@@ -1,5 +1,9 @@
 const path = require('path');
 
+const Paths = {
+    resources: "/src/main/resources/static"
+}
+
 module.exports = {
     entry: './src/main/js/app.js',
     devtool: 'sourcemaps',
@@ -20,6 +24,10 @@ module.exports = {
                         presets: ["@babel/preset-env", "@babel/preset-react"]
                     }
                 }]
+            },
+            {
+                test: `${Paths.resources}`+/\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
             }
         ]
     }

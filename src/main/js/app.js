@@ -2,7 +2,6 @@ import {Component, Fragment} from "react";
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-// const client = require('./client');
 
 class Application extends Component {
     constructor(props) {
@@ -13,10 +12,12 @@ class Application extends Component {
         return (
             <Fragment>
                 <Header/>
-                <div className="w-100">
-                    <h1 className={'w-100'}>Hello, world!</h1>
-                    <p>Hello, Vladimir!</p>
-                    <p>I'm your first React application!</p>
+                <div className="content">
+                    <LeftBar/>
+                    <MainContent
+                        className="main-content"
+                        sourceUrl="http://localhost:8080/stream"
+                    />
                 </div>
             </Fragment>
         );
@@ -30,14 +31,40 @@ class Header extends Component {
 
     render() {
         return (
-          <div
-              className="w-100 h-25"
-              style={{background: "blue"}}
-          >
-            <h1>
+          <div className="header">
+            <div className="header__main-text">
                 Модуль управления платой
-            </h1>
+            </div>
           </div>
+        );
+    }
+}
+
+class LeftBar extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return <div className="left-content">
+            Панель пользователей
+        </div>
+    }
+}
+
+class MainContent extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div className={this.props.className}>
+                <video className="video-player" autoPlay={true} controls={true}>
+                    <source src={this.props.sourceUrl} type="video/mp4"/>
+                    Ваш браузер не поддерживает видео в формате HTML5
+                </video>
+            </div>
         );
     }
 }
@@ -46,3 +73,4 @@ ReactDOM.render(
     <Application/>,
     document.getElementById("react")
 );
+

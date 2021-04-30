@@ -15,7 +15,6 @@ class Application extends Component {
                 <div className="content">
                     <LeftBar/>
                     <MainContent
-                        className="main-content"
                         sourceUrl="http://localhost:8080/stream"
                     />
                 </div>
@@ -59,7 +58,7 @@ class MainContent extends Component {
 
     render() {
         return (
-            <div className={this.props.className}>
+            <div className="main-content">
                 <video className="video-player" autoPlay={true} controls={true}>
                     <source src={this.props.sourceUrl} type="video/mp4"/>
                     Ваш браузер не поддерживает видео в формате HTML5

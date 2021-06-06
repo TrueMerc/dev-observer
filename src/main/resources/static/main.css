@@ -64,6 +64,7 @@ body {
 }
 
 .video-player {
+  width: auto;
   height: 65%;
 }
 

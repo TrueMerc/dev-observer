@@ -1,4 +1,4 @@
-package ru.ryabtsev.devobserver.controllers;
+package ru.devobserver.controllers;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package ru.ryabtsev.devobserver;
+package ru.devobserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

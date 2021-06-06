@@ -4,13 +4,22 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("application")
 public class ApplicationProperties {
-    private String folder;
+    private String firmwareFolder;
+    private String videoStreamUrl;
 
-    public String getFolder() {
-        return folder;
+    public String getFirmwareFolder() {
+        return firmwareFolder;
     }
 
-    public void setFolder(String folder) {
-        this.folder = folder;
+    public void setFirmwareFolder(String firmwareFolder) {
+        this.firmwareFolder = firmwareFolder;
+    }
+
+    public String getVideoStreamUrl() {
+        return videoStreamUrl;
+    }
+
+    public void setVideoStreamUrl(String videoStreamUrl) {
+        this.videoStreamUrl = videoStreamUrl;
     }
 }

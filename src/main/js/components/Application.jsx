@@ -19,7 +19,7 @@ export default class Application extends Component {
         if(!this.applicationStore.isReady) {
             return null;
         }
-        const { serverUrl, videoStreamUrl, firmwareControllerUrl } = this.applicationStore;
+        const { videoStreamUrl, firmwareControllerUrl } = this.applicationStore;
         console.log(videoStreamUrl);
         console.log(firmwareControllerUrl);
         return (

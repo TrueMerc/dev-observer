@@ -82,7 +82,6 @@ var Application = (0,mobx_react__WEBPACK_IMPORTED_MODULE_2__.observer)(_class = 
       }
 
       var _this$applicationStor = this.applicationStore,
-          serverUrl = _this$applicationStor.serverUrl,
           videoStreamUrl = _this$applicationStor.videoStreamUrl,
           firmwareControllerUrl = _this$applicationStor.firmwareControllerUrl;
       console.log(videoStreamUrl);
@@ -265,10 +264,11 @@ var ApplicationStore = /*#__PURE__*/function () {
     _classCallCheck(this, ApplicationStore);
 
     this.isReady = false;
-    this.serverUrl = '';
+    this.serverUrl = null;
     this.settingsUrl = 'settings';
-    this.videoStreamUrl = '';
-    this.firmwareControllerUrl = '';
+    this.videoStreamUrl = null;
+    this.firmwareControllerUrl = null;
+    console.log("".concat(this.serverUrl));
     (0,mobx__WEBPACK_IMPORTED_MODULE_1__.makeObservable)(this, {
       isReady: mobx__WEBPACK_IMPORTED_MODULE_1__.observable,
       serverUrl: mobx__WEBPACK_IMPORTED_MODULE_1__.observable,
@@ -276,8 +276,8 @@ var ApplicationStore = /*#__PURE__*/function () {
       firmwareControllerUrl: mobx__WEBPACK_IMPORTED_MODULE_1__.observable,
       loadSettings: mobx__WEBPACK_IMPORTED_MODULE_1__.action
     });
-    this.serverUrl = serverUrl;
-    this.settingsUrl = "".concat(this.serverUrl).concat(this.settingsUrl);
+    this.serverUrl = new URL(serverUrl);
+    this.settingsUrl = new URL(this.settingsUrl, serverUrl);
   }
 
   _createClass(ApplicationStore, [{
@@ -286,7 +286,8 @@ var ApplicationStore = /*#__PURE__*/function () {
       var _this = this;
 
       this.isReady = false;
-      fetch("".concat(this.serverUrl).concat(this.settingsUrl), {
+      console.log("".concat(this.settingsUrl));
+      fetch("".concat(this.settingsUrl), {
         method: 'GET',
         mode: 'same-origin',
         credentials: 'same-origin',
@@ -298,8 +299,13 @@ var ApplicationStore = /*#__PURE__*/function () {
           return response.json();
         }
       }).then(function (json) {
-        _this.firmwareControllerUrl = "".concat(_this.serverUrl).concat(json.firmwareControllerUrl);
-        _this.videoStreamUrl = "".concat(_this.serverUrl).concat(json.videoStreamUrl);
+        _this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, _this.serverUrl);
+        var videoStreamServerUrl = _this.serverUrl;
+        videoStreamServerUrl.port = json.videoStreamPort;
+        console.log(videoStreamServerUrl);
+        console.log(json.videoStreamUrl);
+        console.log(json.videoStreamPort);
+        _this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
         _this.isReady = true;
       })["catch"](function (error) {
         console.error(error);

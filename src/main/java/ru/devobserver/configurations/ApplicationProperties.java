@@ -7,6 +7,7 @@ public class ApplicationProperties {
     private String firmwareFolder;
     private String firmwareControllerUrl;
     private String videoStreamUrl;
+    private int videoStreamPort;
 
     public String getFirmwareFolder() {
         return firmwareFolder;
@@ -30,5 +31,13 @@ public class ApplicationProperties {
 
     public void setVideoStreamUrl(String videoStreamUrl) {
         this.videoStreamUrl = videoStreamUrl;
+    }
+
+    public int getVideoStreamPort() {
+        return videoStreamPort;
+    }
+
+    public void setVideoStreamPort(int videoStreamPort) {
+        this.videoStreamPort = videoStreamPort;
     }
 }

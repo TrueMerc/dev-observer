@@ -27,8 +27,9 @@ public class MainController {
     @ResponseBody
     public WebSettings getWebSettings() {
         return new WebSettings(
+                applicationProperties.getFirmwareControllerUrl(),
                 applicationProperties.getVideoStreamUrl(),
-                applicationProperties.getFirmwareControllerUrl()
+                applicationProperties.getVideoStreamPort()
         );
     }
 }

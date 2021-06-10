@@ -6,7 +6,7 @@ const Paths = {
 
 module.exports = {
     entry: './src/main/js/app.js',
-    devtool: 'sourcemaps',
+    devtool: 'source-map',
     cache: true,
     mode: 'development',
     output: {
@@ -18,12 +18,13 @@ module.exports = {
             {
                 test: path.join(__dirname, '.'),
                 exclude: /(node_modules)/,
-                use: [{
+                use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ["@babel/preset-env", "@babel/preset-react"]
+                        babelrc: true,
+                        cacheDirectory: true
                     }
-                }]
+                }
             },
             {
                 test: `${Paths.resources}`+/\.css$/,

@@ -1,19 +1,34 @@
 import React from "react";
 import { Component } from "react";
+import { ApplicationStore } from "../store/ApplicationStore";
+import { observer } from  "mobx-react";
 
+@observer
 export default class Application extends Component {
+
     constructor(props) {
         super(props);
+        this.applicationStore = new ApplicationStore(document.documentURI);
+    }
+
+    componentDidMount() {
+        this.applicationStore.loadSettings();
     }
 
     render() {
+        if(!this.applicationStore.isReady) {
+            return null;
+        }
+        const { serverUrl, videoStreamUrl, firmwareControllerUrl } = this.applicationStore;
+        console.log(videoStreamUrl);
+        console.log(firmwareControllerUrl);
         return (
             <>
                 <Header/>
                 <div className="content">
                     <LeftBar/>
                     <MainContent
-                        sourceUrl="http://localhost:8081/stream"
+                        sourceUrl={videoStreamUrl}
                     />
                 </div>
             </>

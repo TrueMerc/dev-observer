@@ -26,6 +26,9 @@ public class MainController {
     @GetMapping(value = "/settings")
     @ResponseBody
     public WebSettings getWebSettings() {
-        return new WebSettings(applicationProperties.getVideoStreamUrl());
+        return new WebSettings(
+                applicationProperties.getVideoStreamUrl(),
+                applicationProperties.getFirmwareControllerUrl()
+        );
     }
 }

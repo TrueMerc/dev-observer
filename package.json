@@ -15,22 +15,34 @@
   ],
   "author": "Vladimir V. Ryabtsev",
   "scripts": {
-    "watch": "webpack --watch -d --output ./target/classes/static/built/bundle.js"
+    "watch": "webpack --watch --mode development --config webpack.config.js"
   },
   "dependencies": {
-    "bootstrap": "^4.6.0",
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/plugin-proposal-private-methods": "^7.13.0",
+    "@babel/preset-env": "^7.14.4",
+    "@babel/preset-react": "^7.13.13",
+    "bootstrap": "^5.0.1",
+    "mobx": "^6.3.2",
+    "mobx-react": "^7.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "rest": "^1.3.2"
+    "react-hot-loader": "^4.13.0",
+    "rest": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.2",
-    "css-loader": "^5.2.1",
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/plugin-proposal-private-methods": "^7.13.0",
+    "@babel/preset-env": "^7.14.4",
+    "@babel/preset-react": "^7.13.13",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.2.6",
     "style-loader": "^2.0.0",
-    "webpack": "^4.19.1",
-    "webpack-cli": "^3.1.0"
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2"
   }
 }

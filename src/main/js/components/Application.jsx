@@ -3,6 +3,7 @@ import { Component } from "react";
 import { ApplicationStore } from "../store/ApplicationStore";
 import { observer } from  "mobx-react";
 
+
 @observer
 export default class Application extends Component {
 
@@ -70,9 +71,11 @@ class MainContent extends Component {
     }
 
     render() {
+        const poster = "./images/video-stream-play.png";
+
         return (
             <div className="main-content">
-                <video className="video-player" controls={true} autoPlay={true}>
+                <video className="video-player" controls={true} autoPlay={true} poster={poster}>
                     <source src={this.props.sourceUrl} type="video/ogg"/>
                     Ваш браузер не поддерживает видео в формате HTML5
                 </video>

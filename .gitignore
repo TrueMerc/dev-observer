@@ -36,5 +36,9 @@ build/
 node/
 node_modules/
 
+### Webpack ###
+/src/main/resources/static/built/
+
 ### npm ###
 package-lock.json
+

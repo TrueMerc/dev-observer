@@ -39,6 +39,8 @@
     "@babel/plugin-proposal-private-methods": "^7.13.0",
     "@babel/preset-env": "^7.14.4",
     "@babel/preset-react": "^7.13.13",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.6",
     "style-loader": "^2.0.0",

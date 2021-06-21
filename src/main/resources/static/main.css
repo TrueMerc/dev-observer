@@ -57,7 +57,7 @@ body {
 
 .main-content {
   padding-left: 25px;
-  width: 90%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,6 +66,19 @@ body {
 .video-player {
   width: auto;
   height: 65%;
+}
+
+.upload-button {
+  border-radius: 5px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  background:#5cb85c;
+  color:#fff!important;
+  width: 200px;
+  height: 30px;
+  border-width: 0px;
+  display: block;;
 }
 
 

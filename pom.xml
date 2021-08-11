@@ -149,7 +149,18 @@
 			<version>3.4.5</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.junit</groupId>
+			<artifactId>junit-bom</artifactId>
+			<version>5.7.1</version>
+			<scope>test</scope>
+		</dependency>
 
+		<dependency>
+			<groupId>uk.co.caprica</groupId>
+			<artifactId>vlcj</artifactId>
+			<version>4.7.0</version>
+		</dependency>
 
 	</dependencies>
 	<dependencyManagement>

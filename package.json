@@ -24,7 +24,7 @@
     "@babel/plugin-proposal-private-methods": "^7.13.0",
     "@babel/preset-env": "^7.14.4",
     "@babel/preset-react": "^7.13.13",
-    "bootstrap": "^5.0.1",
+    "bootstrap": "^5.1.0",
     "mobx": "^6.3.2",
     "mobx-react": "^7.2.0",
     "prop-types": "^15.7.2",

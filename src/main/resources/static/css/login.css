@@ -1,0 +1,56 @@
+.form-element {
+    margin-left: auto;
+    margin-top: 15px;
+    margin-right: auto;
+    font-size: 28px;
+    width: 90%;
+    display: flex;
+}
+
+.login-block {
+    display: block;
+    margin-left: auto;
+    margin-top: 100px;
+    margin-right: auto;
+    width: 600px;
+}
+
+.login-form {
+    margin-top: 50px;
+    width: 100%;
+}
+
+.logo-part {
+    width: 100%;
+    display: flex;
+}
+
+.logo-part__text-block {
+    font-size: 48px;
+    font-weight: bold;
+    padding-left: 20px;
+}
+
+.logo-violet {
+    color: #28166f
+}
+
+.form-input {
+    margin-left: auto;
+    width: 60%;
+}
+
+.submit-button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    background-color: #28166f;
+    width: 200px;
+    height: 50px;
+    border: 0;
+    color: #ffffff;
+    font-size: 20px;
+    border-radius: 10px;
+}
+

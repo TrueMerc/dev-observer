@@ -3,7 +3,6 @@ import {observer} from "mobx-react";
 import {ApplicationStore} from "../store/ApplicationStore";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileUpload} from "@fortawesome/free-solid-svg-icons";
-import "./DevicePage.css"
 
 @observer
 export default class DevicePage extends Component {
@@ -109,13 +108,17 @@ class MainContent extends Component {
                     <source src={this.props.videoStreamUrl} type="video/ogg"/>
                     Ваш браузер не поддерживает видео в формате HTML5
                 </video>
+                <div className='log-area'>
+                    <p>Журнал сообщений:</p>
+                    <textarea className='w-100' rows={10} />
+                </div>
                 <button
                     className="upload-button"
                     onClick={this.handleUploadButtonClick}
                 >
-                    <FontAwesomeIcon icon={faFileUpload}/>
-                    &nbsp;
-                    Загрузить прошивку
+                    <span>
+                        Загрузить прошивку
+                    </span>
                 </button>
             </div>
         );

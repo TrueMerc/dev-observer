@@ -11,14 +11,25 @@ export class LeftBar extends Component {
         return (
             <div className="left-bar">
                 <div className='task-list'>
-                    <p>Главная</p>
-                    <p>Лабораторные работы</p>
-                    <span className='ml-10'>
-                        <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
-                        &nbsp;
-                        УЛС-2021
-                    </span>
-
+                    <div>
+                        <p>
+                            УЛС-2021
+                        </p>
+                    </div>
+                    <div className='ml-15 mt-5'>
+                        <p>
+                            <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
+                            &nbsp;
+                            <b className='underlined'>Работа #1</b>
+                        </p>
+                    </div>
+                    <div className='ml-15 mt-5'>
+                        <p>
+                            <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
+                            &nbsp;
+                            Работа #2
+                        </p>
+                    </div>
                 </div>
             </div>
         );

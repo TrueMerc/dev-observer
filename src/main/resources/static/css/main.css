@@ -1,7 +1,12 @@
 html {
   width: 100%;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow: auto;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -11,8 +16,7 @@ body {
   margin:0;
   padding:0;
   width: 100%;
-  height: 100%;
-  max-height: 100%;
+  min-height: 100%;
 }
 
 .react-container {
@@ -42,8 +46,8 @@ body {
   border-bottom: 1px solid #484343;
   margin: 0;
   width: 100%;
-  height: 5%;
-  background: blue;
+  height: 75px;
+  background: #28166f;
   color: azure;
   display: flex;
   align-items: center;
@@ -97,12 +101,32 @@ body {
   margin-left: 10px;
 }
 
+.ml-15 {
+  margin-left: 15px;
+}
+
+.ml-20 {
+  margin-left: 20px;
+}
+
+.ml-30 {
+  margin-left: 30px;
+}
+
 .mr-10 {
   margin-right: 10px;
 }
 
 .mr-30 {
   margin-right: 30px;
+}
+
+.mt-0 {
+  margin-top: 0;
+}
+
+.mt-5 {
+  margin-top: 5px;
 }
 
 .left-bar {
@@ -117,6 +141,12 @@ body {
   border-right: 2px solid slategrey;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.pt-0 {
+  padding-top: 0px;
 }
 
 .task-list {
@@ -164,6 +194,11 @@ body {
 .w-100 {
   width: 100%;
 }
+
+.underlined {
+  text-decoration: underline;
+}
+
 
 
 

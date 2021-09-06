@@ -10,7 +10,7 @@ export class Header extends Component {
     render() {
         return (
             <div className="header">
-                <img className='header__logo' src='./images/logo_mtuci_blue.png' />
+                <img className='header__logo' src='./images/logo_mtuci_violet.png' />
                 <div className="header__main-text">
                     МТУСИ&nbsp;УЛС-2021
                 </div>

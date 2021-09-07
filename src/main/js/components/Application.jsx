@@ -4,6 +4,7 @@ import DevicePage from "./DevicePage.jsx";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import {Header} from "./Header.jsx";
 import {LeftBar} from "./LeftBar.jsx";
+import {DeviceDescription} from "./DeviceDescription.jsx";
 
 const Application = observer(() => {
     return (
@@ -15,6 +16,9 @@ const Application = observer(() => {
                     <Switch>
                         <Route path="/" exact>
                             <DevicePage />
+                        </Route>
+                        <Route path="/description">
+                            <DeviceDescription/>
                         </Route>
                         <Route path="*">
                             <Redirect to="/" />

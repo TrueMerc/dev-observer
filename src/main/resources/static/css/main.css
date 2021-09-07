@@ -129,6 +129,10 @@ body {
   margin-top: 5px;
 }
 
+.mb-0 {
+  margin-bottom: 0;
+}
+
 .left-bar {
   margin-left: 0;
   margin-top: 0;

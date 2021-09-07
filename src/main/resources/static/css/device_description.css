@@ -1,0 +1,39 @@
+.main-area {
+    margin: 15px;
+}
+
+.text-description-block {
+    width: 50%;
+    text-align: justify;
+    line-height: 1.5;
+}
+
+.dashed-list {
+    list-style-type: none;
+    margin: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 20px;
+}
+
+.dashed-list > li {
+    text-indent: -3px;
+}
+
+.dashed-list > li::before {
+    content: "\2014";
+    text-indent: -5px;
+}
+
+.picture {
+    width: 480px;
+    height: 400px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.picture-block {
+    width: 50%;
+    display: block;
+}

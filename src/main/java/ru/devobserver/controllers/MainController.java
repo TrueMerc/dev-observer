@@ -23,6 +23,11 @@ public class MainController {
         return "index";
     }
 
+    @GetMapping("/description")
+    public String redirectToMainPage() {
+        return "index";
+    }
+
     @GetMapping(value = "/settings")
     @ResponseBody
     public WebSettings getWebSettings() {

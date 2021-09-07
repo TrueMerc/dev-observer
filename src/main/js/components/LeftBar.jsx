@@ -13,14 +13,15 @@ export class LeftBar extends Component {
                 <div className='task-list'>
                     <div>
                         <p>
-                            УЛС-2021
+                            <b className='underlined'>УЛС-2021</b>
                         </p>
                     </div>
                     <div className='ml-15 mt-5'>
                         <p>
                             <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
                             &nbsp;
-                            <b className='underlined'>Работа #1</b>
+                            {/*<b className='underlined'>Работа #1</b>*/}
+                            Работа #1
                         </p>
                     </div>
                     <div className='ml-15 mt-5'>

@@ -16,12 +16,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/resources/**", "/css/**", "/images/**", "/js/**").permitAll()
+                .antMatchers("/**").hasAnyRole("USER")
+                .antMatchers("/").hasAnyRole("USER")
                 .antMatchers("/files/*").permitAll()
-                .antMatchers("/login*").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login")
+                .formLogin().loginPage("/login").permitAll()
                 .loginProcessingUrl("/perform_login")
                 .defaultSuccessUrl("/index", true);
     }

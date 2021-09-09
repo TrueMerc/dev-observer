@@ -17,6 +17,8 @@ public class MvcConfiguration implements WebMvcConfigurer {
                 .addResourceLocations("/templates/index.html");
         registry.addResourceHandler("/login.html")
                 .addResourceLocations("/templates/login.html");
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
     }
 
     @Override

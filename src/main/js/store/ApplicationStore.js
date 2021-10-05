@@ -10,7 +10,6 @@ export class ApplicationStore {
     firmwareControllerUrl = null;
 
     constructor(serverUrl) {
-        console.log(`${this.serverUrl}`);
         makeObservable(this, {
             isReady: observable,
             serverUrl: observable,
@@ -33,8 +32,10 @@ export class ApplicationStore {
                 'Content-Type': 'application/json'
             }
         }).then(response => {
-            if(response.ok) {
+            if (response.ok) {
                 return response.json();
+            } else {
+                throw new Error(`Can't download application settings: server responded with code ${response.status}`);
             }
         }).then(json => {
             this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);

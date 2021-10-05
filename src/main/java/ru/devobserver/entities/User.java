@@ -27,11 +27,14 @@ public class User {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Column(name = "patronymic", nullable = false)
+    private String patronymic;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "phone")
-    private String phone;
+//    @Column(name = "phone")
+//    private String phone;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(

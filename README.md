@@ -1,5 +1,5 @@
 # dev-observer
-Application for remote control on study board firmware
+Application for remote control on study board firmware.
 
 ## VLC setting
 Application use VLC video player to show study board for students.

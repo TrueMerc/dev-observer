@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.devobserver.entities.Role;
 
+
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userService.findByLogin(username).orElseThrow(
                 () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, username))

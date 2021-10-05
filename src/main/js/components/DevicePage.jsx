@@ -19,8 +19,6 @@ export default class DevicePage extends Component {
             return null;
         }
         const { videoStreamUrl, firmwareControllerUrl } = this.applicationStore;
-        console.log(videoStreamUrl);
-        console.log(firmwareControllerUrl);
         return (
             <div className='device-page'>
                 <div className="half-screen">

@@ -16,5 +16,6 @@ CREATE TABLE firmware_files (
     original_name VARCHAR (100),
     name VARCHAR (50),
     author_id BIGINT,
+    size INTEGER,
     path VARCHAR (300)
 );

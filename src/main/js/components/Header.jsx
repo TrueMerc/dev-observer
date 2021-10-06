@@ -12,6 +12,11 @@ export class Header extends Component {
     }
 
     render() {
+
+        const userFullName = this.props.applicationStore.user
+            ? this.props.applicationStore.user.lastNameWithInitials()
+            : '';
+
         return (
             <div className="header">
                 <img className='header__logo' src='./images/logo_mtuci_violet.png' />
@@ -24,7 +29,9 @@ export class Header extends Component {
                         icon={faUserCircle}
                     />
                     <div className='mr-30'>
-                        <span className='header__user-name-text'>Тестовый Пользователь</span>
+                        <span className='header__user-name-text'>
+                            {userFullName}
+                        </span>
                     </div>
                     <Tooltip html={
                         <div className='header__tooltip'>

@@ -1,24 +1,18 @@
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {ApplicationStore} from "../store/ApplicationStore";
 
 @observer
 export default class DevicePage extends Component {
 
     constructor(props) {
         super(props);
-        this.applicationStore = new ApplicationStore(document.documentURI);
-    }
-
-    componentDidMount() {
-        this.applicationStore.loadSettings();
     }
 
     render() {
-        if(!this.applicationStore.isReady) {
+        if(!this.props.applicationStore.isReady) {
             return null;
         }
-        const { videoStreamUrl, firmwareControllerUrl } = this.applicationStore;
+        const { videoStreamUrl, firmwareControllerUrl } = this.props.applicationStore;
         return (
             <div className='device-page'>
                 <div className="half-screen">
@@ -59,7 +53,7 @@ class DeviceControls extends Component {
 
         const requestBody = new FormData();
         const file = files[0];
-        let start = 0, end = requestBody.append('file', file, file.name);
+        requestBody.append('file', file, file.name);
         console.log(this.props.firmwareUrl);
         const uploadUrl = new URL('upload', this.props.firmwareUrl);
         console.log(uploadUrl);

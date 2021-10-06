@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSignOutAlt, faUserCircle} from "@fortawesome/free-solid-svg-icons";
 import {Tooltip} from "react-tippy";
 import {observer} from "mobx-react";
-import {ApplicationStore} from "../store/ApplicationStore";
+import {Link} from "react-router-dom";
 
 @observer
 export class Header extends Component {
@@ -19,25 +19,29 @@ export class Header extends Component {
 
         return (
             <div className="header">
-                <img className='header__logo' src='./images/logo_mtuci_violet.png' />
+                <img
+                    className='header__logo'
+                    src='./images/logo_mtuci_violet.png'
+                    onClick={() => { window.open('https://mtuci.ru'); } }
+                />
                 <div className="header__main-text">
                     МТУСИ&nbsp;УЛС-2021
                 </div>
                 <div className='header__right_content'>
-                    <FontAwesomeIcon
-                        className='fa-3x mr-10'
-                        icon={faUserCircle}
-                    />
+                    <Tooltip title='Профиль пользователя'>
+                        <Link className='header__link' to="/profile">
+                            <FontAwesomeIcon
+                                className='fa-3x mr-10'
+                                icon={faUserCircle}
+                            />
+                        </Link>
+                    </Tooltip>
                     <div className='mr-30'>
                         <span className='header__user-name-text'>
                             {userFullName}
                         </span>
                     </div>
-                    <Tooltip html={
-                        <div className='header__tooltip'>
-                            Выйти
-                        </div>
-                    }>
+                    <Tooltip title='Выйти'>
                         <button
                             className='header__button'
                             onClick={(event) => {

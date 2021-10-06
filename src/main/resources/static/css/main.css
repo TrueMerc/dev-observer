@@ -56,12 +56,31 @@ body {
   background-color: #28166f;
   color: azure;
   border: none;
+  max-height: 75px;
+  height: 75px;
+  display: inline-block;
+}
+
+.header__link:visited {
+  color: azure;
+}
+
+.header__link:hover {
+  color: azure;
 }
 
 .header__logo {
-  margin-left: 10px;
-  max-width: 95%;
   max-height: 95%;
+  display: block;
+}
+
+.header__logo:hover {
+  cursor: pointer;
+}
+
+.header__logo-link {
+  margin-left: 10px;
+  max-height: 100%;
   display: block;
 }
 

@@ -6,6 +6,7 @@ import {Header} from "./Header.jsx";
 import {LeftBar} from "./LeftBar.jsx";
 import {DeviceDescription} from "./DeviceDescription.jsx";
 import {ApplicationStore} from "../store/ApplicationStore";
+import {UserProfile} from "./UserProfile.jsx";
 
 const Application = observer(() => {
 
@@ -28,6 +29,9 @@ const Application = observer(() => {
                         </Route>
                         <Route path="/description">
                             <DeviceDescription/>
+                        </Route>
+                        <Route path="/profile">
+                            <UserProfile/>
                         </Route>
                         <Route path="*">
                             <Redirect to="/" />

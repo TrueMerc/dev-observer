@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {observer} from "mobx-react";
-import DevicePage from "./DevicePage.jsx";
+import LabWorkPage from "./LabWorkPage.jsx";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import {Header} from "./Header.jsx";
 import {LeftBar} from "./LeftBar.jsx";
@@ -25,7 +25,7 @@ const Application = observer(() => {
                     <LeftBar/>
                     <Switch>
                         <Route path="/" exact>
-                            <DevicePage applicationStore = {applicationStore} />
+                            <LabWorkPage applicationStore = {applicationStore} />
                         </Route>
                         <Route path="/description">
                             <DeviceDescription/>

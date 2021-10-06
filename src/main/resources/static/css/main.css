@@ -184,6 +184,11 @@ body {
   overflow: auto;
 }
 
+.left-bar__selected-item {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .pt-0 {
   padding-top: 0;
 }
@@ -236,6 +241,27 @@ body {
 
 .underlined {
   text-decoration: underline;
+}
+
+.undecorated-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.undecorated-link {
+  color: inherit;
+}
+
+.undecorated-link:hover {
+  color: inherit;
+}
+
+.undecorated-link:visited {
+  color: inherit;
+}
+
+.undecorated-link:active {
+  color: inherit;
 }
 
 

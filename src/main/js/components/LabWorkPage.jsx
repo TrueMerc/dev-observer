@@ -3,7 +3,7 @@ import {observer} from "mobx-react";
 import "./DevicePage.css";
 
 @observer
-export default class DevicePage extends Component {
+export default class LabWorkPage extends Component {
 
     constructor(props) {
         super(props);

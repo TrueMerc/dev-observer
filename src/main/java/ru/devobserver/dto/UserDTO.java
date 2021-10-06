@@ -1,5 +1,6 @@
 package ru.devobserver.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import ru.devobserver.entities.User;
 
@@ -11,6 +12,8 @@ public class UserDTO {
     private final String lastName;
     private final String patronymic;
     private final String email;
+
+    @JsonProperty
     private final boolean isAdministrator;
 
     public UserDTO(final User user) {

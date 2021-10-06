@@ -38,7 +38,6 @@ const Application = observer(() => {
                         </Route>
                     </Switch>
                 </div>
-
             </div>
         </BrowserRouter>
     );

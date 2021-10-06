@@ -7,7 +7,7 @@ export class LeftBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            lastSelectedItemId: 'device'
+            lastSelectedItemId: 'lab1'
         };
     }
 

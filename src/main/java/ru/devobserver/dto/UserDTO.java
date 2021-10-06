@@ -12,7 +12,6 @@ public class UserDTO {
     private final String lastName;
     private final String patronymic;
     private final String email;
-
     @JsonProperty
     private final boolean isAdministrator;
 
@@ -23,6 +22,11 @@ public class UserDTO {
         this.lastName = user.getLastName();
         this.patronymic = user.getPatronymic();
         this.email = user.getEmail();
-        this.isAdministrator = user.getRoles().contains("ROLE_ADMIN");
+        this.isAdministrator = user
+                .getRoles()
+                .stream()
+                .filter(role -> role.getName().equals("ROLE_ADMIN"))
+                .findFirst()
+                .isPresent();
     }
 }

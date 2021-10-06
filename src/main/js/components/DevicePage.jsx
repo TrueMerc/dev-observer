@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {observer} from "mobx-react";
+import "./DevicePage.css";
 
 @observer
 export default class DevicePage extends Component {

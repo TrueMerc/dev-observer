@@ -1,5 +1,5 @@
 import React from "react";
-import { makeObservable, observable, action } from "mobx";
+import {makeObservable, observable, action, runInAction} from "mobx";
 import {User} from "../domain/User";
 
 export class ApplicationStore {
@@ -49,7 +49,9 @@ export class ApplicationStore {
             const videoStreamServerUrl = this.serverUrl;
             videoStreamServerUrl.port = json.videoStreamPort;
             this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
-            this.isReady = true;
+            runInAction(() => {
+                this.isReady = true;
+            })
         }).catch(error => {
             console.error(error);
         });
@@ -71,9 +73,12 @@ export class ApplicationStore {
                throw new Error(`Can't load current user data`);
             }
         }).then(json => {
-            this.user = new User(json);
+            runInAction(() => {
+                this.user = new User(json);
+                this.isReady = true;
+            });
         }).catch(error => {
-            console.error(error)
+            console.error(error);
         });
     }
 }

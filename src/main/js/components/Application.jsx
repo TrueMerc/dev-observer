@@ -31,7 +31,7 @@ const Application = observer(() => {
                             <DeviceDescription/>
                         </Route>
                         <Route path="/profile">
-                            <UserProfile/>
+                            <UserProfile applicationStore = {applicationStore}/>
                         </Route>
                         <Route path="*">
                             <Redirect to="/" />

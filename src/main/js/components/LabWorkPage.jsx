@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import "./DevicePage.css";
+import "./LabWorkPage.css";
 
 @observer
 export default class LabWorkPage extends Component {
@@ -97,7 +97,7 @@ class DeviceControls extends Component {
                     <textarea className='w-100' rows={10} />
                 </div>
                 <button
-                    className="upload-button"
+                    className="btn btn-success upload-button"
                     onClick={this.handleUploadButtonClick}
                 >
                     <span>
@@ -189,84 +189,82 @@ class Description extends Component {
                     </ol>
                     <label>
                         <b>Таблица 1&nbsp;&mdash;&nbsp;Варианты заданий</b>
-                        <table className='description__table'>
-                            <thead>
-                                <tr>
-                                    <th className='description__table-element wp-100'>
-                                        <b>Вариант</b>
-                                    </th>
-                                    <th className='description__table-element'>
-                                        <b>Режим работ светодиодов</b>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td className='description__table-element center-aligned'>1</td>
-                                <td className='description__table-element pl-5'>
-                                    D1 мигает, D2 и D3 потушены
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>2</td>
-                                <td className='description__table-element pl-5'>
-                                    D1 и D2 мигают синхронно, D2 потушен
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>3</td>
-                                <td className='description__table-element pl-5'>
-                                    D1, D2 и D3 мигают синхронно
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>4</td>
-                                <td className='description__table-element pl-5'>
-                                    D1 горит, D2 и D3 мигают синхронно
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>5</td>
-                                <td className='description__table-element pl-5'>
-                                    D1 и D2 горят постоянно, D3 мигает
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>6</td>
-                                <td className='description__table-element pl-5'>
-                                    D1, D2 и D3 горят постоянно
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>7</td>
-                                <td className='description__table-element pl-5'>
-                                    D1 потушен, D2 и D3 мигают асинхронно
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>8</td>
-                                <td className='description__table-element pl-5'>
-                                    D3 горит постоянно, D1 мигает, D2 потушен
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>9</td>
-                                <td className='description__table-element pl-5'>
-                                    D1 мигает, D2 и D3 горят постоянно
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='description__table-element center-aligned'>10</td>
-                                <td className='description__table-element pl-5'>
-                                    D1 и D2 мигают асинхронно, D3 потушен
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
                     </label>
-                    <label>
-                        <b>Контрольные вопросы:</b>
-                    </label>
+                    <table className='description__table'>
+                        <thead>
+                        <tr>
+                            <th className='description__table-element wp-100'>
+                                <b>Вариант</b>
+                            </th>
+                            <th className='description__table-element'>
+                                <b>Режим работ светодиодов</b>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td className='description__table-element center-aligned'>1</td>
+                            <td className='description__table-element pl-5'>
+                                D1 мигает, D2 и D3 потушены
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>2</td>
+                            <td className='description__table-element pl-5'>
+                                D1 и D2 мигают синхронно, D2 потушен
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>3</td>
+                            <td className='description__table-element pl-5'>
+                                D1, D2 и D3 мигают синхронно
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>4</td>
+                            <td className='description__table-element pl-5'>
+                                D1 горит, D2 и D3 мигают синхронно
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>5</td>
+                            <td className='description__table-element pl-5'>
+                                D1 и D2 горят постоянно, D3 мигает
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>6</td>
+                            <td className='description__table-element pl-5'>
+                                D1, D2 и D3 горят постоянно
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>7</td>
+                            <td className='description__table-element pl-5'>
+                                D1 потушен, D2 и D3 мигают асинхронно
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>8</td>
+                            <td className='description__table-element pl-5'>
+                                D3 горит постоянно, D1 мигает, D2 потушен
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>9</td>
+                            <td className='description__table-element pl-5'>
+                                D1 мигает, D2 и D3 горят постоянно
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='description__table-element center-aligned'>10</td>
+                            <td className='description__table-element pl-5'>
+                                D1 и D2 мигают асинхронно, D3 потушен
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <b>Контрольные вопросы:</b>
                     <ol>
                         <li className='description-list'>
                             Что такое микроконтроллер?

@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faLevelUpAlt} from "@fortawesome/free-solid-svg-icons";
+import {faCog, faLevelUpAlt} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
+import "./LeftBar.css"
 
 export class LeftBar extends Component {
     constructor(props) {
@@ -18,7 +19,7 @@ export class LeftBar extends Component {
     render() {
         return (
             <div className="left-bar">
-                <div className='task-list'>
+                <div className='left-bar__device-list'>
                     <div>
                         <Link className='undecorated-link' to="/description">
                             <span id='device'
@@ -32,7 +33,7 @@ export class LeftBar extends Component {
                             </span>
                         </Link>
                     </div>
-                    <div className='ml-15 mt-5'>
+                    <div className='left-bar__device-list-lab-item'>
                         <Link className='undecorated-link' to="/">
                             <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
                             &nbsp;
@@ -48,6 +49,13 @@ export class LeftBar extends Component {
                         </Link>
                     </div>
                 </div>
+                <button className='btn btn-outline-secondary left-bar__administration-button'>
+                    <span>
+                        <FontAwesomeIcon icon={faCog}/>
+                        &nbsp;
+                        Администрирование
+                    </span>
+                </button>
             </div>
         );
     }

@@ -133,6 +133,11 @@ body {
   display: flex;
 }
 
+.main-area {
+  margin: 15px;
+  width: calc(100% - 30px);
+}
+
 .m-10 {
   margin: 10px;
 }

@@ -94,7 +94,11 @@ class DeviceControls extends Component {
                 </video>
                 <div className='log-area'>
                     <p>Журнал сообщений:</p>
-                    <textarea className='w-100' rows={10} />
+                    <textarea
+                        className='w-100'
+                        rows={10}
+                        readOnly={true}
+                    />
                 </div>
                 <button
                     className="btn btn-success upload-button"

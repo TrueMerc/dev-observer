@@ -31,7 +31,7 @@ body {
 }
 
 .device-page {
-  width: 100%;
+  width: calc(100% - 250px);
   display: flex;
 }
 
@@ -119,8 +119,12 @@ body {
 }
 
 .log-area {
-  width: 100%;
+  width: 90%;
   margin-top: 20px;
+}
+
+.log-area textarea {
+  resize: none;
 }
 
 .main-section {
@@ -178,18 +182,18 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .video-player {
-  width: 100%;
+  width: 90%;
   height: auto;
-  background-size: 100%;
+  background-size: 90%;
   display: block;
 }
 
 .upload-button {
-  margin-top: 30px;
+  margin-top: 25px;
   margin-left: auto;
   margin-right: auto;
 }

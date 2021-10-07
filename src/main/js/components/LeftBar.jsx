@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCog, faLevelUpAlt} from "@fortawesome/free-solid-svg-icons";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import "./LeftBar.css"
 import {observer} from "mobx-react";
 
 @observer
-export class LeftBar extends Component {
+class LeftBarComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,6 +16,11 @@ export class LeftBar extends Component {
 
     handleClickOnItem = (event) => {
         this.setState({lastSelectedItemId: event.target.id});
+    }
+
+    handleAdministrationButtonClick = (event) => {
+
+        this.props.history.push('/Administration');
     }
 
     render() {
@@ -56,7 +61,10 @@ export class LeftBar extends Component {
                     </div>
                 </div>
                 {isAdministrationButtonVisible &&
-                <button className='btn btn-outline-secondary left-bar__administration-button'>
+                <button
+                    className='btn btn-outline-secondary left-bar__administration-button'
+                    onClick={this.handleAdministrationButtonClick}
+                >
                     <span>
                         <FontAwesomeIcon icon={faCog}/>
                         &nbsp;
@@ -68,3 +76,5 @@ export class LeftBar extends Component {
         );
     }
 }
+
+export const LeftBar = withRouter(LeftBarComponent);

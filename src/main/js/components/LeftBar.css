@@ -2,7 +2,7 @@
     margin-left: 0;
     margin-top: 0;
     margin-bottom: 0;
-    width: 15%;
+    width: 250px;
     min-width: 250px;
     display: flex;
     color: #363534;
@@ -12,7 +12,7 @@
     justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-    overflow: auto;
+    overflow-y: auto;
 }
 
 .left-bar__device-list {
@@ -34,6 +34,10 @@
     margin-top: 20px;
     position: fixed;
     bottom: 20px;
+}
+
+.left-bar__administration-button-link {
+    display: block;
 }
 
 

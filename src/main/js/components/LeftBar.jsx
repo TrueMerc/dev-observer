@@ -3,7 +3,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCog, faLevelUpAlt} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
 import "./LeftBar.css"
+import {observer} from "mobx-react";
 
+@observer
 export class LeftBar extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +19,10 @@ export class LeftBar extends Component {
     }
 
     render() {
+
+        const {isReady, user} = this.props.applicationStore;
+        const isAdministrationButtonVisible = isReady && (user ? user.isAdministrator : false);
+
         return (
             <div className="left-bar">
                 <div className='left-bar__device-list'>
@@ -49,6 +55,7 @@ export class LeftBar extends Component {
                         </Link>
                     </div>
                 </div>
+                {isAdministrationButtonVisible &&
                 <button className='btn btn-outline-secondary left-bar__administration-button'>
                     <span>
                         <FontAwesomeIcon icon={faCog}/>
@@ -56,6 +63,7 @@ export class LeftBar extends Component {
                         Администрирование
                     </span>
                 </button>
+                }
             </div>
         );
     }

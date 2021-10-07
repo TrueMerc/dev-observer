@@ -7,6 +7,7 @@ import {LeftBar} from "./LeftBar.jsx";
 import {DeviceDescription} from "./DeviceDescription.jsx";
 import {ApplicationStore} from "../store/ApplicationStore";
 import {UserProfile} from "./UserProfile.jsx";
+import {Administration} from "./Administration.jsx";
 
 const Application = observer(() => {
 
@@ -22,7 +23,7 @@ const Application = observer(() => {
             <div className='application'>
                 <Header applicationStore = {applicationStore}/>
                 <div className='main-section'>
-                    <LeftBar/>
+                    <LeftBar applicationStore = {applicationStore}/>
                     <Switch>
                         <Route path="/" exact>
                             <LabWorkPage applicationStore = {applicationStore} />
@@ -32,6 +33,9 @@ const Application = observer(() => {
                         </Route>
                         <Route path="/profile">
                             <UserProfile applicationStore = {applicationStore}/>
+                        </Route>
+                        <Route path="/administration">
+                            <Administration/>
                         </Route>
                         <Route path="*">
                             <Redirect to="/" />

@@ -9,13 +9,17 @@ export class User {
     lastName = '';
     patronymic = '';
     email = '';
-    isAdministrator = '';
+    isAdministrator = false;
 
     constructor(json) {
         makeObservable(this, {
             id: observable,
             login: observable,
-            lastName: observable
+            lastName: observable,
+            firstName: observable,
+            patronymic: observable,
+            email: observable,
+            isAdministrator: observable
         });
         this.id = json.id;
         this.login = json.login;

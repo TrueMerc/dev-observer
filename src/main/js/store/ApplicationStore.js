@@ -16,14 +16,13 @@ export class ApplicationStore {
     constructor(serverUrl) {
         makeObservable(this, {
             isReady: observable,
-            serverUrl: observable,
             videoStreamUrl: observable,
             firmwareControllerUrl: observable,
             user: observable,
             loadSettings: action,
             loadUser: action
         });
-        this.serverUrl = new URL(serverUrl);
+        this.serverUrl = new URL(new URL(serverUrl).origin);
         this.settingsUrl = new URL(this.settingsUrl, serverUrl);
         this.usersUrl = new URL(this.usersUrl, serverUrl);
         this.currentUserUrl = new URL(this.currentUserUrl, serverUrl);

@@ -2,6 +2,7 @@ package ru.devobserver.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.devobserver.dto.UserDTO;
 import ru.devobserver.entities.User;
@@ -20,6 +21,11 @@ public class JpaUserService implements UserService {
     @Autowired
     public JpaUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public long getCount() {
+        return userRepository.count();
     }
 
     @Override
@@ -46,4 +52,11 @@ public class JpaUserService implements UserService {
     public List<User> findAll() {
         return StreamSupport.stream(userRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
+
+    @Override
+    public List<User> findAllForPage(int pageNumber, int usersPerPage) {
+        return userRepository.findAll(PageRequest.of(pageNumber, usersPerPage)).getContent();
+    }
+
+
 }

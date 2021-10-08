@@ -10,6 +10,13 @@ import java.util.Optional;
  * Provides interface for users management service.
  */
 public interface UserService {
+
+    /**
+     * Returns overall users count.
+     * @return
+     */
+    long getCount();
+
     /**
      * Returns user with given identifier if user exists.
      * @param id user identifier.
@@ -42,4 +49,10 @@ public interface UserService {
      * @return the list of all users.
      */
     List<User> findAll();
+
+    /**
+     * Returns the list of all users for given page.
+     * @return the list of all users for given page.
+     */
+    List<User> findAllForPage(final int pageNumber, final int usersPerPage);
 }

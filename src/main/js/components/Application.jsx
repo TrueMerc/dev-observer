@@ -18,6 +18,8 @@ const Application = observer(() => {
         applicationStore.loadUser();
     }, []);
 
+    console.log('Application server URL: ' + applicationStore.serverUrl);
+
     return (
         <BrowserRouter>
             <div className='application'>
@@ -35,7 +37,7 @@ const Application = observer(() => {
                             <UserProfile applicationStore = {applicationStore}/>
                         </Route>
                         <Route path="/administration">
-                            <Administration/>
+                            <Administration serverUrl = {applicationStore.serverUrl}/>
                         </Route>
                         <Route path="*">
                             <Redirect to="/" />

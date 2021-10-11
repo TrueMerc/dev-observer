@@ -18,3 +18,11 @@
     font-weight: bold;
     color: slategray;
 }
+
+.user-management__user-table {
+    margin-top: 20px;
+}
+
+.user-management__user-table-header {
+    text-align: center;
+}

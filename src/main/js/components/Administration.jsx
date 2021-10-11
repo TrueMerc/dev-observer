@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Pagination, Tab, Tabs} from "react-bootstrap";
+import {Pagination, Tab, Table, Tabs} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import "./Administration.css"
+import {Strings} from "../domain/Strings";
 
 
 export const Administration = (props) => {
@@ -31,7 +32,8 @@ export const Administration = (props) => {
 }
 
 const UserManagement = (props) => {
-    const userPerPagePossibleValues = [20, 50];
+    // const userPerPagePossibleValues = [20, 50];
+    const userPerPagePossibleValues = [2, 5];
 
     const [pageNumber, setPageNumber] = useState(0);
     const [usersPerPage, setUsersPerPage] = useState(userPerPagePossibleValues[0]);
@@ -101,6 +103,37 @@ const UserManagement = (props) => {
                     Добавить пользователя
                 </button>
             </div>
+            <Table
+                className='user-management__user-table'
+                striped={true} bordered={true} hover={true}
+            >
+                <thead className='user-management__user-table-header'>
+                    <th>Номер</th>
+                    <th>Фамилия, имя, отчество</th>
+                    <th>Пользователь</th>
+                    <th>E-mail</th>
+                    <th>Действия</th>
+                </thead>
+                <tbody>
+                {users.map((user, index) =>
+                    <tr key={`userTableRow${index}`}>
+                        <td>{pageNumber * usersPerPage + index + 1}</td>
+                        <td>
+                            {user.lastName
+                            + (Strings.isNonEmptyString(user.firstName) ? ` ${user.firstName}` : '')
+                            + (Strings.isNonEmptyString(user.patronymic) ? ` ${user.patronymic}` : '')
+                            }
+                        </td>
+                        <td>
+                            {user.login}
+                        </td>
+                        <td>
+                            {user.email}
+                        </td>
+                    </tr>
+                )}
+                </tbody>
+            </Table>
         </div>
     );
 }

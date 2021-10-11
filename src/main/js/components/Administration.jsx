@@ -40,10 +40,8 @@ const UserManagement = (props) => {
     const [users, setUsers] = useState([]);
     const [overallUsersCount, setOverallUsersCount] = useState(0);
 
-    const url = `${window.location.origin}/users/forPage/${pageNumber}/${usersPerPage}`;
-    console.log('URL: ' + url);
-
-    useEffect(() => {
+    const getPageUsers = (pageNumber, usersPerPage) => {
+        const url = `${window.location.origin}/users/forPage/${pageNumber}/${usersPerPage}`;
         fetch(url, {
             method: 'GET',
             mode: 'same-origin',
@@ -64,7 +62,15 @@ const UserManagement = (props) => {
         }).catch(error => {
             console.error(error);
         });
+    }
+
+    useEffect(() => {
+        getPageUsers(pageNumber, usersPerPage);
     }, []);
+
+    useEffect(() => {
+        getPageUsers(pageNumber, usersPerPage);
+    }, [pageNumber, usersPerPage]);
 
     const pagesCount = Math.floor(overallUsersCount / usersPerPage) + 1;
 

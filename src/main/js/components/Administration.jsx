@@ -114,11 +114,13 @@ const UserManagement = (props) => {
                 striped={true} bordered={true} hover={true}
             >
                 <thead className='user-management__user-table-header'>
-                    <th>Номер</th>
-                    <th>Фамилия, имя, отчество</th>
-                    <th>Пользователь</th>
-                    <th>E-mail</th>
-                    <th>Действия</th>
+                    <tr>
+                        <th>Номер</th>
+                        <th>Фамилия, имя, отчество</th>
+                        <th>Пользователь</th>
+                        <th>E-mail</th>
+                        <th>Действия</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {users.map((user, index) =>
@@ -177,28 +179,38 @@ export const PagesPagination = ({pageNumber, pagesCount, onPageNumberChange, dis
     } else if (pageInHead) {
         pageNumbers = [...Array(displayedPagesCount - 1).keys(), pagesCount - 1];
     } else if (pageInTail) {
-        const tail = Array(displayedPagesCount - 1)
-            .map((value, index) => pagesCount - displayedPagesCount + index);
+        const tail = [...Array(displayedPagesCount - 1).keys()]
+            .map((value, index) => pagesCount - displayedPagesCount + index + 1);
         pageNumbers = [0, ...tail];
     } else {
-        const centralPart = Array(displayedPagesCount).map((value, index) => index + pageNumber - center);
+        const centralPart = [...Array(displayedPagesCount - 2).keys()]
+            .map((value, index) => (index + pageNumber - center + 1));
+        console.log('Central part');
+        console.log(centralPart);
         pageNumbers = [0, ...centralPart, pagesCount - 1];
     }
+
+    console.log('PageNumbers');
+    console.log(pageNumbers);
 
     return (
         <Pagination className={className}>
             <Pagination.Prev
                 disabled={pageNumber === 0}
-                onClick={onPageNumberChange(--pageNumber)}
+                onClick={() => onPageNumberChange(--pageNumber)}
             />
-            {pageNumbers.map(value =>
-                <Pagination.Item key={`pageKey${value}`} active={value === pageNumber}>
-                    {value + 1}
+            {pageNumbers.map(number =>
+                <Pagination.Item
+                    key={`pageKey${number}`}
+                    active={number === pageNumber}
+                    onClick={() => onPageNumberChange(number)}
+                >
+                    {number + 1}
                 </Pagination.Item>
             )}
             <Pagination.Next
                 disabled={pageNumber === pagesCount - 1}
-                onClick={onPageNumberChange(++pageNumber)}
+                onClick={() => onPageNumberChange(++pageNumber)}
             />
         </Pagination>
     );

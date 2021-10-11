@@ -9,9 +9,9 @@ import {ApplicationStore} from "../store/ApplicationStore";
 import {UserProfile} from "./UserProfile.jsx";
 import {Administration} from "./Administration.jsx";
 
-const Application = observer(() => {
+const Application = () => {
 
-    const applicationStore = new ApplicationStore(document.documentURI);
+    const applicationStore = new ApplicationStore(Object.assign(window.location.origin));
 
     useEffect(() => {
         applicationStore.loadSettings();
@@ -47,7 +47,7 @@ const Application = observer(() => {
             </div>
         </BrowserRouter>
     );
-});
+};
 
 export default Application;
 

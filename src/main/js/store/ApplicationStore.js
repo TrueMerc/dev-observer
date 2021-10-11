@@ -22,7 +22,7 @@ export class ApplicationStore {
             loadSettings: action,
             loadUser: action
         });
-        this.serverUrl = new URL(new URL(serverUrl).origin);
+        this.serverUrl = Object.assign(new URL(serverUrl));
         this.settingsUrl = new URL(this.settingsUrl, serverUrl);
         this.usersUrl = new URL(this.usersUrl, serverUrl);
         this.currentUserUrl = new URL(this.currentUserUrl, serverUrl);

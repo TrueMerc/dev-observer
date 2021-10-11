@@ -88,7 +88,7 @@ class DeviceControls extends Component {
 
         return (
             <div className="video-player-bar">
-                <video className="video-player" controls={true} autoPlay={true} poster={poster}>
+                <video className="video-player" controls={true} poster={poster}>
                     <source src={this.props.videoStreamUrl} type="video/ogg"/>
                     Ваш браузер не поддерживает видео в формате HTML5
                 </video>

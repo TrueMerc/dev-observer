@@ -1,3 +1,20 @@
 .tab-content {
     margin: 10px;
+    display: block;
+}
+
+.user-management__control-panel {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.user-management__user-count {
+    /*margin-left: 30px;*/
+}
+
+.user-management__user-count span {
+    font-size: 24px;
+    font-weight: bold;
+    color: slategray;
 }

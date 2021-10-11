@@ -181,23 +181,19 @@ export const PagesPagination = ({pageNumber, pagesCount, onPageNumberChange, dis
 
     return (
         <Pagination className={className}>
-            {pagesCount > displayedPagesCount &&
             <Pagination.Prev
                 disabled={pageNumber === 0}
                 onClick={onPageNumberChange(--pageNumber)}
             />
-            }
             {pageNumbers.map(value =>
                 <Pagination.Item key={`pageKey${value}`} active={value === pageNumber}>
                     {value + 1}
                 </Pagination.Item>
             )}
-            {pagesCount > displayedPagesCount &&
             <Pagination.Next
                 disabled={pageNumber === pagesCount - 1}
                 onClick={onPageNumberChange(++pageNumber)}
             />
-            }
         </Pagination>
     );
 }

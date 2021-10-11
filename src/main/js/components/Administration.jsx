@@ -72,6 +72,10 @@ const UserManagement = (props) => {
         getPageUsers(pageNumber, usersPerPage);
     }, [pageNumber, usersPerPage]);
 
+    useEffect(() => {
+        setPageNumber(0);
+    }, [usersPerPage]);
+
     const pagesCount = Math.floor(overallUsersCount / usersPerPage) + 1;
 
     return (

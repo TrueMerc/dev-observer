@@ -8,7 +8,7 @@ VALUES (
         ''
         );
 
-INSERT INTO roles(name)
-VALUES ('ROLE_ADMIN'), ('ROLE_STAFF'), ('ROLE_USER');
+INSERT INTO roles(name, displayed_name)
+VALUES ('ROLE_ADMIN', 'Администратор'), ('ROLE_STAFF', 'Сотрудник'), ('ROLE_USER', 'Пользователь');
 
 INSERT INTO users_roles VALUES (1, 1);

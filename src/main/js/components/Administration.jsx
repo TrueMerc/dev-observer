@@ -5,12 +5,10 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import "./Administration.css"
 import {Strings} from "../domain/Strings";
-import {Role} from "../domain/Role";
+import {observer} from "mobx-react";
 
-
-
-export const Administration = (props) => {
-
+export const Administration = observer((props) => {
+    console.log(props.applicationStore.roles);
     return  (
         <div className='main-area'>
             <Tabs defaultActiveKey='userManagement'>
@@ -18,7 +16,7 @@ export const Administration = (props) => {
                     eventKey='userManagement'
                     title='Управление пользователями'
                 >
-                    <UserManagement serverUrl = {props.serverUrl}/>
+                    <UserManagement roles={props.applicationStore.roles}/>
                 </Tab>
                 <Tab
                     eventKey='deviceManagement'
@@ -31,7 +29,7 @@ export const Administration = (props) => {
             </Tabs>
         </div>
     );
-}
+});
 
 const UserManagement = (props) => {
     const Modes = Object.freeze({ UserTable: 0, UserRegistration: 1});
@@ -52,7 +50,10 @@ const UserManagement = (props) => {
             <UserTable onUserAdditionButtonClick={handleUserAdditionButtonClick}/>
             }
             {mode === Modes.UserRegistration &&
-            <UserRegistrationForm onFinish={handleUserAdditionFinish}/>
+            <UserRegistrationForm
+                onFinish={handleUserAdditionFinish}
+                roles={props.roles}
+            />
             }
         </div>
     );
@@ -102,7 +103,7 @@ const UserTable = ({onUserAdditionButtonClick}) => {
         setPageNumber(0);
     }, [usersPerPage]);
 
-    const pagesCount = Math.floor(overallUsersCount / usersPerPage) + 1;
+    const pagesCount = Math.floor(overallUsersCount / usersPerPage) + overallUsersCount % usersPerPage;
 
     return (
         <>
@@ -133,7 +134,10 @@ const UserTable = ({onUserAdditionButtonClick}) => {
                     displayedPagesCount={7}
                 />
                 }
-                <button className='btn btn-success ml-30' onClick={onUserAdditionButtonClick}>
+                <button
+                    className='btn btn-outline-success ml-30'
+                    onClick={onUserAdditionButtonClick}
+                >
                     <FontAwesomeIcon icon={faPlus}/>
                     &nbsp;
                     Добавить пользователя
@@ -256,7 +260,7 @@ PagesPagination.defaultProps = {
     displayedPagesCount: 7
 }
 
-const UserRegistrationForm = ({onFinish}) => {
+const UserRegistrationForm = ({onFinish, roles}) => {
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
@@ -265,7 +269,7 @@ const UserRegistrationForm = ({onFinish}) => {
     const [firstName, setFirstName] = useState('');
     const [patronymic, setPatronymic] = useState('');
     const [email, setEmail] = useState('');
-    const [role, setRole] = useState(`${Role.UNDEFINED}`);
+    const [role, setRole] = useState('');
 
     const handleSubmit = () => {
         const user = {
@@ -303,6 +307,8 @@ const UserRegistrationForm = ({onFinish}) => {
     const handleCancel = () => {
         onFinish();
     }
+
+    console.log(roles);
 
     return (
         <div className='half-screen'>
@@ -453,9 +459,11 @@ const UserRegistrationForm = ({onFinish}) => {
                             defaultValue='Тип пользователя'
                         >
                             <option selected hidden>Тип пользователя</option>
-                            <option value={`${Role.ADMINISTRATOR}`}>Администратор</option>
-                            <option value={`${Role.STAFF}`}>Сотрудник</option>
-                            <option value={`${Role.USER}`}>Пользователь</option>
+                            {roles.map((userRole, index) =>
+                                <option key={`roleOption${index}`} value={`${userRole.id}`}>
+                                    {userRole.name}
+                                </option>
+                            )}
                         </Form.Control>
                     </Col>
                 </Form.Group>

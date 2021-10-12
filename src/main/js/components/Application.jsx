@@ -18,6 +18,8 @@ const Application = () => {
         applicationStore.loadUser();
     }, []);
 
+    console.log(applicationStore.roles);
+
     return (
         <BrowserRouter>
             <div className='application'>
@@ -35,7 +37,7 @@ const Application = () => {
                             <UserProfile applicationStore = {applicationStore}/>
                         </Route>
                         <Route path="/administration">
-                            <Administration serverUrl = {applicationStore.serverUrl}/>
+                            <Administration applicationStore = {applicationStore}/>
                         </Route>
                         <Route path="*">
                             <Redirect to="/" />

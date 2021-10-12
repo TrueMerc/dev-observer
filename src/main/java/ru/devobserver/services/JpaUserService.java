@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.devobserver.dto.UserRegistrationDTO;
 import ru.devobserver.entities.User;
 import ru.devobserver.repositories.RoleRepository;
@@ -43,6 +44,7 @@ public class JpaUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public User save(UserRegistrationDTO data) {
         final User user = new User();
         user.setLogin(data.getLogin());
@@ -66,7 +68,7 @@ public class JpaUserService implements UserService {
 
     @Override
     public void delete(final Long id) {
-        throw new UnsupportedOperationException("This operation is unimplemented yet");
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -78,6 +80,4 @@ public class JpaUserService implements UserService {
     public List<User> findAllForPage(int pageNumber, int usersPerPage) {
         return userRepository.findAll(PageRequest.of(pageNumber, usersPerPage)).getContent();
     }
-
-
 }

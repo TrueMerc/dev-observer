@@ -12,6 +12,7 @@ export class ApplicationStore {
     videoStreamUrl = null;
     firmwareControllerUrl = null;
     user = null;
+    roles = [];
 
     constructor(serverUrl) {
         makeObservable(this, {
@@ -19,6 +20,7 @@ export class ApplicationStore {
             videoStreamUrl: observable,
             firmwareControllerUrl: observable,
             user: observable,
+            roles: observable,
             loadSettings: action,
             loadUser: action
         });
@@ -49,6 +51,7 @@ export class ApplicationStore {
             videoStreamServerUrl.port = json.videoStreamPort;
             this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
             runInAction(() => {
+                this.roles = json.roles;
                 this.isReady = true;
             })
         }).catch(error => {

@@ -31,7 +31,6 @@ export class User {
     }
 
     lastNameWithInitials() {
-        console.log(this);
         return this.lastName
         + (Strings.isNonEmptyString(this.firstName) ? (` ${this.firstName.at(0)}.` ) : '')
         + (Strings.isNonEmptyString(this.patronymic) ? (` ${this.patronymic.at(0)}.`) : '');

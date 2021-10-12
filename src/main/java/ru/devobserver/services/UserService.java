@@ -1,6 +1,6 @@
 package ru.devobserver.services;
 
-import ru.devobserver.dto.UserDTO;
+import ru.devobserver.dto.UserRegistrationDTO;
 import ru.devobserver.entities.User;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public interface UserService {
      * @param data user registration data
      * @return true if operation is successful and false in other case.
      */
-    User save(final UserDTO data);
+    User save(final UserRegistrationDTO data);
 
     /**
      * Removes user with given identifier.

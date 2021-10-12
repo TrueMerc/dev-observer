@@ -18,8 +18,6 @@ const Application = () => {
         applicationStore.loadUser();
     }, []);
 
-    console.log('Application server URL: ' + applicationStore.serverUrl);
-
     return (
         <BrowserRouter>
             <div className='application'>

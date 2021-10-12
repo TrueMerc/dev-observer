@@ -1,14 +1,13 @@
 package ru.devobserver.controllers;
 
 import org.hibernate.Hibernate;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.devobserver.dto.UserDTO;
+import ru.devobserver.dto.UserRegistrationDTO;
 import ru.devobserver.dto.UsersPageDTO;
 import ru.devobserver.entities.User;
 import ru.devobserver.services.UserService;
@@ -48,4 +47,12 @@ public class UserController {
                 .collect(Collectors.toList());
         return new UsersPageDTO(overallUsersCount, users);
     }
+
+    @PostMapping("/addUser")
+    @ResponseBody
+    @Secured("ROLE_ADMIN")
+    public void addUser(@RequestBody final UserRegistrationDTO registrationData) {
+        userService.save(registrationData);
+    }
+
 }

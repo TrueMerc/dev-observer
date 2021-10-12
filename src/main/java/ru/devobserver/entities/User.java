@@ -2,6 +2,8 @@ package ru.devobserver.entities;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.devobserver.dto.UserRegistrationDTO;
 
 import javax.persistence.*;
 import java.util.List;
@@ -37,9 +39,6 @@ public class User {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-
-//    @Column(name = "phone")
-//    private String phone;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(

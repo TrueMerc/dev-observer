@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Pagination, Tab, Table, Tabs} from "react-bootstrap";
+import {Button, Col, Form, Pagination, Row, Tab, Table, Tabs} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import "./Administration.css"
 import {Strings} from "../domain/Strings";
+import {Role} from "../domain/Role";
+
 
 
 export const Administration = (props) => {
@@ -32,6 +34,31 @@ export const Administration = (props) => {
 }
 
 const UserManagement = (props) => {
+    const Modes = Object.freeze({ UserTable: 0, UserRegistration: 1});
+
+    const [mode, switchToMode] = useState(Modes.UserTable);
+
+    const handleUserAdditionButtonClick = () => {
+        switchToMode(Modes.UserRegistration);
+    }
+
+    const handleUserAdditionFinish = () => {
+        switchToMode(Modes.UserTable);
+    }
+
+    return (
+        <div className='tab-content'>
+            {mode === Modes.UserTable &&
+            <UserTable onUserAdditionButtonClick={handleUserAdditionButtonClick}/>
+            }
+            {mode === Modes.UserRegistration &&
+            <UserRegistrationForm onFinish={handleUserAdditionFinish}/>
+            }
+        </div>
+    );
+}
+
+const UserTable = ({onUserAdditionButtonClick}) => {
     // const userPerPagePossibleValues = [20, 50];
     const userPerPagePossibleValues = [2, 5];
 
@@ -56,9 +83,8 @@ const UserManagement = (props) => {
                 throw new Error("Server have responded with status " + response.status);
             }
         }).then(json => {
-            console.log(json);
             setOverallUsersCount(json.overallUsersCount);
-            setUsers(json.users);
+            setUsers([...json.users]);
         }).catch(error => {
             console.error(error);
         });
@@ -79,7 +105,7 @@ const UserManagement = (props) => {
     const pagesCount = Math.floor(overallUsersCount / usersPerPage) + 1;
 
     return (
-        <div className='tab-content'>
+        <>
             <div className='user-management__control-panel'>
                 <UserCount
                     pageNumber={pageNumber}
@@ -107,7 +133,7 @@ const UserManagement = (props) => {
                     displayedPagesCount={7}
                 />
                 }
-                <button className='btn btn-success ml-30'>
+                <button className='btn btn-success ml-30' onClick={onUserAdditionButtonClick}>
                     <FontAwesomeIcon icon={faPlus}/>
                     &nbsp;
                     Добавить пользователя
@@ -118,13 +144,13 @@ const UserManagement = (props) => {
                 striped={true} bordered={true} hover={true}
             >
                 <thead className='user-management__user-table-header'>
-                    <tr>
-                        <th>Номер</th>
-                        <th>Фамилия, имя, отчество</th>
-                        <th>Пользователь</th>
-                        <th>E-mail</th>
-                        <th>Действия</th>
-                    </tr>
+                <tr>
+                    <th>Номер</th>
+                    <th>Фамилия, имя, отчество</th>
+                    <th>Пользователь</th>
+                    <th>E-mail</th>
+                    <th>Действия</th>
+                </tr>
                 </thead>
                 <tbody>
                 {users.map((user, index) =>
@@ -146,11 +172,15 @@ const UserManagement = (props) => {
                 )}
                 </tbody>
             </Table>
-        </div>
+        </>
     );
 }
 
-export const UserCount = ({pageNumber, usersPerPage, usersOnPageCount, overallUsersCount}) => {
+UserTable.propTypes = {
+    onUserAdditionButtonClick: PropTypes.func.isRequired
+}
+
+const UserCount = ({pageNumber, usersPerPage, usersOnPageCount, overallUsersCount}) => {
     const firstUserNumber = pageNumber * usersPerPage + 1;
     const lastUserNumber = firstUserNumber + usersOnPageCount - 1;
 
@@ -170,14 +200,13 @@ export const UserCount = ({pageNumber, usersPerPage, usersOnPageCount, overallUs
     );
 }
 
-export const PagesPagination = ({pageNumber, pagesCount, onPageNumberChange, displayedPagesCount, className}) => {
+const PagesPagination = ({pageNumber, pagesCount, onPageNumberChange, displayedPagesCount, className}) => {
 
     const center = Math.floor(displayedPagesCount / 2);
-    console.log(center);
     const pageInHead = pageNumber <= center;
     const pageInTail = (pagesCount - 1 - pageNumber) <= center;
 
-    let pageNumbers = [];
+    let pageNumbers;
     if(pagesCount <= displayedPagesCount) {
         pageNumbers = [...Array(pagesCount).keys()];
     } else if (pageInHead) {
@@ -189,13 +218,8 @@ export const PagesPagination = ({pageNumber, pagesCount, onPageNumberChange, dis
     } else {
         const centralPart = [...Array(displayedPagesCount - 2).keys()]
             .map((value, index) => (index + pageNumber - center + 1));
-        console.log('Central part');
-        console.log(centralPart);
         pageNumbers = [0, ...centralPart, pagesCount - 1];
     }
-
-    console.log('PageNumbers');
-    console.log(pageNumbers);
 
     return (
         <Pagination className={className}>
@@ -221,9 +245,229 @@ export const PagesPagination = ({pageNumber, pagesCount, onPageNumberChange, dis
 }
 
 PagesPagination.propTypes = {
-    pageNumber: PropTypes.number.isRequired
+    className: PropTypes.string,
+    pageNumber: PropTypes.number.isRequired,
+    pagesCount: PropTypes.number.isRequired,
+    onPageNumberChange: PropTypes.func.isRequired,
+    displayedPagesCount: PropTypes.number,
 }
 
 PagesPagination.defaultProps = {
     displayedPagesCount: 7
+}
+
+const UserRegistrationForm = ({onFinish}) => {
+
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [patronymic, setPatronymic] = useState('');
+    const [email, setEmail] = useState('');
+    const [role, setRole] = useState(`${Role.UNDEFINED}`);
+
+    const handleSubmit = () => {
+        const user = {
+            login: login,
+            password: password,
+            lastName: lastName,
+            firstName: firstName,
+            patronymic: patronymic,
+            email: email,
+            roleId: Number.parseInt(role)
+        }
+        console.log(user);
+        const url = `${window.location.origin}/users/addUser`
+        fetch(url, {
+            method: 'POST',
+            mode: 'same-origin',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        }).then(response => {
+            if(response.ok) {
+                console.log('User was registered successfully');
+                onFinish();
+            } else {
+                throw new Error('User registration error. Server responded with status ' + response.status)
+            }
+        }).catch(error => {
+            console.error(error);
+            onFinish();
+        });
+    }
+
+    const handleCancel = () => {
+        onFinish();
+    }
+
+    return (
+        <div className='half-screen'>
+            <Form onSubmit={handleSubmit} onReset={handleCancel}>
+                <Form.Group
+                    as={Row}
+                    className='mb-3'
+                    controlId='userRegistration.Login'
+                >
+                    <Form.Label
+                        column={true}
+                        lg={2}
+                    >
+                        Пользователь
+                    </Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            onChange={event => setLogin(event.target.value)}
+                            placeholder='Имя пользователя'
+                            value={login}
+                        />
+                    </Col>
+                </Form.Group>
+                <Form.Group
+                    as={Row}
+                    className='mb-3'
+                    controlId='userRegistration.Password'
+                >
+                    <Form.Label column={true} lg={2}>Пароль</Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            onChange={event => setPassword(event.target.value)}
+                            placeholder='Пароль'
+                            type='password'
+                            value={password}
+                        />
+                    </Col>
+                </Form.Group>
+                <Form.Group as={Row} className='mb-3' controlId='userRegistration.PasswordConfirmation'>
+                    <Form.Label
+                        column={true}
+                        lg={2}
+                    >
+                        Подтверждение пароля
+                    </Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            onChange={event => setPasswordConfirmation(event.target.value)}
+                            placeholder='Пароль'
+                            type='password'
+                            value={passwordConfirmation}
+                        />
+                    </Col>
+                </Form.Group>
+                <Form.Group
+                    as={Row}
+                    className='mb-3'
+                    controlId='userRegistration.LastName'
+                >
+                    <Form.Label
+                        column={true}
+                        lg={2}
+                    >
+                        Фамилия
+                    </Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            onChange={event => setLastName(event.target.value)}
+                            placeholder='Фамилия'
+                            value={lastName}
+                        />
+                    </Col>
+                </Form.Group>
+                <Form.Group
+                    as={Row}
+                    className='mb-3'
+                    controlId='userRegistration.FirstName'
+                >
+                    <Form.Label
+                        column={true}
+                        lg={2}
+                    >
+                        Имя
+                    </Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            onChange={event => setFirstName(event.target.value)}
+                            placeholder='Имя'
+                            value={firstName}
+                        />
+                    </Col>
+                </Form.Group>
+                <Form.Group
+                    as={Row}
+                    className='mb-3'
+                    controlId='userRegistration.Patronymic'
+                >
+                    <Form.Label
+                        column={true}
+                        lg={2}
+                    >
+                        Отчество
+                    </Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            onChange={event => setPatronymic(event.target.value)}
+                            placeholder='Отчество'
+                            value={patronymic}
+                        />
+                    </Col>
+                </Form.Group>
+                <Form.Group
+                    as={Row}
+                    className='mb-3'
+                    controlId='userRegistration.E-mail'
+                >
+                    <Form.Label
+                        column={true}
+                        lg={2}
+                    >
+                        E-Mail
+                    </Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            onChange={event => setEmail(event.target.value)}
+                            placeholder='E-Mail'
+                            type='email'
+                            value={email}
+                        />
+                    </Col>
+                </Form.Group>
+                <Form.Group
+                    as={Row}
+                    className='mb-3'
+                    controlId='userRegistration.Role'
+                >
+                    <Form.Label
+                        column={true}
+                        lg={2}
+                    >
+                        Тип пользователя
+                    </Form.Label>
+                    <Col lg={10}>
+                        <Form.Control
+                            as='select'
+                            value={role}
+                            onChange={event => setRole(event.target.value)}
+                            defaultValue='Тип пользователя'
+                        >
+                            <option selected hidden>Тип пользователя</option>
+                            <option value={`${Role.ADMINISTRATOR}`}>Администратор</option>
+                            <option value={`${Role.STAFF}`}>Сотрудник</option>
+                            <option value={`${Role.USER}`}>Пользователь</option>
+                        </Form.Control>
+                    </Col>
+                </Form.Group>
+                <div className='user-management__registration-form-buttons'>
+                    <Button variant='outline-success' type='submit'>
+                        Сохранить
+                    </Button>
+                    <Button className='ml-20' variant='outline-danger' type='reset'>
+                        Отмена
+                    </Button>
+                </div>
+            </Form>
+        </div>
+    );
 }

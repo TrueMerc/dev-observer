@@ -2,7 +2,11 @@ package ru.devobserver.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import org.hibernate.Hibernate;
+import ru.devobserver.entities.Role;
 import ru.devobserver.entities.User;
+
+import java.util.List;
 
 @Getter
 public class UserDTO {
@@ -12,6 +16,7 @@ public class UserDTO {
     private final String lastName;
     private final String patronymic;
     private final String email;
+    private final long roleId;
     @JsonProperty
     private final boolean isAdministrator;
 
@@ -22,6 +27,7 @@ public class UserDTO {
         this.lastName = user.getLastName();
         this.patronymic = user.getPatronymic();
         this.email = user.getEmail();
+        this.roleId = user.getRoles().get(0).getId();
         this.isAdministrator = user
                 .getRoles()
                 .stream()

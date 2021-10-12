@@ -8,7 +8,6 @@ import {Strings} from "../domain/Strings";
 import {observer} from "mobx-react";
 
 export const Administration = observer((props) => {
-    console.log(props.applicationStore.roles);
     return  (
         <div className='main-area'>
             <Tabs defaultActiveKey='userManagement'>
@@ -47,7 +46,10 @@ const UserManagement = (props) => {
     return (
         <div className='tab-content'>
             {mode === Modes.UserTable &&
-            <UserTable onUserAdditionButtonClick={handleUserAdditionButtonClick}/>
+            <UserTable
+                onUserAdditionButtonClick={handleUserAdditionButtonClick}
+                roles={props.roles}
+            />
             }
             {mode === Modes.UserRegistration &&
             <UserRegistrationForm
@@ -59,7 +61,7 @@ const UserManagement = (props) => {
     );
 }
 
-const UserTable = ({onUserAdditionButtonClick}) => {
+const UserTable = ({onUserAdditionButtonClick, roles}) => {
     // const userPerPagePossibleValues = [20, 50];
     const userPerPagePossibleValues = [2, 5];
 
@@ -152,6 +154,7 @@ const UserTable = ({onUserAdditionButtonClick}) => {
                     <th>Номер</th>
                     <th>Фамилия, имя, отчество</th>
                     <th>Пользователь</th>
+                    <th>Тип пользователя</th>
                     <th>E-mail</th>
                     <th>Действия</th>
                 </tr>
@@ -168,6 +171,9 @@ const UserTable = ({onUserAdditionButtonClick}) => {
                         </td>
                         <td>
                             {user.login}
+                        </td>
+                        <td>
+                            {(roles.find(role => role.id === user.roleId) || {}).name}
                         </td>
                         <td>
                             {user.email}

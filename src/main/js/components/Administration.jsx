@@ -18,7 +18,7 @@ export const Administration = observer(({applicationStore}) => {
                     eventKey='userManagement'
                     title='Управление пользователями'
                 >
-                    {isReady &&
+                    {isReady && administrator &&
                     <UserManagement
                         administrator={administrator}
                         roles={roles}
@@ -39,16 +39,25 @@ export const Administration = observer(({applicationStore}) => {
 });
 
 const UserManagement = ({roles, administrator}) => {
+
+    const [editedUser, setEditedUser] = useState(null);
+
     const Modes = Object.freeze({ UserTable: 0, UserRegistration: 1});
 
     const [mode, switchToMode] = useState(Modes.UserTable);
 
     const handleUserAdditionButtonClick = () => {
         switchToMode(Modes.UserRegistration);
+        setEditedUser(null)
     }
 
     const handleUserAdditionFinish = () => {
         switchToMode(Modes.UserTable);
+    }
+
+    const handleUserEdition = (user) => {
+        switchToMode(Modes.UserRegistration)
+        setEditedUser(user);
     }
 
     return (
@@ -56,21 +65,23 @@ const UserManagement = ({roles, administrator}) => {
             {mode === Modes.UserTable &&
             <UserTable
                 onUserAdditionButtonClick={handleUserAdditionButtonClick}
+                onUserEditing={handleUserEdition}
                 roles={roles}
                 administrator={administrator}
             />
             }
             {mode === Modes.UserRegistration &&
-            <UserRegistrationForm
+            <UserForm
                 onFinish={handleUserAdditionFinish}
                 roles={roles}
+                user={editedUser}
             />
             }
         </div>
     );
 }
 
-const UserTable = ({onUserAdditionButtonClick, roles, administrator}) => {
+const UserTable = ({onUserAdditionButtonClick, onUserEditing, roles, administrator}) => {
     // const userPerPagePossibleValues = [20, 50];
     const userPerPagePossibleValues = [2, 5];
 
@@ -215,7 +226,10 @@ const UserTable = ({onUserAdditionButtonClick, roles, administrator}) => {
                                     className='action-button'
                                     title='Редактировать'
                                 >
-                                    <button className='btn btn-outline-warning'>
+                                    <button
+                                        className='btn btn-outline-warning'
+                                        onClick={() => onUserEditing(user)}
+                                    >
                                         <FontAwesomeIcon icon={faUserEdit}/>
                                     </button>
                                 </Tooltip>
@@ -244,6 +258,7 @@ const UserTable = ({onUserAdditionButtonClick, roles, administrator}) => {
 
 UserTable.propTypes = {
     onUserAdditionButtonClick: PropTypes.func.isRequired,
+    onUserEditing: PropTypes.func.isRequired,
     roles: PropTypes.array.isRequired,
     administrator: PropTypes.object.isRequired
 }
@@ -324,19 +339,20 @@ PagesPagination.defaultProps = {
     displayedPagesCount: 7
 }
 
-const UserRegistrationForm = ({onFinish, roles}) => {
+const UserForm = ({onFinish, roles, user}) => {
 
-    const [login, setLogin] = useState('');
+    const [login, setLogin] = useState(user ? user.login : '');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [patronymic, setPatronymic] = useState('');
-    const [email, setEmail] = useState('');
-    const [role, setRole] = useState('');
+    const [lastName, setLastName] = useState(user ? user.lastName : '');
+    const [firstName, setFirstName] = useState(user ? user.firstName : '');
+    const [patronymic, setPatronymic] = useState(user ? user.patronymic : '');
+    const [email, setEmail] = useState(user ? user.email : '');
+    const [role, setRole] = useState(user ? `${user.roleId}` : '');
 
     const handleSubmit = () => {
-        const user = {
+        const newUser = {
+            id: user ? user.id : 0,
             login: login,
             password: password,
             lastName: lastName,
@@ -345,9 +361,29 @@ const UserRegistrationForm = ({onFinish, roles}) => {
             email: email,
             roleId: Number.parseInt(role)
         }
-        const url = `${window.location.origin}/users/addUser`
+
+        const url = user
+            ? `${window.location.origin}/users/updateUser`
+            : `${window.location.origin}/users/addUser`;
+
+        const method = user ? 'PUT' : 'POST';
+
+        const onSuccess = () => {
+            console.log("User was successfully " + user ? "updated" : "registered");
+            onFinish();
+        }
+
+        const onError = (error) => {
+            console.error((user ? "Registration" : "Update" ) + ` failed with error: ${error}`);
+            onFinish();
+        }
+
+        sendUser(url, newUser, method, onSuccess, onError);
+    }
+
+    const sendUser = (url, user, method, onSuccess, onError) => {
         fetch(url, {
-            method: 'POST',
+            method: method,
             mode: 'same-origin',
             credentials: 'same-origin',
             headers: {
@@ -356,22 +392,18 @@ const UserRegistrationForm = ({onFinish, roles}) => {
             body: JSON.stringify(user)
         }).then(response => {
             if(response.ok) {
-                console.log('User was registered successfully');
-                onFinish();
+                onSuccess();
             } else {
-                throw new Error('User registration error. Server responded with status ' + response.status)
+                throw new Error('Error. Server responded with status ' + response.status)
             }
         }).catch(error => {
-            console.error(error);
-            onFinish();
+            onError(error);
         });
     }
 
     const handleCancel = () => {
         onFinish();
     }
-
-    console.log(roles);
 
     return (
         <div className='half-screen'>

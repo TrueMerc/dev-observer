@@ -3,6 +3,7 @@ package ru.devobserver.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import ru.devobserver.entities.User;
 import ru.devobserver.repositories.RoleRepository;
 import ru.devobserver.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +23,14 @@ import java.util.stream.StreamSupport;
 public class JpaUserService implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public JpaUserService(final UserRepository userRepository, final RoleRepository roleRepository) {
+    public JpaUserService(
+            final UserRepository userRepository, final RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -46,20 +51,27 @@ public class JpaUserService implements UserService {
     @Override
     @Transactional
     public User save(UserRegistrationDTO data) {
-        final User user = new User();
+        final User user = userRepository.findById(data.getId()).orElse(new User());
         user.setLogin(data.getLogin());
-        user.setPassword(new BCryptPasswordEncoder().encode(data.getPassword()));
+        final String password = data.isNewUser()
+                ? data.getPassword()
+                : (data.getPassword().isEmpty() ? user.getPassword() : passwordEncoder.encode(data.getPassword()));
+        user.setPassword(password);
         user.setFirstName(data.getFirstName());
         user.setLastName(data.getLastName());
         user.setPatronymic(data.getPatronymic());
         user.setEmail(data.getEmail());
         user.setRoles(
-                Collections.singletonList(
-                        roleRepository
-                                .findById(data.getRoleId())
-                                .orElseThrow(
-                                        () -> new IllegalArgumentException("Undefined role with ID" + data.getRoleId())
-                                )
+                new ArrayList<>(
+                        Collections.singletonList(
+                                roleRepository
+                                        .findById(data.getRoleId())
+                                        .orElseThrow(
+                                                () -> new IllegalArgumentException(
+                                                        "Undefined role with ID" + data.getRoleId()
+                                                )
+                                        )
+                        )
                 )
         );
 
@@ -78,6 +90,6 @@ public class JpaUserService implements UserService {
 
     @Override
     public List<User> findAllForPage(int pageNumber, int usersPerPage) {
-        return userRepository.findAll(PageRequest.of(pageNumber, usersPerPage)).getContent();
+        return userRepository.findAll(PageRequest.of(pageNumber, usersPerPage, Sort.by("id"))).getContent();
     }
 }

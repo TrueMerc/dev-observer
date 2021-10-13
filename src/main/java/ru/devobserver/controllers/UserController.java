@@ -56,6 +56,13 @@ public class UserController {
         userService.save(registrationData);
     }
 
+    @PutMapping("/updateUser")
+    @ResponseBody
+    @Secured("ROLE_ADMIN")
+    public void updateUser(@RequestBody final UserRegistrationDTO registrationData) {
+        userService.save(registrationData);
+    }
+
     @DeleteMapping("/deleteUser/{userId}")
     @ResponseBody
     @Secured("ROLE_ADMIN")

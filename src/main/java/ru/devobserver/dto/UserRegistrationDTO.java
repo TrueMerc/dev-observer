@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @JsonDeserialize(builder = UserRegistrationDTO.Builder.class)
 public class UserRegistrationDTO {
+    private final long id;
     private final String login;
     private final String password;
     private final String lastName;
@@ -16,6 +17,7 @@ public class UserRegistrationDTO {
     private final long roleId;
 
     private UserRegistrationDTO(Builder builder) {
+        id = builder.getId();
         login = builder.getLogin();
         password = builder.getPassword();
         lastName = builder.getLastName();
@@ -25,9 +27,14 @@ public class UserRegistrationDTO {
         roleId = builder.getRoleId();
     }
 
+    public boolean isNewUser() {
+        return id == 0;
+    }
+
     @JsonPOJOBuilder
     @Getter
     public static class Builder {
+        private long id;
         private String login;
         private String password;
         private String lastName;
@@ -35,6 +42,11 @@ public class UserRegistrationDTO {
         private String patronymic;
         private String email;
         private int roleId;
+
+        Builder withId(final long id) {
+            this.id = id;
+            return this;
+        }
 
         Builder withLogin(final String login) {
             this.login = login;

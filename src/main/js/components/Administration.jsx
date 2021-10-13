@@ -462,6 +462,7 @@ const UserForm = ({onFinish, roles, user}) => {
                     </Form.Label>
                     <Col lg={10}>
                         <Form.Control
+                            autoFocus
                             onChange={event => setLogin(event.target.value)}
                             placeholder='Имя пользователя'
                             value={login}

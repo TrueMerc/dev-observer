@@ -54,7 +54,7 @@ public class JpaUserService implements UserService {
         final User user = userRepository.findById(data.getId()).orElse(new User());
         user.setLogin(data.getLogin());
         final String password = data.isNewUser()
-                ? data.getPassword()
+                ? passwordEncoder.encode(data.getPassword())
                 : (data.getPassword().isEmpty() ? user.getPassword() : passwordEncoder.encode(data.getPassword()));
         user.setPassword(password);
         user.setFirstName(data.getFirstName());
@@ -74,7 +74,6 @@ public class JpaUserService implements UserService {
                         )
                 )
         );
-
         return userRepository.save(user);
     }
 

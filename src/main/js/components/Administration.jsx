@@ -7,6 +7,7 @@ import "./Administration.css"
 import {Strings} from "../domain/Strings";
 import {observer} from "mobx-react";
 import {Tooltip} from "react-tippy";
+import FormContext from "react-bootstrap/FormContext";
 
 export const Administration = observer(({applicationStore}) => {
     const {user: administrator, roles, isReady} = applicationStore;
@@ -349,8 +350,44 @@ const UserForm = ({onFinish, roles, user}) => {
     const [patronymic, setPatronymic] = useState(user ? user.patronymic : '');
     const [email, setEmail] = useState(user ? user.email : '');
     const [role, setRole] = useState(user ? `${user.roleId}` : '');
+    const [errors, setErrors] = useState({});
+    const [validated, setValidated] = useState(false);
 
-    const handleSubmit = () => {
+    useEffect(() => {
+        setValidated(false);
+        setErrors({});
+    }, [login, password, passwordConfirmation, lastName, firstName, patronymic, email, role]);
+
+    const findErrors = () => {
+        const errors = {}
+        errors.emptyLogin = Strings.isEmptyString(login);
+        errors.emptyPassword = Strings.isEmptyString(password) && !user;
+        errors.passwordMismatch = password.localeCompare(passwordConfirmation) !== 0;
+        errors.emptyLastName = Strings.isEmptyString(lastName);
+        errors.role = !(roles.map(role => role.id).find(id => id === Number.parseInt(role)));
+        return errors;
+    }
+
+    const hasErrors = (errors) => {
+        for(let field in errors) {
+            if(errors[field]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        const errors = findErrors();
+        if (!form.checkValidity() || hasErrors(errors)) {
+            event.preventDefault();
+            event.stopPropagation();
+            setErrors(errors);
+            setValidated(true);
+            return;
+        }
+
         const newUser = {
             id: user ? user.id : 0,
             login: login,
@@ -407,7 +444,11 @@ const UserForm = ({onFinish, roles, user}) => {
 
     return (
         <div className='half-screen'>
-            <Form onSubmit={handleSubmit} onReset={handleCancel}>
+            <Form
+                noValidate
+                onSubmit={handleSubmit}
+                onReset={handleCancel}
+            >
                 <Form.Group
                     as={Row}
                     className='mb-3'
@@ -424,7 +465,12 @@ const UserForm = ({onFinish, roles, user}) => {
                             onChange={event => setLogin(event.target.value)}
                             placeholder='Имя пользователя'
                             value={login}
+                            isValid={validated && !errors.emptyLogin}
+                            isInvalid={errors.emptyLogin}
                         />
+                        <Form.Control.Feedback type='invalid'>
+                            Пожалуйста, укажите имя пользователя
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <Form.Group
@@ -439,7 +485,15 @@ const UserForm = ({onFinish, roles, user}) => {
                             placeholder='Пароль'
                             type='password'
                             value={password}
+                            isValid={validated && !errors.passwordMismatch && !errors.emptyPassword}
+                            isInvalid={errors.passwordMismatch || errors.emptyPassword}
                         />
+                        <Form.Control.Feedback type='invalid'>
+                            {errors.passwordMismatch
+                                ? 'Значания в полях \"Пароль\" и \"Подтверждение пароля\" не совпадают'
+                                : 'Пожалуйста, введите пароль'
+                            }
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className='mb-3' controlId='userRegistration.PasswordConfirmation'>
@@ -455,6 +509,8 @@ const UserForm = ({onFinish, roles, user}) => {
                             placeholder='Пароль'
                             type='password'
                             value={passwordConfirmation}
+                            isValid={validated && !errors.passwordMismatch && !errors.emptyPassword}
+                            isInvalid={errors.passwordMismatch || errors.emptyPassword}
                         />
                     </Col>
                 </Form.Group>
@@ -474,7 +530,12 @@ const UserForm = ({onFinish, roles, user}) => {
                             onChange={event => setLastName(event.target.value)}
                             placeholder='Фамилия'
                             value={lastName}
+                            isValid={validated && !errors.emptyLastName}
+                            isInvalid={errors.emptyLastName}
                         />
+                        <Form.Control.Feedback type='invalid'>
+                            Пожалуйста, укажите фамилию
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <Form.Group
@@ -493,6 +554,7 @@ const UserForm = ({onFinish, roles, user}) => {
                             onChange={event => setFirstName(event.target.value)}
                             placeholder='Имя'
                             value={firstName}
+                            isValid={validated}
                         />
                     </Col>
                 </Form.Group>
@@ -512,6 +574,7 @@ const UserForm = ({onFinish, roles, user}) => {
                             onChange={event => setPatronymic(event.target.value)}
                             placeholder='Отчество'
                             value={patronymic}
+                            isValid={validated}
                         />
                     </Col>
                 </Form.Group>
@@ -532,6 +595,7 @@ const UserForm = ({onFinish, roles, user}) => {
                             placeholder='E-Mail'
                             type='email'
                             value={email}
+                            isValid={validated}
                         />
                     </Col>
                 </Form.Group>
@@ -551,15 +615,19 @@ const UserForm = ({onFinish, roles, user}) => {
                             as='select'
                             value={role}
                             onChange={event => setRole(event.target.value)}
-                            defaultValue='Тип пользователя'
+                            isValid={validated && !errors.role}
+                            isInvalid={errors.role}
                         >
-                            <option selected hidden>Тип пользователя</option>
+                            <option value='' hidden>Тип пользователя</option>
                             {roles.map((userRole, index) =>
                                 <option key={`roleOption${index}`} value={`${userRole.id}`}>
                                     {userRole.name}
                                 </option>
                             )}
                         </Form.Control>
+                        <Form.Control.Feedback type='invalid'>
+                            Выберите тип пользователя
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <div className='user-management__registration-form-buttons'>

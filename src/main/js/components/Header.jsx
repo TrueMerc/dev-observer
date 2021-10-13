@@ -19,11 +19,13 @@ export class Header extends Component {
 
         return (
             <div className="header">
-                <img
-                    className='header__logo'
-                    src='./images/logo_mtuci_violet.png'
-                    onClick={() => { window.open('https://mtuci.ru'); } }
-                />
+                <Tooltip title='На сайт организации'>
+                    <img
+                        className='header__logo'
+                        src='./images/logo_mtuci_72x72.png'
+                        onClick={() => { window.open('https://mtuci.ru'); } }
+                    />
+                </Tooltip>
                 <div className="header__main-text">
                     МТУСИ&nbsp;УЛС-2021
                 </div>

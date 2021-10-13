@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Button, Col, Form, Pagination, Row, Tab, Table, Tabs} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faPlus, faUserEdit, faUserTimes} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import "./Administration.css"
 import {Strings} from "../domain/Strings";
 import {observer} from "mobx-react";
+import {Tooltip} from "react-tippy";
 
 export const Administration = observer((props) => {
     return  (
@@ -177,6 +178,26 @@ const UserTable = ({onUserAdditionButtonClick, roles}) => {
                         </td>
                         <td>
                             {user.email}
+                        </td>
+                        <td>
+                            <div className='user-management__user-table-action-buttons'>
+                                <Tooltip
+                                    className='action-button'
+                                    title='Редактировать'
+                                >
+                                    <button className='btn btn-outline-warning'>
+                                        <FontAwesomeIcon icon={faUserEdit}/>
+                                    </button>
+                                </Tooltip>
+                                <Tooltip
+                                    className='action-button'
+                                    title='Удалить'
+                                >
+                                    <button className='btn btn-outline-danger'>
+                                        <FontAwesomeIcon icon={faUserTimes}/>
+                                    </button>
+                                </Tooltip>
+                            </div>
                         </td>
                     </tr>
                 )}

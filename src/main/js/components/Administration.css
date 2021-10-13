@@ -31,6 +31,17 @@
     text-align: center;
 }
 
+.user-management__user-table-action-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.action-button {}
+
+.user-management__user-table-action-buttons .action-button:not(:first-child) {
+    margin-left: 20px!important;
+}
+
 .user-management__registration-form-buttons {
     margin-left: auto;
     margin-right: auto;

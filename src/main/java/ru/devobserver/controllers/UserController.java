@@ -38,6 +38,7 @@ public class UserController {
 
     @GetMapping("/forPage/{pageNumber}/{usersPerPage}")
     @ResponseBody
+    @Secured("ROLE_ADMIN")
     public UsersPageDTO getUsersPage(@PathVariable int pageNumber, @PathVariable int usersPerPage) {
         final long overallUsersCount = userService.getCount();
         final List<UserDTO> users = userService
@@ -55,4 +56,10 @@ public class UserController {
         userService.save(registrationData);
     }
 
+    @DeleteMapping("/deleteUser/{userId}")
+    @ResponseBody
+    @Secured("ROLE_ADMIN")
+    public void deleteUser(@PathVariable long userId) {
+        userService.delete(userId);
+    }
 }

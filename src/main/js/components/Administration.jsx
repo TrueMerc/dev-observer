@@ -8,7 +8,9 @@ import {Strings} from "../domain/Strings";
 import {observer} from "mobx-react";
 import {Tooltip} from "react-tippy";
 
-export const Administration = observer((props) => {
+export const Administration = observer(({applicationStore}) => {
+    const {user: administrator, roles} = applicationStore;
+
     return  (
         <div className='main-area'>
             <Tabs defaultActiveKey='userManagement'>
@@ -16,7 +18,10 @@ export const Administration = observer((props) => {
                     eventKey='userManagement'
                     title='Управление пользователями'
                 >
-                    <UserManagement roles={props.applicationStore.roles}/>
+                    <UserManagement
+                        administrator={administrator}
+                        roles={roles}
+                    />
                 </Tab>
                 <Tab
                     eventKey='deviceManagement'
@@ -31,7 +36,7 @@ export const Administration = observer((props) => {
     );
 });
 
-const UserManagement = (props) => {
+const UserManagement = ({roles, administrator}) => {
     const Modes = Object.freeze({ UserTable: 0, UserRegistration: 1});
 
     const [mode, switchToMode] = useState(Modes.UserTable);
@@ -49,20 +54,21 @@ const UserManagement = (props) => {
             {mode === Modes.UserTable &&
             <UserTable
                 onUserAdditionButtonClick={handleUserAdditionButtonClick}
-                roles={props.roles}
+                roles={roles}
+                administrator={administrator}
             />
             }
             {mode === Modes.UserRegistration &&
             <UserRegistrationForm
                 onFinish={handleUserAdditionFinish}
-                roles={props.roles}
+                roles={roles}
             />
             }
         </div>
     );
 }
 
-const UserTable = ({onUserAdditionButtonClick, roles}) => {
+const UserTable = ({onUserAdditionButtonClick, roles, administrator}) => {
     // const userPerPagePossibleValues = [20, 50];
     const userPerPagePossibleValues = [2, 5];
 
@@ -70,6 +76,18 @@ const UserTable = ({onUserAdditionButtonClick, roles}) => {
     const [usersPerPage, setUsersPerPage] = useState(userPerPagePossibleValues[0]);
     const [users, setUsers] = useState([]);
     const [overallUsersCount, setOverallUsersCount] = useState(0);
+
+    useEffect(() => {
+        getPageUsers(pageNumber, usersPerPage);
+    }, []);
+
+    useEffect(() => {
+        getPageUsers(pageNumber, usersPerPage);
+    }, [pageNumber, usersPerPage]);
+
+    useEffect(() => {
+        setPageNumber(0);
+    }, [usersPerPage]);
 
     const getPageUsers = (pageNumber, usersPerPage) => {
         const url = `${window.location.origin}/users/forPage/${pageNumber}/${usersPerPage}`;
@@ -94,17 +112,25 @@ const UserTable = ({onUserAdditionButtonClick, roles}) => {
         });
     }
 
-    useEffect(() => {
-        getPageUsers(pageNumber, usersPerPage);
-    }, []);
-
-    useEffect(() => {
-        getPageUsers(pageNumber, usersPerPage);
-    }, [pageNumber, usersPerPage]);
-
-    useEffect(() => {
-        setPageNumber(0);
-    }, [usersPerPage]);
+    const deleteUser = (user) => {
+        const url = `${window.location.origin}/users/deleteUser/${user.id}`;
+        fetch(url, {
+            method: 'DELETE',
+            mode: 'same-origin',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if(response.ok) {
+                getPageUsers(pageNumber, usersPerPage)
+            } else {
+                throw new Error(`Server have responded with status ${response.status}`)
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+    }
 
     const pagesCount = Math.floor(overallUsersCount / usersPerPage) + overallUsersCount % usersPerPage;
 
@@ -189,14 +215,19 @@ const UserTable = ({onUserAdditionButtonClick, roles}) => {
                                         <FontAwesomeIcon icon={faUserEdit}/>
                                     </button>
                                 </Tooltip>
+                                {user.id !== administrator.id &&
                                 <Tooltip
                                     className='action-button'
                                     title='Удалить'
                                 >
-                                    <button className='btn btn-outline-danger'>
+                                    <button
+                                        className='btn btn-outline-danger'
+                                        onClick={() => deleteUser(user)}
+                                    >
                                         <FontAwesomeIcon icon={faUserTimes}/>
                                     </button>
                                 </Tooltip>
+                                }
                             </div>
                         </td>
                     </tr>
@@ -208,7 +239,9 @@ const UserTable = ({onUserAdditionButtonClick, roles}) => {
 }
 
 UserTable.propTypes = {
-    onUserAdditionButtonClick: PropTypes.func.isRequired
+    onUserAdditionButtonClick: PropTypes.func.isRequired,
+    roles: PropTypes.array.isRequired,
+    administrator: PropTypes.object.isRequired
 }
 
 const UserCount = ({pageNumber, usersPerPage, usersOnPageCount, overallUsersCount}) => {
@@ -308,7 +341,6 @@ const UserRegistrationForm = ({onFinish, roles}) => {
             email: email,
             roleId: Number.parseInt(role)
         }
-        console.log(user);
         const url = `${window.location.origin}/users/addUser`
         fetch(url, {
             method: 'POST',

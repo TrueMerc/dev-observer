@@ -9,7 +9,7 @@ import {observer} from "mobx-react";
 import {Tooltip} from "react-tippy";
 
 export const Administration = observer(({applicationStore}) => {
-    const {user: administrator, roles} = applicationStore;
+    const {user: administrator, roles, isReady} = applicationStore;
 
     return  (
         <div className='main-area'>
@@ -18,10 +18,12 @@ export const Administration = observer(({applicationStore}) => {
                     eventKey='userManagement'
                     title='Управление пользователями'
                 >
+                    {isReady &&
                     <UserManagement
                         administrator={administrator}
                         roles={roles}
                     />
+                    }
                 </Tab>
                 <Tab
                     eventKey='deviceManagement'
@@ -143,17 +145,19 @@ const UserTable = ({onUserAdditionButtonClick, roles, administrator}) => {
                     usersOnPageCount={users.length}
                     overallUsersCount={overallUsersCount}
                 />
-                <Pagination className='ml-30 mb-0'>
-                    {userPerPagePossibleValues.map(value =>
-                        <Pagination.Item
-                            key={`pagesCountSelectionItem${value}`}
-                            active={usersPerPage === value}
-                            onClick={() => {setUsersPerPage(value)}}
-                        >
-                            {value}
-                        </Pagination.Item>
-                    )}
-                </Pagination>
+                <Tooltip title='Количество отображаемых пользователей'>
+                    <Pagination className='ml-30 mb-0'>
+                        {userPerPagePossibleValues.map(value =>
+                            <Pagination.Item
+                                key={`pagesCountSelectionItem${value}`}
+                                active={usersPerPage === value}
+                                onClick={() => {setUsersPerPage(value)}}
+                            >
+                                {value}
+                            </Pagination.Item>
+                        )}
+                    </Pagination>
+                </Tooltip>
                 {pagesCount > 1 &&
                 <PagesPagination
                     className='ml-30 mb-0'

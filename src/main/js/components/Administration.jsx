@@ -483,7 +483,7 @@ const UserForm = ({onFinish, roles, user}) => {
                     <Col lg={10}>
                         <Form.Control
                             onChange={event => setPassword(event.target.value)}
-                            placeholder='Пароль'
+                            placeholder={user ? 'Для изменения пароля введите новый пароль' : 'Пароль'}
                             type='password'
                             value={password}
                             isValid={validated && !errors.passwordMismatch && !errors.emptyPassword}
@@ -507,7 +507,7 @@ const UserForm = ({onFinish, roles, user}) => {
                     <Col lg={10}>
                         <Form.Control
                             onChange={event => setPasswordConfirmation(event.target.value)}
-                            placeholder='Пароль'
+                            placeholder='Подтверждение пароля'
                             type='password'
                             value={passwordConfirmation}
                             isValid={validated && !errors.passwordMismatch && !errors.emptyPassword}

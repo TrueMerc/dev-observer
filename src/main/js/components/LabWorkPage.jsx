@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import "./LabWorkPage.css";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faUpload} from "@fortawesome/free-solid-svg-icons";
 
 @observer
 export default class LabWorkPage extends Component {
@@ -101,12 +103,12 @@ class DeviceControls extends Component {
                     />
                 </div>
                 <button
-                    className="btn btn-success upload-button"
+                    className="btn btn-outline-success lab-work-page__upload-button"
                     onClick={this.handleUploadButtonClick}
                 >
-                    <span>
-                        Загрузить прошивку
-                    </span>
+                    <FontAwesomeIcon icon={faUpload}/>
+                    &nbsp;
+                    Загрузить прошивку
                 </button>
             </div>
         );

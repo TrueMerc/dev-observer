@@ -137,7 +137,11 @@ const UserTable = ({onUserAdditionButtonClick, onUserEditing, roles, administrat
             }
         }).then(response => {
             if(response.ok) {
-                getPageUsers(pageNumber, usersPerPage)
+                const newPageNumber = (users.length > 1) ? pageNumber : (pageNumber - 1);
+                if(newPageNumber !== pageNumber) {
+                    setPageNumber(newPageNumber);
+                }
+                getPageUsers(newPageNumber, usersPerPage);
             } else {
                 throw new Error(`Server have responded with status ${response.status}`)
             }

@@ -1,8 +1,12 @@
+html {
+    font-size: 14px;
+}
+
 .form-element {
     margin-left: auto;
     margin-top: 15px;
     margin-right: auto;
-    font-size: 28px;
+    font-size: 24px;
     width: 90%;
     display: flex;
 }
@@ -29,6 +33,7 @@
     font-size: 48px;
     font-weight: bold;
     padding-left: 20px;
+    padding-top: 20px;
 }
 
 .logo-violet {
@@ -36,6 +41,7 @@
 }
 
 .form-input {
+    font-size: 14px;
     margin-left: auto;
     width: 60%;
 }

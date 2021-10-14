@@ -18,6 +18,10 @@
     display: inline-block;
 }
 
+.header__link {
+    color: azure;
+}
+
 .header__link:visited {
     color: azure;
 }

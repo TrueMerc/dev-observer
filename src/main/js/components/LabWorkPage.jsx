@@ -3,10 +3,10 @@ import {observer} from "mobx-react";
 import "./LabWorkPage.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUpload} from "@fortawesome/free-solid-svg-icons";
+import {Message} from "../domain/Message";
 
 @observer
 export default class LabWorkPage extends Component {
-
     constructor(props) {
         super(props);
     }
@@ -35,6 +35,9 @@ export default class LabWorkPage extends Component {
 class DeviceControls extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            messages: []
+        }
     }
 
     handleUploadButtonClick = () => {
@@ -66,15 +69,18 @@ class DeviceControls extends Component {
             body: requestBody,
         }).then(response => {
             if (response.ok) {
-                console.log(response);
+                this.addMessage('Прошивка успешно загружена');
             } else {
                 console.warn("Response status: " + response.status);
                 if (response.status === 400) {
                     console.error("Неверный формат файла");
+                    this.addMessage('Неверный формат файла', 'ОШИБКА:');
                 } else if (response.status === 417) {
                     console.error("Превышен максимальный размер файла");
+                    this.addMessage('Превышен максимальный размер файла', 'ОШИБКА:');
                 } else if (response.status === 500) {
                     console.error("Ошибка при загрузке файла");
+                    this.addMessage('Ошибка при загрузке файла', 'ОШИБКА:');
                 }
             }
             return response.text();
@@ -83,6 +89,11 @@ class DeviceControls extends Component {
         }).catch(error => {
             console.error(error);
         });
+    }
+
+    addMessage = (messageText, prefix) => {
+        const message = new Message(messageText, prefix);
+        this.setState({messages: this.state.messages.concat(message)});
     }
 
     render() {
@@ -100,6 +111,7 @@ class DeviceControls extends Component {
                         className='w-100'
                         rows={10}
                         readOnly={true}
+                        value={this.state.messages.map(message => `${message.toLocaleString()}`).join('\n')}
                     />
                 </div>
                 <button

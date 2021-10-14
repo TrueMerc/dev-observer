@@ -4,6 +4,7 @@ import "./LabWorkPage.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Message} from "../domain/Message";
+import {FirmwareQueue} from "./FirmwareQueue.jsx";
 
 @observer
 export default class LabWorkPage extends Component {
@@ -101,6 +102,7 @@ class DeviceControls extends Component {
 
         return (
             <div className="video-player-bar">
+                <FirmwareQueue firmwareControllerUrl={this.props.firmwareUrl}/>
                 <video className="video-player" controls={true} poster={poster}>
                     <source src={this.props.videoStreamUrl} type="video/ogg"/>
                     Ваш браузер не поддерживает видео в формате HTML5

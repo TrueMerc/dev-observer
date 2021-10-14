@@ -10,9 +10,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 15px;
 }
 
 .video-player {
+    margin-top: 15px;
     width: 90%;
     height: auto;
     background-size: 90%;

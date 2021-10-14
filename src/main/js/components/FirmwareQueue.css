@@ -1,0 +1,10 @@
+.firmware-queue {
+    width: 90%;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-around;
+}
+
+.firmware-queue span {
+    display: block;
+}

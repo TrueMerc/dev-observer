@@ -13,21 +13,21 @@ public interface UserService {
 
     /**
      * Returns overall users count.
-     * @return
+     * @return Overall users count.
      */
     long getCount();
 
     /**
      * Returns user with given identifier if user exists.
      * @param id user identifier.
-     * @return user with given identifier.
+     * @return User with given identifier.
      */
     Optional<User> findById(Long id);
 
     /**
      * Returns user with given login if user exists.
-     * @param login
-     * @return
+     * @param login user login.
+     * @return User with given login if user exists.
      */
     Optional<User> findByLogin(final String login);
 
@@ -46,13 +46,21 @@ public interface UserService {
 
     /**
      * Returns the list of all users.
-     * @return the list of all users.
+     * @return The list of all users.
      */
     List<User> findAll();
 
     /**
-     * Returns the list of all users for given page.
-     * @return the list of all users for given page.
+     * Returns The list of all users for given page.
+     * @param pageNumber number of page.
+     * @param usersPerPage number of users that are displayed on this page.
+     * @return The list of all users for given page.
      */
     List<User> findAllForPage(final int pageNumber, final int usersPerPage);
+
+    /**
+     * Returns user for current authorized user.
+     * @return User for current authorized user.
+     */
+    User currentUser();
 }

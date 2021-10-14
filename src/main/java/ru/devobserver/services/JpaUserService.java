@@ -4,6 +4,7 @@ package ru.devobserver.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,5 +91,12 @@ public class JpaUserService implements UserService {
     @Override
     public List<User> findAllForPage(int pageNumber, int usersPerPage) {
         return userRepository.findAll(PageRequest.of(pageNumber, usersPerPage, Sort.by("id"))).getContent();
+    }
+
+    @Override
+    public User currentUser() {
+        return userRepository
+                .findByLogin(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new IllegalStateException("Authenticated user doesn't exist in database."));
     }
 }

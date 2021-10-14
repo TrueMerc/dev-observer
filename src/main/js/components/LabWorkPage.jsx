@@ -103,7 +103,7 @@ class DeviceControls extends Component {
                     />
                 </div>
                 <button
-                    className="btn btn-outline-success lab-work-page__upload-button"
+                    className="btn btn-outline-success upload-button"
                     onClick={this.handleUploadButtonClick}
                 >
                     <FontAwesomeIcon icon={faUpload}/>

@@ -4,6 +4,7 @@ import {faSignOutAlt, faUserCircle} from "@fortawesome/free-solid-svg-icons";
 import {Tooltip} from "react-tippy";
 import {observer} from "mobx-react";
 import {Link} from "react-router-dom";
+import "./Header.css";
 
 @observer
 export class Header extends Component {

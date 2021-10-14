@@ -5,6 +5,10 @@ html {
   font-size: 14px;
 }
 
+html:root {
+  scrollbar-width: none !important
+}
+
 html::-webkit-scrollbar {
   display: none;
 }

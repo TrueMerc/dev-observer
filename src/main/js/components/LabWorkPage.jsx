@@ -20,10 +20,12 @@ export default class LabWorkPage extends Component {
         return (
             <div className='device-page'>
                 <div className="half-screen">
+                    {this.props.applicationStore.isReady &&
                     <DeviceControls
                         videoStreamUrl={videoStreamUrl}
                         firmwareUrl={firmwareControllerUrl}
                     />
+                    }
                 </div>
                 <div className="half-screen">
                     <Description/>

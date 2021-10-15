@@ -2,11 +2,12 @@ package ru.devobserver.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.devobserver.configurations.ApplicationProperties;
+import ru.devobserver.domain.FirmwareQueueState;
+import ru.devobserver.domain.FirmwareStatus;
 import ru.devobserver.entities.Firmware;
 import ru.devobserver.entities.FirmwareQueueItem;
 import ru.devobserver.entities.User;
@@ -16,8 +17,6 @@ import ru.devobserver.services.exceptions.FirmwareServiceException;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.security.Principal;
-import java.util.Optional;
 
 @Service
 public class DefaultFirmwareService implements FirmwareService {
@@ -65,5 +64,21 @@ public class DefaultFirmwareService implements FirmwareService {
 
     private String getFirmwareFileName(final User user, final long userFirmwareCount) {
         return String.format("firmware_%d_%d.bit", user.getId(), userFirmwareCount + 1);
+    }
+
+    @Override
+    @Transactional
+    public FirmwareQueueState getFirmwareQueueState() {
+        final User currentUser = userService.currentUser();
+        final long queueSize = firmwareQueue.countAllByStatusNot(FirmwareStatus.PROCESSED);
+        final String activeFirmwareName = firmwareRepository
+                .findByStatus(FirmwareStatus.ACTIVE)
+                .map(Firmware::getName)
+                .orElse("");
+        final long itemsBeforeFirstUserFirmware = firmwareQueue.itemsBeforeUserFirstFirmware(currentUser.getId());
+        final boolean hasUnprocessedFirmware = firmwareRepository.existsByAuthorAndStatusNot(
+                currentUser, FirmwareStatus.PROCESSED
+        );
+        return new FirmwareQueueState(activeFirmwareName, queueSize, itemsBeforeFirstUserFirmware, hasUnprocessedFirmware);
     }
 }

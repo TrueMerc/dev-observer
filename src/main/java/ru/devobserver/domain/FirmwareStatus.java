@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 public enum FirmwareStatus {
     UNDEFINED((short)0),
     WAITING((short)1),
-    IN_PROGRESS((short)2),
+    ACTIVE((short)2),
     PROCESSED((short)3);
 
     private final short value;

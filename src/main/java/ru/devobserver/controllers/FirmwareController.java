@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.devobserver.domain.FirmwareQueueState;
 import ru.devobserver.services.FirmwareService;
 import ru.devobserver.services.exceptions.FirmwareServiceException;
 
@@ -34,5 +35,11 @@ public class FirmwareController {
         } catch (FirmwareServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/queueState")
+    @ResponseBody
+    public FirmwareQueueState getQueueState() {
+        return firmwareService.getFirmwareQueueState();
     }
 }

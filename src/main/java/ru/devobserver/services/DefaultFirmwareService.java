@@ -4,6 +4,7 @@ package ru.devobserver.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.devobserver.configurations.ApplicationProperties;
 import ru.devobserver.entities.Firmware;
@@ -32,7 +33,7 @@ public class DefaultFirmwareService implements FirmwareService {
             final UserService userService,
             final FirmwareRepository firmwareRepository,
             final FirmwareQueue firmwareQueue
-            ) {
+    ) {
         this.applicationProperties = applicationProperties;
         this.userService = userService;
         this.firmwareRepository = firmwareRepository;
@@ -40,6 +41,7 @@ public class DefaultFirmwareService implements FirmwareService {
     }
 
     @Override
+    @Transactional
     public void upload(MultipartFile file) {
         try {
             final String firmwareFolderName = applicationProperties.getFirmwareFolder();

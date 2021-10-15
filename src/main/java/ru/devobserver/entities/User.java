@@ -57,6 +57,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Long.valueOf(id).hashCode();
     }
 }

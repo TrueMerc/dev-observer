@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import ru.devobserver.domain.FirmwareStatus;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -49,6 +50,6 @@ public class Firmware {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Long.valueOf(id).hashCode();
     }
 }

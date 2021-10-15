@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
-import ru.devobserver.repositories.FirmwareQueue;
 
 import javax.persistence.*;
 import java.util.Objects;
+
+import ru.devobserver.domain.FirmwareStatus;
 
 @Entity
 @Table(name="firmware_queue")
@@ -17,8 +18,6 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 public class FirmwareQueueItem {
-
-    private static final int DEFAULT_FIRMWARE_STATUS_ID = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,15 +28,16 @@ public class FirmwareQueueItem {
     @JoinColumn(name="firmware_id", nullable = false)
     private Firmware firmware;
 
-    @ManyToOne
-    @JoinColumn(name="status", nullable = false)
-    private FirmwareProcessingStatus status;
+    @Column(name="status", nullable = false)
+    private FirmwareStatus status;
 
+    /**
+     * Creates new firmware execution queue item.
+     * @param firmware firmware.
+     */
     public FirmwareQueueItem(final Firmware firmware) {
         this.firmware = firmware;
-        final FirmwareProcessingStatus status = new FirmwareProcessingStatus();
-        status.setId(DEFAULT_FIRMWARE_STATUS_ID);
-        this.status = status;
+        this.status = FirmwareStatus.WAITING;
     }
 
     @Override
@@ -50,6 +50,6 @@ public class FirmwareQueueItem {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Long.valueOf(id).hashCode();
     }
 }

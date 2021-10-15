@@ -15,11 +15,12 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class FirmwareProcessingStatus {
+public class FirmwareStatusDescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "id")
+    private char id;
 
     @Column(name = "name")
     private String name;
@@ -34,12 +35,12 @@ public class FirmwareProcessingStatus {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        final FirmwareProcessingStatus status = (FirmwareProcessingStatus) o;
+        final FirmwareStatusDescription status = (FirmwareStatusDescription) o;
         return Objects.equals(id, status.id);
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return id;
     }
 }

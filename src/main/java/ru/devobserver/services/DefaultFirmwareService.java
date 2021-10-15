@@ -17,11 +17,14 @@ import ru.devobserver.repositories.FirmwareQueue;
 import ru.devobserver.repositories.FirmwareRepository;
 import ru.devobserver.services.exceptions.FirmwareServiceException;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
 @Service
 public class DefaultFirmwareService implements FirmwareService {
+
+    private static final int NORMAL_EXECUTION_CODE = 0;
 
     private final ApplicationProperties applicationProperties;
     private final UserService userService;
@@ -88,18 +91,39 @@ public class DefaultFirmwareService implements FirmwareService {
 
     @Override
     @Async
-    @Scheduled(fixedDelay = 15000)
+    @Scheduled(fixedDelay = 60000)
     public void executeNextFirmware() {
         firmwareQueue.findFirstByStatusOrderById(FirmwareStatus.WAITING).ifPresent(firmwareQueueItem -> {
-            firmwareQueueItem.setStatus(FirmwareStatus.ACTIVE);
-            firmwareQueue.save(firmwareQueueItem);
+            final String firmwareName = firmwareQueueItem.getFirmware().getName();
+            final String firmwarePath = applicationProperties.getFirmwareFolder() + "/" + firmwareName;
+            final ProcessBuilder processBuilder = new ProcessBuilder(
+                    applicationProperties.getScriptPath(), firmwarePath
+            );
+            final String scriptWorkingDirectory = applicationProperties.getScriptWorkingDirectory();
+            if (scriptWorkingDirectory != null && !scriptWorkingDirectory.isEmpty()) {
+                final File file = new File(scriptWorkingDirectory);
+                if (!file.exists()) {
+                    throw new IllegalArgumentException("Script working directory doesn't exist");
+                }
+                processBuilder.directory(new File(scriptWorkingDirectory));
+            }
             try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
+                final Process process = processBuilder.start();
+                final int returnCode = process.waitFor();
+                if(returnCode == NORMAL_EXECUTION_CODE) {
+                    firmwareQueueItem.setStatus(FirmwareStatus.ACTIVE);
+                    firmwareQueue.save(firmwareQueueItem);
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    firmwareQueueItem.setStatus(FirmwareStatus.PROCESSED);
+                    firmwareQueue.save(firmwareQueueItem);
+                }
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-            firmwareQueueItem.setStatus(FirmwareStatus.PROCESSED);
-            firmwareQueue.save(firmwareQueueItem);
         });
     }
 }

@@ -8,6 +8,8 @@ public class ApplicationProperties {
     private String firmwareControllerUrl;
     private String videoStreamUrl;
     private int videoStreamPort;
+    private String scriptPath;
+    private String scriptWorkingDirectory;
 
     public String getFirmwareFolder() {
         return firmwareFolder;
@@ -39,5 +41,21 @@ public class ApplicationProperties {
 
     public void setVideoStreamPort(int videoStreamPort) {
         this.videoStreamPort = videoStreamPort;
+    }
+
+    public String getScriptPath() {
+        return scriptPath;
+    }
+
+    public void setScriptPath(String scriptPath) {
+        this.scriptPath = scriptPath;
+    }
+
+    public String getScriptWorkingDirectory() {
+        return scriptWorkingDirectory;
+    }
+
+    public void setScriptWorkingDirectory(String scriptWorkingDirectory) {
+        this.scriptWorkingDirectory = scriptWorkingDirectory;
     }
 }

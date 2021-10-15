@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ru.devobserver.domain.FirmwareStatus;
-import ru.devobserver.entities.Firmware;
 import ru.devobserver.entities.FirmwareQueueItem;
 
 import java.util.Optional;
@@ -21,4 +20,6 @@ public interface FirmwareQueue extends CrudRepository<FirmwareQueueItem, Long> {
             "JOIN firmware_files ff on ff.id = fq.firmware_id " +
             "WHERE ff.author_id = ?1 AND fq.status <> 3)", nativeQuery = true)
     long itemsBeforeUserFirstFirmware(long userId);
+
+    Optional<FirmwareQueueItem> findFirstByStatusOrderById(FirmwareStatus status);
 }

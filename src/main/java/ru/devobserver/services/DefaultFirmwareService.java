@@ -2,6 +2,8 @@ package ru.devobserver.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -79,6 +81,25 @@ public class DefaultFirmwareService implements FirmwareService {
         final boolean hasUnprocessedFirmware = firmwareRepository.existsByAuthorAndStatusNot(
                 currentUser, FirmwareStatus.PROCESSED
         );
-        return new FirmwareQueueState(activeFirmwareName, queueSize, itemsBeforeFirstUserFirmware, hasUnprocessedFirmware);
+        return new FirmwareQueueState(
+                activeFirmwareName, queueSize, itemsBeforeFirstUserFirmware, hasUnprocessedFirmware
+        );
+    }
+
+    @Override
+    @Async
+    @Scheduled(fixedDelay = 15000)
+    public void executeNextFirmware() {
+        firmwareQueue.findFirstByStatusOrderById(FirmwareStatus.WAITING).ifPresent(firmwareQueueItem -> {
+            firmwareQueueItem.setStatus(FirmwareStatus.ACTIVE);
+            firmwareQueue.save(firmwareQueueItem);
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            firmwareQueueItem.setStatus(FirmwareStatus.PROCESSED);
+            firmwareQueue.save(firmwareQueueItem);
+        });
     }
 }

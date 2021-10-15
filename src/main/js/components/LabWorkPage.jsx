@@ -35,6 +35,7 @@ export default class LabWorkPage extends Component {
     }
 }
 
+@observer
 class DeviceControls extends Component {
     constructor(props) {
         super(props);

@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface FirmwareRepository extends CrudRepository<Firmware, Long> {
     long countAllByAuthor(User user);
 
-    @Query("SELECT DISTINCT f FROM FirmwareQueueItem qi JOIN qi.firmware f WHERE qi.status = ?1")
+    @Query("SELECT f FROM FirmwareQueueItem qi JOIN qi.firmware f WHERE qi.status = ?1 ORDER BY qi.id")
     Optional<Firmware> findByStatus(FirmwareStatus status);
 
     @Query("SELECT (case when count(f) > 0  then true else false end) " +

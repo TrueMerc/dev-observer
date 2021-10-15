@@ -7,4 +7,6 @@ public interface FirmwareService {
     void upload(MultipartFile file);
 
     FirmwareQueueState getFirmwareQueueState();
+
+    void executeNextFirmware();
 }

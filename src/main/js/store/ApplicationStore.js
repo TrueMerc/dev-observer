@@ -9,8 +9,8 @@ export class ApplicationStore {
     settingsUrl = 'settings';
     usersUrl = 'users';
     currentUserUrl = `${this.usersUrl}/currentUser`;
-    videoStreamUrl = null;
-    firmwareControllerUrl = null;
+    videoStreamUrl = 'stream';
+    firmwareControllerUrl = 'firmware';
     user = null;
     roles = [];
 
@@ -46,11 +46,11 @@ export class ApplicationStore {
                 throw new Error(`Can't download application settings: server responded with code ${response.status}`);
             }
         }).then(json => {
-            this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
-            const videoStreamServerUrl = this.serverUrl;
-            videoStreamServerUrl.port = json.videoStreamPort;
-            this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
             runInAction(() => {
+                this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
+                const videoStreamServerUrl = this.serverUrl;
+                videoStreamServerUrl.port = 8081;
+                this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
                 this.roles = json.roles;
                 this.isReady = true;
             })

@@ -106,7 +106,7 @@ class DeviceControls extends Component {
         return (
             <div className="video-player-bar">
                 <FirmwareQueue firmwareControllerUrl={this.props.firmwareUrl}/>
-                <video className="video-player" controls={true} poster={poster}>
+                <video className="video-player" autoPlay={true} controls={false} poster={poster} muted={true}>
                     <source src={this.props.videoStreamUrl} type="video/ogg"/>
                     Ваш браузер не поддерживает видео в формате HTML5
                 </video>

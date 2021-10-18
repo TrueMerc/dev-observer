@@ -1,0 +1,50 @@
+.tab-content {
+    margin: 10px;
+    display: block;
+}
+
+.user-management__control-panel {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.user-management__user-count {
+    min-width: 400px;
+}
+
+.user-management__user-count span {
+    font-size: 24px;
+    font-weight: bold;
+    color: slategray;
+}
+
+.user-management__user-table {
+    margin-top: 30px;
+}
+
+.form-input:disabled {
+    color:#6c757d!important;
+}
+
+.user-management__user-table-header {
+    text-align: center;
+}
+
+.user-management__user-table-action-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.action-button {}
+
+.user-management__user-table-action-buttons .action-button:not(:first-child) {
+    margin-left: 20px!important;
+}
+
+.user-management__registration-form-buttons {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+}

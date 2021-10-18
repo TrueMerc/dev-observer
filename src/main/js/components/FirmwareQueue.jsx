@@ -5,7 +5,6 @@ import {Strings} from "../domain/Strings";
 
 export const FirmwareQueue = observer(({firmwareControllerUrl}) => {
     const updatePeriodInMs = 1000;
-    const url = `${firmwareControllerUrl}/queueState`;
 
     const [activeFirmwareName, setActiveFirmwareName] = useState('\u2014');
     const [length, setLength] = useState(0);
@@ -14,7 +13,7 @@ export const FirmwareQueue = observer(({firmwareControllerUrl}) => {
 
     useEffect(() => {
         updateState();
-    });
+    }, []);
 
     useEffect(() => {
         const id = setInterval(() => {
@@ -24,6 +23,8 @@ export const FirmwareQueue = observer(({firmwareControllerUrl}) => {
     }, []);
 
     const updateState = () => {
+        const url = `${firmwareControllerUrl}/queueState`;
+        console.log(url);
         fetch(url, {
             method: 'GET',
             mode: 'same-origin',

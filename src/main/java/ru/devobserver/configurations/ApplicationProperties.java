@@ -1,11 +1,14 @@
 package ru.devobserver.configurations;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("application")
 public class ApplicationProperties {
     private String firmwareFolder;
     private String firmwareControllerUrl;
+    @Value("${spring.http.multipart.max-file-size}")
+    private String firmwareMaxFileSize;
     private String videoStreamUrl;
     private int videoStreamPort;
     private String scriptPath;
@@ -57,5 +60,13 @@ public class ApplicationProperties {
 
     public void setScriptWorkingDirectory(String scriptWorkingDirectory) {
         this.scriptWorkingDirectory = scriptWorkingDirectory;
+    }
+
+    public String getFirmwareMaxFileSize() {
+        return firmwareMaxFileSize;
+    }
+
+    public void setFirmwareMaxFileSize(String firmwareMaxFileSize) {
+        this.firmwareMaxFileSize = firmwareMaxFileSize;
     }
 }

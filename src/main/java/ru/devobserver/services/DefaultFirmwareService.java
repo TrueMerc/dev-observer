@@ -15,7 +15,7 @@ import ru.devobserver.entities.FirmwareQueueItem;
 import ru.devobserver.entities.User;
 import ru.devobserver.repositories.FirmwareQueue;
 import ru.devobserver.repositories.FirmwareRepository;
-import ru.devobserver.services.exceptions.FirmwareServiceException;
+import ru.devobserver.exceptions.FirmwareServiceException;
 
 import java.io.File;
 import java.io.IOException;

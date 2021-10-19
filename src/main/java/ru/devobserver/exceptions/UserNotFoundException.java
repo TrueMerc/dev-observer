@@ -1,4 +1,4 @@
-package ru.devobserver.services.exceptions;
+package ru.devobserver.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {

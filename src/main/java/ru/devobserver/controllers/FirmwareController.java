@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.devobserver.domain.FirmwareQueueState;
 import ru.devobserver.services.FirmwareService;
-import ru.devobserver.services.exceptions.FirmwareServiceException;
+import ru.devobserver.exceptions.FirmwareServiceException;
 
 @Controller
 @RequestMapping("/firmware")

@@ -1,4 +1,4 @@
-package ru.devobserver.services.exceptions;
+package ru.devobserver.exceptions;
 
 public class FirmwareServiceException extends RuntimeException {
     public FirmwareServiceException() {

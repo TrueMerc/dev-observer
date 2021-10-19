@@ -11,6 +11,7 @@ export class ApplicationStore {
     currentUserUrl = `${this.usersUrl}/currentUser`;
     videoStreamUrl = 'stream';
     firmwareControllerUrl = 'firmware';
+    maxFirmwareSize = '';
     user = null;
     roles = [];
 
@@ -21,6 +22,7 @@ export class ApplicationStore {
             firmwareControllerUrl: observable,
             user: observable,
             roles: observable,
+            maxFirmwareSize: observable,
             loadSettings: action,
             loadUser: action
         });
@@ -46,12 +48,14 @@ export class ApplicationStore {
                 throw new Error(`Can't download application settings: server responded with code ${response.status}`);
             }
         }).then(json => {
+            console.log(json.maxUploadedFileSize);
             runInAction(() => {
                 this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
                 const videoStreamServerUrl = this.serverUrl;
                 videoStreamServerUrl.port = 8081;
                 this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
                 this.roles = json.roles;
+                this.maxFirmwareSize = json.maxUploadedFileSize;
                 this.isReady = true;
             })
         }).catch(error => {

@@ -46,7 +46,7 @@ public class DefaultFirmwareService implements FirmwareService {
 
     @Override
     @Transactional
-    public void upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
         try {
             final String firmwareFolderName = applicationProperties.getFirmwareFolder();
             final User currentUser = userService.currentUser();
@@ -62,6 +62,7 @@ public class DefaultFirmwareService implements FirmwareService {
             firmware.setAuthor(currentUser);
             final Firmware registeredFirmware = firmwareRepository.save(firmware);
             firmwareQueue.save(new FirmwareQueueItem(registeredFirmware));
+            return fileName;
         } catch (IOException e) {
             throw new FirmwareServiceException("Can't save uploaded file", e);
         }

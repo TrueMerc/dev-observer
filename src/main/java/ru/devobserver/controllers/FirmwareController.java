@@ -30,8 +30,7 @@ public class FirmwareController {
     @ResponseBody
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
         try {
-            firmwareService.upload(file);
-            return ResponseEntity.ok("OK");
+            return ResponseEntity.ok(firmwareService.upload(file));
         } catch (FirmwareServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

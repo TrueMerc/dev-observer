@@ -73,7 +73,7 @@ class DeviceControls extends Component {
             body: requestBody,
         }).then(response => {
             if (response.ok) {
-                this.addMessage('Прошивка успешно загружена');
+                return response.text();
             } else {
                 console.warn("Response status: " + response.status);
                 if (response.status === 400) {
@@ -90,6 +90,7 @@ class DeviceControls extends Component {
             return response.text();
         }).then(text => {
             console.log(text);
+            this.addMessage(`Прошивка успешно загружена. Идентификатор прошивки: ${text}`);
         }).catch(error => {
             console.error(error);
         });

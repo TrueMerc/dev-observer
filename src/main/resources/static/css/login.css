@@ -47,18 +47,43 @@ html {
 }
 
 .submit-button {
-    display: block;
+    display: block!important;
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
-    background-color: #28166f;
-    width: 200px;
-    height: 50px;
-    border: 0;
-    color: #ffffff;
-    font-size: 20px;
-    border-radius: 10px;
+    color: #28166f!important;
+    border-color: #28166f!important;
+    /*width: 200px;*/
+    /*height: 50px;*/
+    /*border: 0;*/
+    /*color: #ffffff;*/
+    /*font-size: 20px;*/
+    /*border-radius: 10px;*/
 }
+
+.submit-button:visited {
+    color: #28166f!important;
+    border-color: #28166f!important;
+    box-shadow: 0 0 0 .2rem #4B34A3FF!important;
+}
+
+.submit-button:focus {
+    background-color: #28166f!important;
+    color: white!important;
+    box-shadow: 0 0 0 .2rem #4B34A3FF!important;
+}
+
+.submit-button:hover {
+    background-color: #28166f !important;
+    color: white !important;
+}
+
+
+/*.submit-button:active {*/
+/*    color: #28166f!important;*/
+/*    border-color: #28166f!important;*/
+/*    box-shadow: 0 0 0 .2rem #4B34A3FF!important;*/
+/*}*/
 
 .logo-error-text {
     padding: 20px;

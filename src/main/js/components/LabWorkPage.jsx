@@ -16,7 +16,7 @@ export default class LabWorkPage extends Component {
         if(!this.props.applicationStore.isReady) {
             return null;
         }
-        const { videoStreamUrl, firmwareControllerUrl } = this.props.applicationStore;
+        const { videoStreamUrl, firmwareControllerUrl, maxFirmwareSize } = this.props.applicationStore;
         return (
             <div className='device-page'>
                 <div className="half-screen">
@@ -24,6 +24,7 @@ export default class LabWorkPage extends Component {
                     <DeviceControls
                         videoStreamUrl={videoStreamUrl}
                         firmwareUrl={firmwareControllerUrl}
+                        maxFirmwareSize={maxFirmwareSize}
                     />
                     }
                 </div>
@@ -55,41 +56,41 @@ class DeviceControls extends Component {
     }
 
     handleFirmwareUpload = (files) => {
-        console.log(files);
-
         if(files.length !== 1) {
             console.error("You should upload only one file!");
+            this.addMessage("Для загрузки допустим выбор только одного файла");
         }
 
         const requestBody = new FormData();
         const file = files[0];
         requestBody.append('file', file, file.name);
-        console.log(this.props.firmwareUrl);
         const uploadUrl = new URL('upload', this.props.firmwareUrl);
-        console.log(uploadUrl);
         fetch(`${this.props.firmwareUrl}/upload`, {
             method: 'POST',
             credentials: 'same-origin',
             body: requestBody,
         }).then(response => {
             if (response.ok) {
-                this.addMessage('Прошивка успешно загружена');
+                return response.text();
             } else {
-                console.warn("Response status: " + response.status);
                 if (response.status === 400) {
-                    console.error("Неверный формат файла");
                     this.addMessage('Неверный формат файла', 'ОШИБКА:');
+                    throw new Error("Неверный формат файла");
                 } else if (response.status === 417) {
-                    console.error("Превышен максимальный размер файла");
-                    this.addMessage('Превышен максимальный размер файла', 'ОШИБКА:');
+                    const maxSize = this.convertFileSize(this.props.maxFirmwareSize);
+                    const maxSizeLimitString = `(максимальный допустимый размер файла: ${maxSize})`;
+                    const text = 'Превышен максимальный размер файла ' + maxSizeLimitString;
+                    this.addMessage(text,'ОШИБКА:');
+                    throw new Error("Превышен максимальный размер файла");
                 } else if (response.status === 500) {
-                    console.error("Ошибка при загрузке файла");
                     this.addMessage('Ошибка при загрузке файла', 'ОШИБКА:');
+                    throw new Error("Ошибка при загрузке файла");
                 }
             }
             return response.text();
         }).then(text => {
             console.log(text);
+            this.addMessage(`Прошивка успешно загружена. Идентификатор прошивки: ${text}`);
         }).catch(error => {
             console.error(error);
         });
@@ -98,6 +99,13 @@ class DeviceControls extends Component {
     addMessage = (messageText, prefix) => {
         const message = new Message(messageText, prefix);
         this.setState({messages: this.state.messages.concat(message)});
+    }
+
+    convertFileSize = (fileSizeString) => {
+        const unitsTranslation = { B: 'Б', KB: 'КБ', MB: 'МБ', GB: 'ГБ' };
+        const size = fileSizeString.match(/\d+/)[0];
+        const sizeUnits = fileSizeString.match(/\D+/)[0];
+        return `${size} ${unitsTranslation[sizeUnits]}`;
     }
 
     render() {

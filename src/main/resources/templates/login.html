@@ -13,6 +13,7 @@
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
           crossorigin="anonymous"
     >
+    <script src="https://kit.fontawesome.com/3da44372c1.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div th:if="${param.logout}">
@@ -20,7 +21,6 @@
 </div>
 <div class="login-block">
     <div class="logo-part">
-
         <img src="../static/images/logo_mtuci.png"
              th:src="@{/images/logo_mtuci.png}"
              alt="Логотип"
@@ -43,7 +43,9 @@
             </label>
             <input class="form-input" type="password" name="password"/>
         </div>
-        <button class="submit-button">
+        <button class="btn btn-outline-primary btn-lg submit-button">
+            <i class="fas fa-sign-in-alt"></i>
+            &nbsp;
             Войти
         </button>
         <div th:if="${param.error}" class="logo-error-text">
@@ -51,6 +53,5 @@
         </div>
     </form>
 </div>
-
 </body>
 </html>

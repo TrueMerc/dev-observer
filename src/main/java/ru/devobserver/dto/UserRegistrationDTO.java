@@ -32,6 +32,7 @@ public class UserRegistrationDTO {
     }
 
     @JsonPOJOBuilder
+    @SuppressWarnings("unused")
     @Getter
     public static class Builder {
         private long id;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.devobserver.domain.FirmwareQueueState;
 import ru.devobserver.services.FirmwareService;
-import ru.devobserver.services.exceptions.FirmwareServiceException;
+import ru.devobserver.exceptions.FirmwareServiceException;
 
 @Controller
 @RequestMapping("/firmware")
@@ -30,8 +30,7 @@ public class FirmwareController {
     @ResponseBody
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
         try {
-            firmwareService.upload(file);
-            return ResponseEntity.ok("OK");
+            return ResponseEntity.ok(firmwareService.upload(file));
         } catch (FirmwareServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

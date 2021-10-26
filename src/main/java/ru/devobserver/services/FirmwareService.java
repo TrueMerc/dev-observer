@@ -4,7 +4,12 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.devobserver.domain.FirmwareQueueState;
 
 public interface FirmwareService {
-    void upload(MultipartFile file);
+    /**
+     * Uploads file to server's drive and returns name that is automatically assigned to file.
+     * @param file uploaded file.
+     * @return Name that is automatically assigned to file.
+     */
+    String upload(MultipartFile file);
 
     FirmwareQueueState getFirmwareQueueState();
 

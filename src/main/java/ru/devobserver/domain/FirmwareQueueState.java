@@ -10,7 +10,7 @@ public class FirmwareQueueState {
     private final String activeFirmwareName;
     private final long size;
     private final long itemsBefore;
-    private boolean hasUnprocessedFirmware;
+    private final boolean hasUnprocessedFirmware;
 
     public FirmwareQueueState(String activeFirmwareName, long size, long itemsBefore, boolean hasUnprocessedFirmware) {
         this.activeFirmwareName = activeFirmwareName;

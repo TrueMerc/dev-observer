@@ -1,6 +1,8 @@
 package ru.devobserver.services;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +17,7 @@ import ru.devobserver.entities.FirmwareQueueItem;
 import ru.devobserver.entities.User;
 import ru.devobserver.repositories.FirmwareQueue;
 import ru.devobserver.repositories.FirmwareRepository;
-import ru.devobserver.services.exceptions.FirmwareServiceException;
+import ru.devobserver.exceptions.FirmwareServiceException;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,8 @@ import java.nio.file.Path;
 
 @Service
 public class DefaultFirmwareService implements FirmwareService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFirmwareService.class);
 
     private static final int NORMAL_EXECUTION_CODE = 0;
 
@@ -46,7 +50,7 @@ public class DefaultFirmwareService implements FirmwareService {
 
     @Override
     @Transactional
-    public void upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
         try {
             final String firmwareFolderName = applicationProperties.getFirmwareFolder();
             final User currentUser = userService.currentUser();
@@ -62,7 +66,9 @@ public class DefaultFirmwareService implements FirmwareService {
             firmware.setAuthor(currentUser);
             final Firmware registeredFirmware = firmwareRepository.save(firmware);
             firmwareQueue.save(new FirmwareQueueItem(registeredFirmware));
+            return fileName;
         } catch (IOException e) {
+            LOGGER.error("Exception caught when uploading file", e);
             throw new FirmwareServiceException("Can't save uploaded file", e);
         }
     }
@@ -113,16 +119,12 @@ public class DefaultFirmwareService implements FirmwareService {
                 if(returnCode == NORMAL_EXECUTION_CODE) {
                     firmwareQueueItem.setStatus(FirmwareStatus.ACTIVE);
                     firmwareQueue.save(firmwareQueueItem);
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(10000);
                     firmwareQueueItem.setStatus(FirmwareStatus.PROCESSED);
                     firmwareQueue.save(firmwareQueueItem);
                 }
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.error("Can't execute firmware " + firmwareName, e);
             }
         });
     }

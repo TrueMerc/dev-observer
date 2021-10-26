@@ -50,6 +50,6 @@ public class FirmwareQueueItem {
 
     @Override
     public int hashCode() {
-        return Long.valueOf(id).hashCode();
+        return id.hashCode();
     }
 }

@@ -1,6 +1,8 @@
 package ru.devobserver.services;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,6 +25,8 @@ import java.nio.file.Path;
 
 @Service
 public class DefaultFirmwareService implements FirmwareService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFirmwareService.class);
 
     private static final int NORMAL_EXECUTION_CODE = 0;
 
@@ -64,6 +68,7 @@ public class DefaultFirmwareService implements FirmwareService {
             firmwareQueue.save(new FirmwareQueueItem(registeredFirmware));
             return fileName;
         } catch (IOException e) {
+            LOGGER.error("Exception caught when uploading file", e);
             throw new FirmwareServiceException("Can't save uploaded file", e);
         }
     }

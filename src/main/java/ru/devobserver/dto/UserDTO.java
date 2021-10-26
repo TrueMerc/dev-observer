@@ -2,11 +2,7 @@ package ru.devobserver.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.hibernate.Hibernate;
-import ru.devobserver.entities.Role;
 import ru.devobserver.entities.User;
-
-import java.util.List;
 
 @Getter
 public class UserDTO {

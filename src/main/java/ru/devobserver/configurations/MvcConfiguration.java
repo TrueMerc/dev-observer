@@ -37,9 +37,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Bean
     public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> containerCustomizer() {
-        return container -> {
-            container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND,
-                    "/notFound"));
-        };
+        return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND,"/notFound"));
     }
 }

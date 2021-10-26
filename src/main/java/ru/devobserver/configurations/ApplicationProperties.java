@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
     private String firmwareFolder;
     private String firmwareControllerUrl;
-    @Value("${spring.http.multipart.max-file-size}")
+    @Value("${spring.servlet.multipart.max-file-size}")
     private String firmwareMaxFileSize;
     private String videoStreamUrl;
     private int videoStreamPort;

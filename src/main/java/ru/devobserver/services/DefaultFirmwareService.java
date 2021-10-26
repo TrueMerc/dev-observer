@@ -119,16 +119,12 @@ public class DefaultFirmwareService implements FirmwareService {
                 if(returnCode == NORMAL_EXECUTION_CODE) {
                     firmwareQueueItem.setStatus(FirmwareStatus.ACTIVE);
                     firmwareQueue.save(firmwareQueueItem);
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(10000);
                     firmwareQueueItem.setStatus(FirmwareStatus.PROCESSED);
                     firmwareQueue.save(firmwareQueueItem);
                 }
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.error("Can't execute firmware " + firmwareName, e);
             }
         });
     }

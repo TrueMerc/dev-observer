@@ -1,6 +1,7 @@
 import React from "react";
 import {makeObservable, observable, action, runInAction} from "mobx";
 import {User} from "../domain/User";
+import "regenerator-runtime/runtime";
 
 export class ApplicationStore {
 
@@ -9,7 +10,7 @@ export class ApplicationStore {
     settingsUrl = 'settings';
     usersUrl = 'users';
     currentUserUrl = `${this.usersUrl}/currentUser`;
-    videoStreamUrl = 'stream';
+    videoStreamUrl = '';
     firmwareControllerUrl = 'firmware';
     maxFirmwareSize = '';
     user = null;
@@ -23,6 +24,7 @@ export class ApplicationStore {
             user: observable,
             roles: observable,
             maxFirmwareSize: observable,
+            load: action,
             loadSettings: action,
             loadUser: action
         });
@@ -32,9 +34,20 @@ export class ApplicationStore {
         this.currentUserUrl = new URL(this.currentUserUrl, serverUrl);
     }
 
-    loadSettings() {
+    load() {
         this.isReady = false;
-        fetch(`${this.settingsUrl}`, {
+        this.loadSettings().then(() => {
+            this.loadUser().then(() => {
+                runInAction(() => {
+                    console.log("Uploading completed.");
+                    this.isReady = true;
+                })
+            })
+        });
+    }
+
+    async loadSettings() {
+        await fetch(`${this.settingsUrl}`, {
             method: 'GET',
             mode: 'same-origin',
             credentials: 'same-origin',
@@ -48,7 +61,6 @@ export class ApplicationStore {
                 throw new Error(`Can't download application settings: server responded with code ${response.status}`);
             }
         }).then(json => {
-            console.log(json.maxUploadedFileSize);
             runInAction(() => {
                 this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
                 const videoStreamServerUrl = this.serverUrl;
@@ -57,15 +69,15 @@ export class ApplicationStore {
                 this.roles = json.roles;
                 this.maxFirmwareSize = json.maxUploadedFileSize;
                 this.isReady = true;
+                console.log('Settings are loaded');
             })
         }).catch(error => {
             console.error(error);
         });
     }
 
-    loadUser() {
-        this.isReady = false;
-        fetch(`${this.currentUserUrl}`, {
+    async loadUser() {
+        await fetch(`${this.currentUserUrl}`, {
             method: 'GET',
             mode: 'same-origin',
             credentials: 'same-origin',
@@ -82,6 +94,7 @@ export class ApplicationStore {
             runInAction(() => {
                 this.user = new User(json);
                 this.isReady = true;
+                console.log('User is loaded');
             });
         }).catch(error => {
             console.error(error);

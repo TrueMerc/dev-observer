@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import {observer} from "mobx-react";
 import LabWorkPage from "./LabWorkPage.jsx";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import {Header} from "./Header.jsx";
@@ -14,8 +13,7 @@ const Application = () => {
     const applicationStore = new ApplicationStore(Object.assign(window.location.origin));
 
     useEffect(() => {
-        applicationStore.loadSettings();
-        applicationStore.loadUser();
+        applicationStore.load();
     }, []);
 
     console.log(applicationStore.roles);

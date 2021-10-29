@@ -23,7 +23,7 @@ public class VlcJVideoStreamService implements VideoStreamService {
         final String media = "v4l2:///dev/video0";
         final String[] options = {
                 ":sout=#transcode{" +
-                        "vcodec=VP80,vb=8192,scale=1,acodec=vorb," +
+                        "vcodec=VP80,vb=2048,scale=1,acodec=vorb," +
                         "ab=128," +
                         "channels=2," +
                         "samplerate=44100," +

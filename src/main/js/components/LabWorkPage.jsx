@@ -5,6 +5,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Message} from "../domain/Message";
 import {FirmwareQueue} from "./FirmwareQueue.jsx";
+import VideoJS from "video.js";
+import "video.js/dist/video-js.css";
 
 @observer
 export default class LabWorkPage extends Component {

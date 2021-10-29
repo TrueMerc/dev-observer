@@ -112,12 +112,14 @@ class DeviceControls extends Component {
 
     render() {
         const poster = "./images/video-stream-play.png";
+        console.log("Stream URL");
+        console.log(this.props.videoStreamUrl);
 
         return (
             <div className="video-player-bar">
                 <FirmwareQueue firmwareControllerUrl={this.props.firmwareUrl}/>
                 <video className="video-player" autoPlay={true} controls={false} poster={poster} muted={true}>
-                    <source src={this.props.videoStreamUrl} type="video/ogg"/>
+                    <source src={this.props.videoStreamUrl} type="video/webm"/>
                     Ваш браузер не поддерживает видео в формате HTML5
                 </video>
                 <div className='log-area'>

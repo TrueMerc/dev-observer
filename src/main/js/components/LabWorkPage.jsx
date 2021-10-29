@@ -25,6 +25,7 @@ export default class LabWorkPage extends Component {
                         videoStreamUrl={videoStreamUrl}
                         firmwareUrl={firmwareControllerUrl}
                         maxFirmwareSize={maxFirmwareSize}
+                        isVideoReady={this.props.applicationStore.isReady}
                     />
                     }
                 </div>
@@ -110,12 +111,17 @@ class DeviceControls extends Component {
 
     render() {
         const poster = "./images/video-stream-play.png";
+        console.log("Stream URL");
+        console.log(this.props.videoStreamUrl);
+        console.log(this.props.isVideoReady);
 
         return (
             <div className="video-player-bar">
                 <FirmwareQueue firmwareControllerUrl={this.props.firmwareUrl}/>
                 <video className="video-player" autoPlay={true} controls={false} poster={poster} muted={true}>
-                    <source src={this.props.videoStreamUrl} type="video/ogg"/>
+                    {this.props.isVideoReady &&
+                    <source src={this.props.videoStreamUrl} type="video/webm"/>
+                    }
                     Ваш браузер не поддерживает видео в формате HTML5
                 </video>
                 <div className='log-area'>

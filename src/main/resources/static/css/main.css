@@ -149,6 +149,10 @@ body {
   color: inherit;
 }
 
+.white-spaces__break-spaces {
+  white-space: break-spaces;
+}
+
 
 
 

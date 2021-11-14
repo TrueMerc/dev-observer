@@ -36,6 +36,7 @@
 
 .description__table-element {
     border: 1px solid black;
+    white-space: break-spaces;
 }
 
 .center-aligned {
@@ -52,6 +53,11 @@
 
 .description-list:not(:last-child) {
     margin-bottom: 5px;
+    white-space: break-spaces;
+}
+
+.variant-table__table-header {
+    text-align: center;
 }
 
 

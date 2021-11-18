@@ -182,19 +182,6 @@ class Description extends Component {
             "для составления отчета."
         ];
 
-        // const labWorkVariants = [
-        //     "D1 мигает, D2 и D3 потушены",
-        //     "D1 и D2 мигают синхронно, D2 потушен",
-        //     "D1, D2 и D3 мигают синхронно",
-        //     "D1 горит, D2 и D3 мигают синхронно",
-        //     "D1 и D2 горят постоянно, D3 мигает",
-        //     "D1, D2 и D3 горят постоянно",
-        //     "D1 потушен, D2 и D3 мигают асинхронно",
-        //     "D3 горит постоянно, D1 мигает, D2 потушен",
-        //     "D1 мигает, D2 и D3 горят постоянно",
-        //     "D1 и D2 мигают асинхронно, D3 потушен"
-        // ];
-
         return (
             <div className='w-100'>
                 <div className='w-100 description__header'>
@@ -221,33 +208,6 @@ class Description extends Component {
                             </li>
                         ))}
                     </ol>
-                    {/*<label>*/}
-                    {/*    <b>Варианты заданий</b>*/}
-                    {/*</label>*/}
-                    {/*<table className='description__table'>*/}
-                    {/*    <thead>*/}
-                    {/*    <tr>*/}
-                    {/*        <th className='description__table-element wp-100 variant-table__table-header'>*/}
-                    {/*            <b>Вариант</b>*/}
-                    {/*        </th>*/}
-                    {/*        <th className='description__table-element variant-table__table-header'>*/}
-                    {/*            <b>Режим работ светодиодов</b>*/}
-                    {/*        </th>*/}
-                    {/*    </tr>*/}
-                    {/*    </thead>*/}
-                    {/*    <tbody>*/}
-                    {/*    {labWorkVariants.map((variant, index) => (*/}
-                    {/*        <tr>*/}
-                    {/*            <td className='description__table-element center-aligned'>*/}
-                    {/*                {index + 1}*/}
-                    {/*            </td>*/}
-                    {/*            <td className='description__table-element pl-5'>*/}
-                    {/*                {variant}*/}
-                    {/*            </td>*/}
-                    {/*        </tr>*/}
-                    {/*    ))}*/}
-                    {/*    </tbody>*/}
-                    {/*</table>*/}
                 </div>
             </div>
         );

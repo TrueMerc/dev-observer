@@ -36,7 +36,7 @@ export class DeviceDescription extends Component {
                     </p>
                 </div>
                 <div className='picture-block '>
-                    <img className='picture' src='./images/board.png'/>
+                    <img className='picture' src='./images/board_480_400.png'/>
                 </div>
             </div>
         );

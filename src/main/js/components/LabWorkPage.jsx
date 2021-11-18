@@ -164,7 +164,7 @@ class Description extends Component {
             "Скопируйте папку ULS_LAB1_dynamic_indication (из комплекта материалов) в рабочий каталог. " +
             "Путь к каталогу не должен содержать русских символов.",
             "Создайте проект dynamic_indication в папке ULS_LAB1_dynamic_indication при помощи системы " +
-            "автоматизированного проектирования Xilinx ISE Web Pack (см. методические указания пункт 1).",
+            "автоматизированного проектирования Xilinx ISE Web Pack (см.\u00A0методические указания пункт 1).",
             "Из папки ULS_LAB1_dynamic_indication добавьте в проект модули:\n" +
             "debounce.vhd, multiple_driver_x2.vhd, top.vhd, UART_RX.vhd.",
             "Создайте модуль счётчика тактовых импульсов с названием counter, который понадобится для реализации счёта "
@@ -209,6 +209,7 @@ class Description extends Component {
                         ))}
                     </ol>
                 </div>
+
             </div>
         );
     }

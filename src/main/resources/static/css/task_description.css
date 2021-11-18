@@ -15,12 +15,13 @@
 .description__execution-order {
     margin-top: 15px;
     width: 100%;
+    text-align: justify;
 }
 
 .description__execution-order-text {
     width: 100%;
     border: none;
-    white-space: pre-wrap;
+    white-space: break-spaces;
     resize: none;
     overflow: auto;
     background-color: #f8f8f8;
@@ -49,6 +50,10 @@
 
 .pl-5 {
     padding-left: 5px;
+}
+
+.description-list:first-child {
+    margin-top: 5px;
 }
 
 .description-list:not(:last-child) {

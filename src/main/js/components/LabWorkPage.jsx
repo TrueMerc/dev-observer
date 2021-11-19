@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {observer} from "mobx-react";
 import "./LabWorkPage.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faUpload} from "@fortawesome/free-solid-svg-icons";
+import {faDownload, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Message} from "../domain/Message";
 import {FirmwareQueue} from "./FirmwareQueue.jsx";
 
@@ -16,7 +16,9 @@ export default class LabWorkPage extends Component {
         if(!this.props.applicationStore.isReady) {
             return null;
         }
-        const { videoStreamUrl, firmwareControllerUrl, maxFirmwareSize } = this.props.applicationStore;
+        const {
+            videoStreamUrl, firmwareControllerUrl, maxFirmwareSize, labWorksControllerUrl
+        } = this.props.applicationStore;
         return (
             <div className='device-page'>
                 <div className="half-screen">
@@ -30,7 +32,11 @@ export default class LabWorkPage extends Component {
                     }
                 </div>
                 <div className="half-screen">
-                    <Description/>
+                    {this.props.applicationStore.isReady &&
+                    <Description
+                        labWorksControllerUrl={labWorksControllerUrl}
+                    />
+                    }
                 </div>
             </div>
         );
@@ -146,9 +152,50 @@ class DeviceControls extends Component {
     }
 }
 
+@observer
 class Description extends Component {
     constructor(props) {
         super(props);
+    }
+
+    handleDownloadButtonClick = () => {
+        console.log(this.props.labWorksControllerUrl);
+        fetch(`${this.props.labWorksControllerUrl}/download`, {
+            method: "GET",
+            mode: "same-origin",
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/x-octet-stream'
+            }
+        }).then(response => {
+            if(response.ok) {
+                console.log(response);
+                return response.blob();
+            } else {
+                throw new Error('Server responded with status ' + response.status);
+            }
+        }).then(blob => {
+            // Maybe, it would rather use FileSaver.js or StreamSaver.js instead of this code.
+            console.log(blob);
+            const url = window.URL.createObjectURL(
+                new Blob([blob], {type: 'octet/stream'})
+            );
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download','file');
+
+            // Append to html link element page
+            document.body.appendChild(link);
+
+            // Start download
+            link.click();
+
+            // Clean up and remove the link
+            window.URL.revokeObjectURL(url);
+        }).catch(error => {
+            console.error(error);
+        });
     }
 
     render() {
@@ -183,7 +230,7 @@ class Description extends Component {
         ];
 
         return (
-            <div className='w-100'>
+            <div className='lab-description'>
                 <div className='w-100 description__header'>
                     <h2 className='mt-0 white-spaces__break-spaces'>
                         {labWorkName}
@@ -209,7 +256,14 @@ class Description extends Component {
                         ))}
                     </ol>
                 </div>
-
+                <button
+                    className="btn btn-outline-primary download-button"
+                    onClick={this.handleDownloadButtonClick}
+                >
+                    <FontAwesomeIcon icon={faDownload}/>
+                    &nbsp;
+                    Скачать материалы
+                </button>
             </div>
         );
     }

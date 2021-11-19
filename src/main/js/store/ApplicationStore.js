@@ -12,6 +12,7 @@ export class ApplicationStore {
     currentUserUrl = `${this.usersUrl}/currentUser`;
     videoStreamUrl = '';
     firmwareControllerUrl = 'firmware';
+    labWorksControllerUrl = 'labWorks';
     maxFirmwareSize = '';
     user = null;
     roles = [];
@@ -21,6 +22,7 @@ export class ApplicationStore {
             isReady: observable,
             videoStreamUrl: observable,
             firmwareControllerUrl: observable,
+            labWorksControllerUrl: observable,
             user: observable,
             roles: observable,
             maxFirmwareSize: observable,
@@ -63,6 +65,7 @@ export class ApplicationStore {
         }).then(json => {
             runInAction(() => {
                 this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
+                this.labWorksControllerUrl = new URL(this.labWorksControllerUrl, this.serverUrl);
                 const videoStreamServerUrl = this.serverUrl;
                 videoStreamServerUrl.port = 8081;
                 this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);

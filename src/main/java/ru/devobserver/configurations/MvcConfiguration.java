@@ -32,8 +32,8 @@ public class MvcConfiguration implements WebMvcConfigurer {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/index").setViewName("index");
         registry.addViewController("/").setViewName("index");
-        registry.addViewController("/labs/*").setViewName("index");
-        registry.addViewController("/notFound").setViewName("forward:index");
+        registry.addViewController("/labs**").setViewName("redirect:/");
+        registry.addViewController("/notFound").setViewName("redirect:/");
     }
 
     @Bean

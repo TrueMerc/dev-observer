@@ -5,8 +5,11 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import ru.devobserver.configurations.ApplicationProperties;
 import ru.devobserver.entities.Laboratory;
+import ru.devobserver.entities.projections.LaboratoryIdentifierAndName;
 import ru.devobserver.exceptions.LaboratoryException;
 import ru.devobserver.repositories.LaboratoryRepository;
+
+import java.util.List;
 
 @Service
 public class DefaultLaboratoryService implements LaboratoryService {
@@ -42,5 +45,10 @@ public class DefaultLaboratoryService implements LaboratoryService {
                 .orElseThrow(() -> new LaboratoryException("Can't find file name for laboratory with ID " + id));
         final String filePath = applicationProperties.getLaboratoriesFolder() + "/" + fileName;
         return new FileSystemResource(filePath);
+    }
+
+    @Override
+    public List<LaboratoryIdentifierAndName> getAllIdentifiersAndNames() {
+        return laboratoryRepository.findAllProjectedBy();
     }
 }

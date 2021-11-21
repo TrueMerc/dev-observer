@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.devobserver.configurations.ApplicationProperties;
 import ru.devobserver.domain.ApplicationSettings;
 import ru.devobserver.dto.RoleDTO;
+import ru.devobserver.entities.projections.LaboratoryIdentifierAndName;
 import ru.devobserver.services.LaboratoryService;
 import ru.devobserver.services.RoleService;
 
@@ -46,7 +47,8 @@ public class MainController {
     @ResponseBody
     public ApplicationSettings getWebSettings() {
         final List<RoleDTO> roles = roleService.findAll().stream().map(RoleDTO::new).collect(Collectors.toList());
-        final long laboratoriesCount = laboratoryService.count();
-        return new ApplicationSettings(applicationProperties, roles, (int) laboratoriesCount);
+        final List<LaboratoryIdentifierAndName> laboratoryIdentifierAndNames = laboratoryService
+                .getAllIdentifiersAndNames();
+        return new ApplicationSettings(applicationProperties, roles, laboratoryIdentifierAndNames);
     }
 }

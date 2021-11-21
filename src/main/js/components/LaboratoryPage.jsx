@@ -231,34 +231,28 @@ class Description extends Component {
         });
     }
 
+    removeAdditionalBackSlashes = (input) => {
+        const doubleBackSlash = "\\\\";
+        const backSlash = "\\";
+        return input.replaceAll(doubleBackSlash, backSlash);
+    }
+
     render() {
-        const labWorkName = this.state.laboratory ? this.state.laboratory.name : '';
 
-        const labWorkGoal = this.state.laboratory ? this.state.laboratory.goal : '';
+        // const labWorkName = this.removeAdditionalBackSlashes(
+        //     this.state.laboratory ? this.state.laboratory.name : ''
+        // );
 
-        const labWorkExecutionSteps = [
-            "Скачайте с сайта УЛС-2021 комплект учебно-методических материалов, необходимых для выполнения " +
-            "лабораторной работы.",
-            "Скопируйте папку ULS_LAB1_dynamic_indication (из комплекта материалов) в рабочий каталог. " +
-            "Путь к каталогу не должен содержать русских символов.",
-            "Создайте проект dynamic_indication в папке ULS_LAB1_dynamic_indication при помощи системы " +
-            "автоматизированного проектирования Xilinx ISE Web Pack (см.\u00A0методические указания пункт 1).",
-            "Из папки ULS_LAB1_dynamic_indication добавьте в проект модули:\n" +
-            "debounce.vhd, multiple_driver_x2.vhd, top.vhd, UART_RX.vhd.",
-            "Создайте модуль счётчика тактовых импульсов с названием counter, который понадобится для реализации счёта "
-            + "времени в секундах, а также для процесса динамической индикации.",
-            "Создайте модуль дешифратора для семисегментного цифрового индикатора с названием seven_segm_ind, " +
-            "который должен преобразовывать входные целочисленные значения в 8-битный вектор логических нулей и " +
-            "единиц.",
-            "Изучите текст программы проекта. Внесите свои изменения в модуль top.vhd согласно выданному варианту.",
-            "Создайте файл связи с выводами отладочной платы, который должен соответствовать вашему варианту " +
-            "(Implementation Constraints File).",
-            "Скомпилируйте проект и загрузите файл с расширением *.bit на сайт УЛС-2021 (лабораторная работа №1) " +
-            "для проверки его работоспособности.",
-            "Убедитесь, что полученный результат соответствует заданному варианту.",
-            "Сохраните полученный код программы и сделайте фотоотчет работы проекта на лабораторном стенде " +
-            "для составления отчета."
-        ];
+        const labWorkName = JSON.parse(`"${this.state.laboratory ? this.state.laboratory.name : ''}"`);
+
+        const labWorkGoal = this.removeAdditionalBackSlashes(
+            this.state.laboratory ? this.state.laboratory.goal : ''
+        );
+
+        // const labWorkExecutionSteps = (this.state.laboratory ? this.state.laboratory.description.executionOrder : [])
+        //     .map(element => (this.removeAdditionalBackSlashes(element)));
+
+        const labWorkExecutionSteps = (this.state.laboratory ? this.state.laboratory.description.executionOrder : []);
 
         return (
             <div className='lab-description'>

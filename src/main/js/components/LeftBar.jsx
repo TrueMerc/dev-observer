@@ -48,7 +48,10 @@ class LeftBarComponent extends Component {
                     <div className='left-bar__device-list-lab-item'>
                         {laboratoryIdentifiersAndNames.map((item, index) => (
                             <div>
-                                <Tooltip title={item.name}>
+                                <Tooltip
+                                    title={JSON.parse(`"${item.name}"`)}
+                                    position='right'
+                                >
                                     <Link className='undecorated-link' to={`/labs/${item.id}`}>
                                         <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
                                         &nbsp;

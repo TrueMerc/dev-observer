@@ -166,7 +166,16 @@ class Description extends Component {
     }
 
     componentDidMount() {
-        const id = this.props.laboratoryId;
+        this.fetchData(this.props.laboratoryId);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.laboratoryId !== prevProps.laboratoryId) {
+            this.fetchData(this.props.laboratoryId);
+        }
+    }
+
+    fetchData = (id) => {
         const url = `${this.props.labWorksControllerUrl}/${id}`;
         console.log(url);
         fetch(url, {
@@ -186,7 +195,7 @@ class Description extends Component {
             console.log(json);
             this.setState({laboratory : json});
         }).catch(error => {
-           console.log(error);
+            console.log(error);
         });
     }
 

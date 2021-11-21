@@ -231,26 +231,10 @@ class Description extends Component {
         });
     }
 
-    removeAdditionalBackSlashes = (input) => {
-        const doubleBackSlash = "\\\\";
-        const backSlash = "\\";
-        return input.replaceAll(doubleBackSlash, backSlash);
-    }
-
     render() {
-
-        // const labWorkName = this.removeAdditionalBackSlashes(
-        //     this.state.laboratory ? this.state.laboratory.name : ''
-        // );
-
         const labWorkName = JSON.parse(`"${this.state.laboratory ? this.state.laboratory.name : ''}"`);
 
-        const labWorkGoal = this.removeAdditionalBackSlashes(
-            this.state.laboratory ? this.state.laboratory.goal : ''
-        );
-
-        // const labWorkExecutionSteps = (this.state.laboratory ? this.state.laboratory.description.executionOrder : [])
-        //     .map(element => (this.removeAdditionalBackSlashes(element)));
+        const labWorkGoal = JSON.parse(`"${this.state.laboratory ? this.state.laboratory.goal : ''}"`);
 
         const labWorkExecutionSteps = (this.state.laboratory ? this.state.laboratory.description.executionOrder : []);
 

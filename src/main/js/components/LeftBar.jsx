@@ -19,7 +19,6 @@ class LeftBarComponent extends Component {
     }
 
     handleAdministrationButtonClick = (event) => {
-
         this.props.history.push('/Administration');
     }
 

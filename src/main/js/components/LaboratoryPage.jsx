@@ -5,9 +5,10 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDownload, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Message} from "../domain/Message";
 import {FirmwareQueue} from "./FirmwareQueue.jsx";
+import {withRouter} from "react-router-dom";
 
 @observer
-export default class LabWorkPage extends Component {
+class LaboratoryPage extends Component {
     constructor(props) {
         super(props);
     }
@@ -34,6 +35,7 @@ export default class LabWorkPage extends Component {
                 <div className="half-screen">
                     {this.props.applicationStore.isReady &&
                     <Description
+                        laboratoryId={this.props.match.params.laboratoryId}
                         labWorksControllerUrl={labWorksControllerUrl}
                     />
                     }
@@ -42,6 +44,8 @@ export default class LabWorkPage extends Component {
         );
     }
 }
+
+export default withRouter(LaboratoryPage);
 
 @observer
 class DeviceControls extends Component {
@@ -116,7 +120,7 @@ class DeviceControls extends Component {
     }
 
     render() {
-        const poster = "./images/video-stream-play.png";
+        const poster = "../images/video-stream-play.png";
         console.log("Stream URL");
         console.log(this.props.videoStreamUrl);
         console.log(this.props.isVideoReady);
@@ -156,11 +160,39 @@ class DeviceControls extends Component {
 class Description extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            laboratory: undefined
+        };
+    }
+
+    componentDidMount() {
+        const id = this.props.laboratoryId;
+        const url = `${this.props.labWorksControllerUrl}/${id}`;
+        console.log(url);
+        fetch(url, {
+            method: 'GET',
+            mode: 'same-origin',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("Server responds with " + response.status);
+            }
+        }).then(json => {
+            console.log(json);
+            this.setState({laboratory : json});
+        }).catch(error => {
+           console.log(error);
+        });
     }
 
     handleDownloadButtonClick = () => {
         console.log(this.props.labWorksControllerUrl);
-        fetch(`${this.props.labWorksControllerUrl}/download`, {
+        fetch(`${this.props.labWorksControllerUrl}/download/${this.props.laboratoryId}`, {
             method: "GET",
             mode: "same-origin",
             credentials: "same-origin",
@@ -183,7 +215,8 @@ class Description extends Component {
 
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download','file');
+            const fileName = this.state.laboratory ? this.state.laboratory.displayedFileName : 'file';
+            link.setAttribute('download', fileName);
 
             // Append to html link element page
             document.body.appendChild(link);
@@ -199,11 +232,9 @@ class Description extends Component {
     }
 
     render() {
-        const labWorkName = "Создание дешифратора для семисегментного цифрового индикатора\n" +
-            "с динамической индикацией";
+        const labWorkName = this.state.laboratory ? this.state.laboratory.name : '';
 
-        const labWorkGoal = "Изучение принципа работы дешифратора для семисегментного цифрового индикатора, "
-            + "ознакомление с системой автоматизированного проектирования (САПР) Xilinx ISE Web Pack.";
+        const labWorkGoal = this.state.laboratory ? this.state.laboratory.goal : '';
 
         const labWorkExecutionSteps = [
             "Скачайте с сайта УЛС-2021 комплект учебно-методических материалов, необходимых для выполнения " +
@@ -268,3 +299,4 @@ class Description extends Component {
         );
     }
 }
+

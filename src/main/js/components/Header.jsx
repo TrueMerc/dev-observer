@@ -23,7 +23,7 @@ export class Header extends Component {
                 <Tooltip title='На сайт организации'>
                     <img
                         className='header__logo'
-                        src='./images/logo_mtuci_72x72.png'
+                        src='../images/logo_mtuci_72x72.png'
                         onClick={() => { window.open('https://mtuci.ru'); } }
                     />
                 </Tooltip>

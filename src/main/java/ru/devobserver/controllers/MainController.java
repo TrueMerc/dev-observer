@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.devobserver.configurations.ApplicationProperties;
 import ru.devobserver.domain.ApplicationSettings;
 import ru.devobserver.dto.RoleDTO;
+import ru.devobserver.services.LaboratoryService;
 import ru.devobserver.services.RoleService;
 
 import java.util.List;
@@ -18,11 +19,17 @@ public class MainController {
 
     private final ApplicationProperties applicationProperties;
     private final RoleService roleService;
+    private final LaboratoryService laboratoryService;
 
     @Autowired
-    public MainController(final ApplicationProperties applicationProperties, final RoleService roleService) {
+    public MainController(
+            final ApplicationProperties applicationProperties,
+            final RoleService roleService,
+            final LaboratoryService laboratoryService
+    ) {
         this.applicationProperties = applicationProperties;
         this.roleService = roleService;
+        this.laboratoryService = laboratoryService;
     }
 
     @GetMapping("/")
@@ -39,6 +46,7 @@ public class MainController {
     @ResponseBody
     public ApplicationSettings getWebSettings() {
         final List<RoleDTO> roles = roleService.findAll().stream().map(RoleDTO::new).collect(Collectors.toList());
-        return new ApplicationSettings(applicationProperties, roles);
+        final long laboratoriesCount = laboratoryService.count();
+        return new ApplicationSettings(applicationProperties, roles, (int) laboratoriesCount);
     }
 }

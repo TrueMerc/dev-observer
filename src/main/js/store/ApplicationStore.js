@@ -12,10 +12,11 @@ export class ApplicationStore {
     currentUserUrl = `${this.usersUrl}/currentUser`;
     videoStreamUrl = '';
     firmwareControllerUrl = 'firmware';
-    labWorksControllerUrl = 'labWorks';
+    labWorksControllerUrl = 'api/labs';
     maxFirmwareSize = '';
     user = null;
     roles = [];
+    laboratoriesCount = 0;
 
     constructor(serverUrl) {
         makeObservable(this, {
@@ -26,6 +27,7 @@ export class ApplicationStore {
             user: observable,
             roles: observable,
             maxFirmwareSize: observable,
+            laboratoriesCount: observable,
             load: action,
             loadSettings: action,
             loadUser: action
@@ -71,6 +73,7 @@ export class ApplicationStore {
                 this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
                 this.roles = json.roles;
                 this.maxFirmwareSize = json.maxUploadedFileSize;
+                this.laboratoriesCount = json.laboratoriesCount;
                 this.isReady = true;
                 console.log('Settings are loaded');
             })

@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private static final String[] ALL_ROLES = { "USER", "ADMIN", "STAFF" };
+
     private final UserDetailsService userDetailsService;
 
     @Autowired
@@ -27,14 +29,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/resources/**", "/css/**", "/images/**", "/js/**").permitAll()
-                .antMatchers("/**").hasAnyRole("USER", "ADMIN", "STAFF")
-                .antMatchers("/").hasAnyRole("USER", "ADMIN", "STAFF")
-                .antMatchers("/files/*").hasAnyRole("USER", "ADMIN", "STAFF")
+                .antMatchers("/**").hasAnyRole(ALL_ROLES)
+                .antMatchers("/").hasAnyRole(ALL_ROLES)
+                .antMatchers("/files/*").hasAnyRole(ALL_ROLES)
+                .antMatchers("/labs/*").hasAnyRole(ALL_ROLES)
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/index", true)
+                .defaultSuccessUrl("/", true)
                 .and()
                 .logout()
                 .logoutSuccessUrl("/login")

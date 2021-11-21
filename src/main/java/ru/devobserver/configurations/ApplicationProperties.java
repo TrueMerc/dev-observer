@@ -13,7 +13,7 @@ public class ApplicationProperties {
     private int videoStreamPort;
     private String scriptPath;
     private String scriptWorkingDirectory;
-    private String labWorksFolder;
+    private String laboratoriesFolder;
 
     public String getFirmwareFolder() {
         return firmwareFolder;
@@ -71,11 +71,11 @@ public class ApplicationProperties {
         this.firmwareMaxFileSize = firmwareMaxFileSize;
     }
 
-    public String getLabWorksFolder() {
-        return labWorksFolder;
+    public String getLaboratoriesFolder() {
+        return laboratoriesFolder;
     }
 
-    public void setLabWorksFolder(String labWorksFolder) {
-        this.labWorksFolder = labWorksFolder;
+    public void setLaboratoriesFolder(String laboratoriesFolder) {
+        this.laboratoriesFolder = laboratoriesFolder;
     }
 }

@@ -120,7 +120,7 @@ class DeviceControls extends Component {
     }
 
     render() {
-        const poster = "../images/video-stream-play.png";
+        const poster = "../images/waiting-for-video.gif";
         console.log("Stream URL");
         console.log(this.props.videoStreamUrl);
         console.log(this.props.isVideoReady);

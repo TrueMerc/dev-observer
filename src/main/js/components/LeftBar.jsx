@@ -4,6 +4,7 @@ import {faCog, faLevelUpAlt} from "@fortawesome/free-solid-svg-icons";
 import {Link, withRouter} from "react-router-dom";
 import "./LeftBar.css"
 import {observer} from "mobx-react";
+import {Tooltip} from "react-tippy";
 
 @observer
 class LeftBarComponent extends Component {
@@ -19,14 +20,14 @@ class LeftBarComponent extends Component {
     }
 
     handleAdministrationButtonClick = (event) => {
-
         this.props.history.push('/Administration');
     }
 
     render() {
 
-        const {isReady, user} = this.props.applicationStore;
+        const {isReady, user, laboratoryIdentifiersAndNames } = this.props.applicationStore;
         const isAdministrationButtonVisible = isReady && (user ? user.isAdministrator : false);
+        const {lastSelectedItemId} = this.state;
 
         return (
             <div className="left-bar">
@@ -45,19 +46,28 @@ class LeftBarComponent extends Component {
                         </Link>
                     </div>
                     <div className='left-bar__device-list-lab-item'>
-                        <Link className='undecorated-link' to="/">
-                            <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
-                            &nbsp;
-                            <span id='lab1'
-                                  className={this.state.lastSelectedItemId.localeCompare('lab1') === 0
-                                      ? 'left-bar__selected-item'
-                                      : ''
-                                  }
-                                  onClick={this.handleClickOnItem}
-                            >
-                                Работа #1
-                            </span>
-                        </Link>
+                        {laboratoryIdentifiersAndNames.map((item, index) => (
+                            <div>
+                                <Tooltip
+                                    title={JSON.parse(`"${item.name}"`)}
+                                    position='right'
+                                >
+                                    <Link className='undecorated-link' to={`/labs/${item.id}`}>
+                                        <FontAwesomeIcon icon={faLevelUpAlt} rotation={90}/>
+                                        &nbsp;
+                                        <span id={`lab${item.id}`}
+                                              className={lastSelectedItemId.localeCompare(`lab${item.id}`) === 0
+                                                  ? 'left-bar__selected-item'
+                                                  : ''
+                                              }
+                                              onClick={this.handleClickOnItem}
+                                        >
+                                    {`Работа #${index + 1}`}
+                                </span>
+                                    </Link>
+                                </Tooltip>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 {isAdministrationButtonVisible &&

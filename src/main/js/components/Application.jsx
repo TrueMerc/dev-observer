@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import LabWorkPage from "./LabWorkPage.jsx";
+import LaboratoryPage from "./LaboratoryPage.jsx";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import {Header} from "./Header.jsx";
 import {LeftBar} from "./LeftBar.jsx";
@@ -26,7 +26,10 @@ const Application = () => {
                     <LeftBar applicationStore = {applicationStore}/>
                     <Switch>
                         <Route path="/" exact>
-                            <LabWorkPage applicationStore = {applicationStore} />
+                            <Redirect to={'/labs/1'}/>
+                        </Route>
+                        <Route path="/labs/:laboratoryId">
+                            <LaboratoryPage applicationStore = {applicationStore} />
                         </Route>
                         <Route path="/description">
                             <DeviceDescription/>

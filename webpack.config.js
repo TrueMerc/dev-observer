@@ -5,7 +5,8 @@ const Paths = {
 }
 
 module.exports = {
-    entry: './src/main/js/app.js',
+    context: path.resolve(__dirname, "src/main"),
+    entry: './js/app.js',
     devtool: 'source-map',
     cache: true,
     mode: 'development',

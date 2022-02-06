@@ -66,14 +66,15 @@ export class ApplicationStore {
             }
         }).then(json => {
             runInAction(() => {
+                console.log(json);
                 this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
                 this.labWorksControllerUrl = new URL(this.labWorksControllerUrl, this.serverUrl);
                 const videoStreamServerUrl = this.serverUrl;
                 videoStreamServerUrl.port = 8081;
                 this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
-                this.roles = json.roles;
+                this.roles = json.applicationEntities.roles;
                 this.maxFirmwareSize = json.maxUploadedFileSize;
-                this.laboratoryIdentifiersAndNames = json.laboratoryIdentifiersAndNames;
+                this.laboratoryIdentifiersAndNames = json.applicationEntities.laboratoryIdentifiersAndNames;
                 this.isReady = true;
                 console.log('Settings are loaded');
                 console.log(this);

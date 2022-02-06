@@ -17,7 +17,7 @@ export const DeviceManagement = ({devices, deviceModes}) => {
     }
 
     const handleCurrentDeviceModeChange = (event) => {
-        console.log(event.target.value);
+        setCurrentDeviceMode(deviceModes.find(mode => mode.id === event.target.value));
     }
 
     return (

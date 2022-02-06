@@ -16,6 +16,8 @@ export class ApplicationStore {
     maxFirmwareSize = '';
     user = null;
     roles = [];
+    deviceModes = [];
+    devices = [];
     laboratoryIdentifiersAndNames = [];
 
     constructor(serverUrl) {
@@ -26,6 +28,8 @@ export class ApplicationStore {
             labWorksControllerUrl: observable,
             user: observable,
             roles: observable,
+            deviceModes: observable,
+            devices: observable,
             maxFirmwareSize: observable,
             laboratoryIdentifiersAndNames: observable,
             load: action,
@@ -73,6 +77,8 @@ export class ApplicationStore {
                 videoStreamServerUrl.port = 8081;
                 this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
                 this.roles = json.applicationEntities.roles;
+                this.deviceModes = json.applicationEntities.deviceModes;
+                this.devices = json.applicationEntities.devices;
                 this.maxFirmwareSize = json.maxUploadedFileSize;
                 this.laboratoryIdentifiersAndNames = json.applicationEntities.laboratoryIdentifiersAndNames;
                 this.isReady = true;

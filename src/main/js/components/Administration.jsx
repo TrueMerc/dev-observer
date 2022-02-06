@@ -7,10 +7,10 @@ import "./Administration.css"
 import {Strings} from "../domain/Strings";
 import {observer} from "mobx-react";
 import {Tooltip} from "react-tippy";
-import FormContext from "react-bootstrap/FormContext";
+import {DeviceManagement} from "./DeviceManagement";
 
 export const Administration = observer(({applicationStore}) => {
-    const {user: administrator, roles, isReady} = applicationStore;
+    const {user: administrator, roles, isReady, devices, deviceModes} = applicationStore;
 
     return  (
         <div className='main-area'>
@@ -30,9 +30,12 @@ export const Administration = observer(({applicationStore}) => {
                     eventKey='deviceManagement'
                     title='Управление устройствами'
                 >
-                    <div className='tab-content'>
-                        <h2>Управление устройствами</h2>
-                    </div>
+                    {isReady && administrator &&
+                        <DeviceManagement
+                            devices={devices}
+                            deviceModes={deviceModes}
+                        />
+                    }
                 </Tab>
             </Tabs>
         </div>
@@ -403,10 +406,7 @@ const UserForm = ({onFinish, roles, user}) => {
             roleId: Number.parseInt(role)
         }
 
-        const url = user
-            ? `${window.location.origin}/users/updateUser`
-            : `${window.location.origin}/users/addUser`;
-
+        const url = `${window.location.origin}${user ? '/users/updateUser`' : '/users/addUser'}`
         const method = user ? 'PUT' : 'POST';
 
         const onSuccess = () => {

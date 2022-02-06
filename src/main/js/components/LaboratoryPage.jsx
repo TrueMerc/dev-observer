@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import "./LabWorkPage.css";
+import "./LaboratoryPage.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDownload, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Message} from "../domain/Message";
@@ -267,8 +267,8 @@ class Description extends Component {
                         <b>Порядок выполнения:</b>
                     </label>
                     <ol>
-                        {labWorkExecutionSteps.map(stepDescription => (
-                            <li className='description-list'>
+                        {labWorkExecutionSteps.map((stepDescription, index) => (
+                            <li key={`executionStep${index}`} className='description-list'>
                                 {stepDescription}
                             </li>
                         ))}

@@ -9,4 +9,6 @@ public interface DeviceService {
     List<DeviceDTO> getDevices();
 
     List<DeviceMode> getDeviceModes();
+
+    DeviceDTO updateDeviceMode(long deviceId, int deviceModeId);
 }

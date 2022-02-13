@@ -34,6 +34,7 @@ export const Administration = observer(({applicationStore}) => {
                         <DeviceManagement
                             devices={devices}
                             deviceModes={deviceModes}
+                            onDeviceModeChange={applicationStore.updateDeviceMode}
                         />
                     }
                 </Tab>

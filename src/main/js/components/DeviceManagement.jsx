@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {Col, Container, Form, Row} from "react-bootstrap";
 
-export const DeviceManagement = ({devices, deviceModes}) => {
+export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => {
     const getDeviceMode = (device) => {
         return (device !== undefined && device !== null)
-            ? deviceModes.find(mode => mode.id === device.mode)
+            ? deviceModes.find(mode => mode.id === device.modeId)
             : null;
     }
 
@@ -13,11 +13,21 @@ export const DeviceManagement = ({devices, deviceModes}) => {
     const [currentDeviceMode, setCurrentDeviceMode] = useState(getDeviceMode(currentDevice));
 
     const handleCurrentDeviceChange = (event) => {
-        console.log(event.target.value);
+        const newId = Number.parseInt(event.target.value);
+        if (currentDevice.id !== id) {
+            console.log(event.target.value);
+            console.log('Another device has been selected');
+            setCurrentDevice(devices.find(device => device.id === newId));
+        }
     }
 
     const handleCurrentDeviceModeChange = (event) => {
-        setCurrentDeviceMode(deviceModes.find(mode => mode.id === event.target.value));
+        const newId = Number.parseInt(event.target.value);
+        if (currentDeviceMode.id !== newId) {
+            setCurrentDeviceMode(deviceModes.find(mode => mode.id === newId));
+            console.log('Device mode has been changed.');
+            onDeviceModeChange(currentDevice.id, newId);
+        }
     }
 
     return (

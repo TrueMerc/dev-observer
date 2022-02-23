@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
-import {Col, Container, Form, Row} from "react-bootstrap";
+import {Col, Container, Form, FormGroup, Row} from "react-bootstrap";
 import "./DeviceManagement.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowAltCircleRight} from "@fortawesome/free-solid-svg-icons";
@@ -82,10 +82,8 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => 
                             <Col lg={true}>
                                 <CommandSendingForm/>
                             </Col>
-                            <Col>
-                                <Form.Label>
-                                    Панель параметров
-                                </Form.Label>
+                            <Col lg={true}>
+                                <UartParametersForm/>
                             </Col>
                         </Row>
                     }
@@ -103,7 +101,7 @@ DeviceManagement.propTypes = {
 const CommandSendingForm = ({onSend}) => {
     return (
         <div className="command-panel">
-            <Form.Control as="textarea" rows={3}/>
+            <Form.Control as="textarea" rows={5}/>
             <button
                 className="btn btn-outline-success download-button"
                 onClick={onSend}
@@ -113,5 +111,36 @@ const CommandSendingForm = ({onSend}) => {
                 Отправить
             </button>
         </div>
+    );
+}
+
+const UartParametersForm = ({onChange}) => {
+    return (
+      <Form>
+          <FormGroup as={Row} className='mb-3'>
+              <Form.Label column>Скорость передачи данных</Form.Label>
+              <Col>
+                  <Form.Control value='number'/>
+              </Col>
+          </FormGroup>
+          <FormGroup as={Row} className='mb-3'>
+              <Form.Label column>Проверка чётности</Form.Label>
+              <Col>
+                  <Form.Control as='select'></Form.Control>
+              </Col>
+          </FormGroup>
+          <FormGroup as={Row} className='mb-3'>
+              <Form.Label column>Биты данных</Form.Label>
+              <Col>
+                  <Form.Control value='number'/>
+              </Col>
+          </FormGroup>
+          <FormGroup as={Row} className='mb-3'>
+              <Form.Label column>Стоп-биты</Form.Label>
+              <Col>
+                  <Form.Control value='number'/>
+              </Col>
+          </FormGroup>
+      </Form>
     );
 }

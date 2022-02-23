@@ -9,3 +9,7 @@
     flex-direction: column;
     align-items: center;
 }
+
+.command-panel textarea {
+    resize: none;
+}

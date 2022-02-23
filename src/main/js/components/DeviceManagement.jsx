@@ -66,7 +66,7 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => 
                         <Col>
                             <Form.Control
                                 as='select'
-                                value={currentDevice.mode}
+                                value={`${currentDeviceMode.id}`}
                                 onChange={handleCurrentDeviceModeChange}
                             >
                                 {deviceModes.map((mode) =>

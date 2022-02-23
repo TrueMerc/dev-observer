@@ -6,7 +6,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowAltCircleRight} from "@fortawesome/free-solid-svg-icons";
 
 
-export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => {
+export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, deviceControllerUrl}) => {
     const getDeviceMode = (device) => {
         return (device !== undefined && device !== null)
             ? deviceModes.find(mode => mode.id === device.modeId)
@@ -80,7 +80,10 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => 
                     {currentDeviceMode.manualControlEnabled &&
                         <Row className='mt-15'>
                             <Col lg={true}>
-                                <CommandSendingForm/>
+                                <CommandSendingForm
+                                    deviceId={currentDevice.id}
+                                    deviceControllerUrl={deviceControllerUrl}
+                                />
                             </Col>
                             <Col lg={true}>
                                 <UartParametersForm/>
@@ -95,16 +98,48 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => 
 
 DeviceManagement.propTypes = {
     devices: PropTypes.array.isRequired,
-    deviceModes: PropTypes.array.isRequired
+    deviceModes: PropTypes.array.isRequired,
+    onDeviceModeChange: PropTypes.func.isRequired,
+    deviceControllerUrl: PropTypes.string.isRequired
 };
 
-const CommandSendingForm = ({onSend}) => {
+const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
+
+    const [commandText, setCommandText] = useState('');
+
+    const handleCommandTextChange = (event) => {
+        const newText = event.target.value;
+        setCommandText(newText);
+    }
+
+    const handleSendButtonClick = () => {
+        const { pathname, origin } = deviceControllerUrl;
+        const url = new URL(`${pathname}/sendCommandToDevice/${deviceId}/${commandText}`, origin);
+        console.log(url);
+        fetch(`${url}`, {
+            method: 'GET',
+            mode: 'same-origin',
+            credentials: 'same-origin',
+        }).then(response => {
+            if (response.ok) {
+                setCommandText('');
+                console.log('Command is successfully sent.');
+            } else {
+                console.error(`Command sending failed! Server has responded with status: ${response.statusText}`);
+            }
+        }).catch(error => console.log(error));
+    }
+
     return (
         <div className="command-panel">
-            <Form.Control as="textarea" rows={5}/>
+            <Form.Control as="textarea"
+                          rows={5}
+                          value={commandText}
+                          onChange={handleCommandTextChange}
+            />
             <button
                 className="btn btn-outline-success download-button"
-                onClick={onSend}
+                onClick={handleSendButtonClick}
             >
                 <FontAwesomeIcon icon={faArrowAltCircleRight}/>
                 &nbsp;
@@ -112,6 +147,11 @@ const CommandSendingForm = ({onSend}) => {
             </button>
         </div>
     );
+}
+
+CommandSendingForm.propTypes = {
+    deviceId: PropTypes.number.isRequired,
+    deviceControllerUrl: PropTypes.string.isRequired
 }
 
 const UartParametersForm = ({onChange}) => {

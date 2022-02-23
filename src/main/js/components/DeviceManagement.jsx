@@ -1,6 +1,10 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {Col, Container, Form, Row} from "react-bootstrap";
+import "./DeviceManagement.css";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faArrowAltCircleRight} from "@fortawesome/free-solid-svg-icons";
+
 
 export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => {
     const getDeviceMode = (device) => {
@@ -73,6 +77,18 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange}) => 
                             </Form.Control>
                         </Col>
                     </Row>
+                    {currentDeviceMode.manualControlEnabled &&
+                        <Row className='mt-15'>
+                            <Col lg={true}>
+                                <CommandSendingForm/>
+                            </Col>
+                            <Col>
+                                <Form.Label>
+                                    Панель параметров
+                                </Form.Label>
+                            </Col>
+                        </Row>
+                    }
                 </Container>
             </div>
         </div>
@@ -83,3 +99,19 @@ DeviceManagement.propTypes = {
     devices: PropTypes.array.isRequired,
     deviceModes: PropTypes.array.isRequired
 };
+
+const CommandSendingForm = ({onSend}) => {
+    return (
+        <div className="command-panel">
+            <Form.Control as="textarea" rows={3}/>
+            <button
+                className="btn btn-outline-success download-button"
+                onClick={onSend}
+            >
+                <FontAwesomeIcon icon={faArrowAltCircleRight}/>
+                &nbsp;
+                Отправить
+            </button>
+        </div>
+    );
+}

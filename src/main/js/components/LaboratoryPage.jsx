@@ -18,8 +18,12 @@ class LaboratoryPage extends Component {
             return null;
         }
         const {
-            videoStreamUrl, firmwareControllerUrl, maxFirmwareSize, labWorksControllerUrl
+            videoStreamUrl, firmwareControllerUrl, maxFirmwareSize, labWorksControllerUrl, devices, deviceModes
         } = this.props.applicationStore;
+
+        const currentDevice = devices[0];
+        const currentDeviceMode = deviceModes.find(mode => mode.id === currentDevice.modeId);
+
         return (
             <div className='device-page'>
                 <div className="half-screen">
@@ -29,6 +33,7 @@ class LaboratoryPage extends Component {
                         firmwareUrl={firmwareControllerUrl}
                         maxFirmwareSize={maxFirmwareSize}
                         isVideoReady={this.props.applicationStore.isReady}
+                        deviceMode={currentDeviceMode}
                     />
                     }
                 </div>
@@ -75,7 +80,7 @@ class DeviceControls extends Component {
         const requestBody = new FormData();
         const file = files[0];
         requestBody.append('file', file, file.name);
-        const uploadUrl = new URL('upload', this.props.firmwareUrl);
+
         fetch(`${this.props.firmwareUrl}/upload`, {
             method: 'POST',
             credentials: 'same-origin',
@@ -127,7 +132,10 @@ class DeviceControls extends Component {
 
         return (
             <div className="video-player-bar">
-                <FirmwareQueue firmwareControllerUrl={this.props.firmwareUrl}/>
+                <FirmwareQueue
+                    firmwareControllerUrl={this.props.firmwareUrl}
+                    deviceMode={this.props.deviceMode}
+                />
                 <video className="video-player" autoPlay={true} controls={false} poster={poster} muted={true}>
                     {this.props.isVideoReady &&
                     <source src={this.props.videoStreamUrl} type="video/webm"/>
@@ -146,6 +154,7 @@ class DeviceControls extends Component {
                 <button
                     className="btn btn-outline-success upload-button"
                     onClick={this.handleUploadButtonClick}
+                    disabled={!this.props.deviceMode.firmwareUploadingEnabled}
                 >
                     <FontAwesomeIcon icon={faUpload}/>
                     &nbsp;

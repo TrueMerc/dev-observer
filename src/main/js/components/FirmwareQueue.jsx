@@ -3,7 +3,7 @@ import "./FirmwareQueue.css"
 import {observer} from "mobx-react";
 import {Strings} from "../domain/Strings";
 
-export const FirmwareQueue = observer(({firmwareControllerUrl}) => {
+export const FirmwareQueue = observer(({firmwareControllerUrl, deviceMode}) => {
     const updatePeriodInMs = 1000;
 
     const [activeFirmwareName, setActiveFirmwareName] = useState('\u2014');
@@ -50,10 +50,19 @@ export const FirmwareQueue = observer(({firmwareControllerUrl}) => {
     }
 
     return (
-        <div className='firmware-queue'>
-            <span>Выполняется прошивка: {activeFirmwareName}</span>
-            <span>Прошивок в очереди: {length}</span>
-            <span>Номер в очереди: {isUnprocessedFirmwareOwner ? (itemsBefore + 1) : '\u2014'}</span>
-        </div>
+        <>
+            {deviceMode.firmwareUploadingEnabled &&
+                <div className='firmware-queue'>
+                    <span>Выполняется прошивка: {activeFirmwareName}</span>
+                    <span>Прошивок в очереди: {length}</span>
+                    <span>Номер в очереди: {isUnprocessedFirmwareOwner ? (itemsBefore + 1) : '\u2014'}</span>
+                </div>
+            }
+            {!deviceMode.firmwareUploadingEnabled &&
+                <div className='firmware-queue-disabled'>
+                    {`Устройство переведено в режим "${deviceMode.name}". Выполнение прошивок приостановлено`}
+                </div>
+            }
+        </>
     );
 });

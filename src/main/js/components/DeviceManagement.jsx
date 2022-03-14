@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {Col, Container, Form, FormGroup, Row} from "react-bootstrap";
 import "./DeviceManagement.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowAltCircleRight} from "@fortawesome/free-solid-svg-icons";
+import {Parity} from "../domain/Parity";
 
 
 export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, deviceControllerUrl}) => {
@@ -69,7 +70,7 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, devi
                                 value={`${currentDeviceMode.id}`}
                                 onChange={handleCurrentDeviceModeChange}
                             >
-                                {deviceModes.map((mode) =>
+                                {deviceModes.map(mode =>
                                     <option key={`deviceModeOption${mode.id}`} value={`${mode.id}`}>
                                         {mode.name}
                                     </option>
@@ -86,7 +87,10 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, devi
                                 />
                             </Col>
                             <Col lg={true}>
-                                <UartParametersForm/>
+                                <UartParametersForm
+                                    deviceId={currentDevice.id}
+                                    deviceControllerUrl={deviceControllerUrl}
+                                />
                             </Col>
                         </Row>
                     }
@@ -100,7 +104,7 @@ DeviceManagement.propTypes = {
     devices: PropTypes.array.isRequired,
     deviceModes: PropTypes.array.isRequired,
     onDeviceModeChange: PropTypes.func.isRequired,
-    deviceControllerUrl: PropTypes.string.isRequired
+    deviceControllerUrl: PropTypes.object.isRequired
 };
 
 const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
@@ -117,7 +121,7 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
         const url = new URL(`${pathname}/sendCommandToDevice/${deviceId}/${commandText}`, origin);
         console.log(url);
         fetch(`${url}`, {
-            method: 'GET',
+            method: 'POST',
             mode: 'same-origin',
             credentials: 'same-origin',
         }).then(response => {
@@ -151,36 +155,112 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
 
 CommandSendingForm.propTypes = {
     deviceId: PropTypes.number.isRequired,
-    deviceControllerUrl: PropTypes.string.isRequired
+    deviceControllerUrl: PropTypes.object.isRequired
 }
 
-const UartParametersForm = ({onChange}) => {
+const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
+
+    const [parameters, setParameters] = useState(
+        {baudRate: 0, parity: Parity.NONE.value, dataBits: 0, stopBits: 0}
+    );
+
+    useEffect(() => {
+        const { pathname, origin } = deviceControllerUrl;
+        const url = new URL(`${pathname}/changeDeviceSettings/${deviceId}`, origin);
+        console.log(url);
+        fetch(`${url}`, {
+            method: 'POST',
+            mode: 'same-origin',
+            credentials: 'same-origin',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(parameters)
+        }).then(response => {
+            if (response.ok) {
+                setCommandText('');
+                console.log('Parameters is successfully sent.');
+            } else {
+                console.error(`Parameters sending failed! Server has responded with status: ${response.statusText}`);
+            }
+        }).catch(error => console.log(error));
+
+        console.log(parameters);
+    }, [parameters.baudRate, parameters.parity, parameters.dataBits, parameters.stopBits]);
+
+    const handleNumberFieldChange = (event) => {
+        const { name, value } = event.target;
+        setParameters(prevState => ({...prevState, [name]: value}));
+    }
+
+
+
+    const handleParityChange = (event) => {
+        const value = event.target.value;
+        const newParityValue = Number.parseInt(value);
+        setParameters(prevState => ({...prevState, parity: newParityValue}));
+    }
+
     return (
       <Form>
           <FormGroup as={Row} className='mb-3'>
               <Form.Label column>Скорость передачи данных</Form.Label>
               <Col>
-                  <Form.Control value='number'/>
+                  <Form.Control
+                      name='baudRate'
+                      type='number'
+                      value={parameters.baudRate}
+                      onChange={handleNumberFieldChange}
+                      min={1}
+                  />
               </Col>
           </FormGroup>
           <FormGroup as={Row} className='mb-3'>
               <Form.Label column>Проверка чётности</Form.Label>
               <Col>
-                  <Form.Control as='select'></Form.Control>
+                  <Form.Control
+                      as='select'
+                      name='parity'
+                      value={`${parameters.parity}`}
+                      onChange={handleParityChange}
+                  >
+                      {Parity.values().map(parity =>
+                          <option key={`parityOption${parity.name}`} value={`${parity.value}`}>
+                              {parity.name}
+                          </option>
+                      )}
+                  </Form.Control>
               </Col>
           </FormGroup>
           <FormGroup as={Row} className='mb-3'>
               <Form.Label column>Биты данных</Form.Label>
               <Col>
-                  <Form.Control value='number'/>
+                  <Form.Control
+                      name={'dataBits'}
+                      type='number'
+                      value={parameters.dataBits}
+                      onChange={handleNumberFieldChange}
+                      min={1}
+                  />
               </Col>
           </FormGroup>
           <FormGroup as={Row} className='mb-3'>
               <Form.Label column>Стоп-биты</Form.Label>
               <Col>
-                  <Form.Control value='number'/>
+                  <Form.Control
+                      name='stopBits'
+                      type='number'
+                      value={parameters.stopBits}
+                      onChange={handleNumberFieldChange}
+                      min={1}
+                  />
               </Col>
           </FormGroup>
       </Form>
     );
+}
+
+UartParametersForm.propTypes = {
+    deviceId: PropTypes.number.isRequired,
+    deviceControllerUrl: PropTypes.object.isRequired
 }

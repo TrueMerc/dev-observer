@@ -1,4 +1,4 @@
-// Constants which describes UART parity types according jdk.dlo.uart.UARTConfig class.
+// Constants which describes UART parity types according com.fazecast.jSerialComm class.
 export class Parity {
     static NONE = { name: "None", value: 0 };
     static ODD = { name: "Odd", value: 1 };

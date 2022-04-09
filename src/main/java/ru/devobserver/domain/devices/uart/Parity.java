@@ -1,4 +1,4 @@
-package ru.devobserver.domain.uart;
+package ru.devobserver.domain.devices.uart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fazecast.jSerialComm.SerialPort;

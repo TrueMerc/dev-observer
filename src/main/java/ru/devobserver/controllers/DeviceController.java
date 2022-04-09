@@ -9,7 +9,6 @@ import ru.devobserver.dto.DeviceDTO;
 import ru.devobserver.dto.DeviceSettingsDTO;
 import ru.devobserver.services.DeviceService;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 @Controller

@@ -6,23 +6,21 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.util.List;
 
 public enum Parity {
-    NONE("None", SerialPort.NO_PARITY),
-    ODD("Odd", SerialPort.ODD_PARITY),
-    EVEN("Even", SerialPort.EVEN_PARITY),
-    MARK("Mark", SerialPort.MARK_PARITY),
-    SPACE("Space", SerialPort.SPACE_PARITY);
+    NONE(SerialPort.NO_PARITY),
+    ODD(SerialPort.ODD_PARITY),
+    EVEN(SerialPort.EVEN_PARITY),
+    MARK(SerialPort.MARK_PARITY),
+    SPACE(SerialPort.SPACE_PARITY);
 
-    private final String name;
     private final int code;
 
-    Parity(String name, int code) {
-        this.name = name;
+    Parity(final int code) {
         this.code = code;
     }
 
     Parity fromName(final String name) {
         return List.of(values()).stream()
-                .filter(value -> value.getName().equals(name))
+                .filter(value -> value.name().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Can't find parity with name " + name));
     }
@@ -32,10 +30,6 @@ public enum Parity {
                 .filter(value -> value.getCode() == code)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Cant find parity with code " + code));
-    }
-
-    public String getName() {
-        return name;
     }
 
     @JsonIgnore

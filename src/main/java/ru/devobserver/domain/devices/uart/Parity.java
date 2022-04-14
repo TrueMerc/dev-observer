@@ -18,14 +18,14 @@ public enum Parity {
         this.code = code;
     }
 
-    Parity fromName(final String name) {
+    public static Parity fromName(final String name) {
         return List.of(values()).stream()
                 .filter(value -> value.name().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Can't find parity with name " + name));
     }
 
-    Parity fromCode(final int code) {
+    public static Parity fromCode(final int code) {
         return List.of(values()).stream()
                 .filter(value -> value.getCode() == code)
                 .findFirst()

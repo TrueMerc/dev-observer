@@ -1,9 +1,8 @@
-package ru.devobserver.domain.uart;
+package ru.devobserver.domain.devices.uart;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import ru.devobserver.domain.devices.uart.Parity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

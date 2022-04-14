@@ -1,0 +1,1 @@
+UPDATE devices SET settings = '{"baudRate":9600,"parity":"NONE","dataBits":8,"stopBits":"ONE"}'::jsonb WHERE ID = 1;

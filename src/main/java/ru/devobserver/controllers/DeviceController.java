@@ -43,14 +43,22 @@ public class DeviceController {
         return "OK";
     }
 
+    @GetMapping("/getDeviceSettings/{deviceId}")
+    @ResponseBody
+    @Secured("ROLE_ADMIN")
+    public DeviceSettingsDTO getDeviceSettings(@PathVariable("deviceId") final long deviceId) {
+        return deviceService.getDeviceSettings(deviceId);
+    }
+
+
     @PostMapping(value = "/changeDeviceSettings/{deviceId}", consumes = MediaType.APPLICATION_JSON)
     @ResponseBody
     @Secured("ROLE_ADMIN")
-    public String changeDeviceSettings(
-            @PathVariable("deviceId") final int deviceId,
+    public DeviceSettingsDTO changeDeviceSettings(
+            @PathVariable("deviceId") final long deviceId,
             @RequestBody final DeviceSettingsDTO deviceSettings
     ) {
         logger.debug("Device settings is received: deviceId = {}, settings = {}", deviceId, deviceSettings);
-        return "OK";
+        return deviceService.updateDeviceSettings(deviceId, deviceSettings);
     }
 }

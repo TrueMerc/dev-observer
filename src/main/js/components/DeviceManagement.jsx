@@ -5,6 +5,7 @@ import "./DeviceManagement.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowAltCircleRight} from "@fortawesome/free-solid-svg-icons";
 import {Parity} from "../domain/Parity";
+import {StopBits} from "../domain/StopBits";
 
 
 export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, deviceControllerUrl}) => {
@@ -90,6 +91,7 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, devi
                                 <UartParametersForm
                                     deviceId={currentDevice.id}
                                     deviceControllerUrl={deviceControllerUrl}
+                                    settings={currentDevice.settings}
                                 />
                             </Col>
                         </Row>
@@ -107,7 +109,7 @@ DeviceManagement.propTypes = {
     deviceControllerUrl: PropTypes.object.isRequired
 };
 
-const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
+const CommandSendingForm = ({deviceId, deviceControllerUrl, settings}) => {
 
     const [commandText, setCommandText] = useState('');
 
@@ -155,19 +157,59 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
 
 CommandSendingForm.propTypes = {
     deviceId: PropTypes.number.isRequired,
-    deviceControllerUrl: PropTypes.object.isRequired
+    deviceControllerUrl: PropTypes.object.isRequired,
+    settings: PropTypes.object.isRequired
 }
 
 const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
 
-    const [parameters, setParameters] = useState(
-        {baudRate: 0, parity: Parity.NONE.value, dataBits: 0, stopBits: 0}
-    );
+    const [parameters, setParameters] = useState({
+        baudRate: 9600,
+        parity: Parity.NONE.value,
+        dataBits: 8,
+        stopBits: StopBits.ONE.value
+    });
+
+    const [isInitialized, setInitialized] = useState(false);
+
+    const formUrlForMethod = (deviceControllerUrl, methodName, deviceId) => {
+        const { pathname, origin } = deviceControllerUrl;
+        return new URL(`${pathname}/${methodName}/${deviceId}`, origin);
+    }
 
     useEffect(() => {
-        const { pathname, origin } = deviceControllerUrl;
-        const url = new URL(`${pathname}/changeDeviceSettings/${deviceId}`, origin);
-        console.log(url);
+        const url = formUrlForMethod(deviceControllerUrl, 'getDeviceSettings', deviceId);
+        fetch(`${url}`, {
+            method: 'GET',
+            mode: 'same-origin',
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error("Can't fetch device settings");
+            }
+        }).then(json => {
+            const newSettings = {
+                baudRate: json.baudRate,
+                parity: json.parity,
+                dataBits: json.dataBits,
+                stopBits: json.stopBits
+            };
+            setParameters(newSettings);
+            setInitialized(true);
+        }).catch(error => {
+            console.error(error);
+        })
+    }, []);
+
+    useEffect(() => {
+        console.log(`Parameters`);
+        console.log(parameters);
+        if(!isInitialized) {
+            return;
+        }
+        const url = formUrlForMethod(deviceControllerUrl, 'changeDeviceSettings', deviceId);
         fetch(`${url}`, {
             method: 'POST',
             mode: 'same-origin',
@@ -178,7 +220,13 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
             body: JSON.stringify(parameters)
         }).then(response => {
             if (response.ok) {
-                setCommandText('');
+                const newSettings = {
+                    baudRate: json.baudRate,
+                    parity: json.parity,
+                    dataBits: json.dataBits,
+                    stopBits: json.stopBits
+                };
+                setParameters(newSettings);
                 console.log('Parameters is successfully sent.');
             } else {
                 console.error(`Parameters sending failed! Server has responded with status: ${response.statusText}`);
@@ -194,11 +242,16 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
     }
 
 
-
     const handleParityChange = (event) => {
         const value = event.target.value;
         const newParityValue = Number.parseInt(value);
         setParameters(prevState => ({...prevState, parity: newParityValue}));
+    }
+
+    const handleStopBitsChange = (event) => {
+        const value = event.target.value;
+        const newStopBitsValue = Number.parseInt(value);
+        setParameters(prevState => ({...prevState, stopBits: newStopBitsValue}));
     }
 
     return (
@@ -236,7 +289,7 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
               <Form.Label column>Биты данных</Form.Label>
               <Col>
                   <Form.Control
-                      name={'dataBits'}
+                      name='dataBits'
                       type='number'
                       value={parameters.dataBits}
                       onChange={handleNumberFieldChange}
@@ -248,12 +301,17 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
               <Form.Label column>Стоп-биты</Form.Label>
               <Col>
                   <Form.Control
+                      as='select'
                       name='stopBits'
-                      type='number'
-                      value={parameters.stopBits}
-                      onChange={handleNumberFieldChange}
-                      min={1}
-                  />
+                      value={`${parameters.stopBits}`}
+                      onChange={handleStopBitsChange}
+                  >
+                      {StopBits.values().map(stopBits =>
+                          <option key={`stopBitsOption${stopBits.name}`} value={`${stopBits.value}`}>
+                              {stopBits.name}
+                          </option>
+                      )}
+                  </Form.Control>
               </Col>
           </FormGroup>
       </Form>

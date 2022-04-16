@@ -1,5 +1,8 @@
 package ru.devobserver.dto;
 
+import ru.devobserver.domain.devices.uart.DeviceSettings;
+import ru.devobserver.domain.devices.uart.LaboratoryStandSettings;
+
 public class DeviceSettingsDTO {
     private final int baudRate;
     private final int parity;
@@ -11,6 +14,13 @@ public class DeviceSettingsDTO {
         this.parity = parity;
         this.dataBits = dataBits;
         this.stopBits = stopBits;
+    }
+
+    public DeviceSettingsDTO(final LaboratoryStandSettings settings) {
+        this.baudRate = settings.getBaudRate();
+        this.parity = settings.getParity().getCode();
+        this.dataBits = settings.getDataBits();
+        this.stopBits = settings.getStopBits().getCode();
     }
 
     public int getBaudRate() {

@@ -40,6 +40,7 @@ public class DeviceController {
             @PathVariable("command") final String command
     ) {
         logger.debug("Command is received: deviceId = {}, command = {}", deviceId, command);
+        deviceService.executeCommand(deviceId, command);
         return "OK";
     }
 

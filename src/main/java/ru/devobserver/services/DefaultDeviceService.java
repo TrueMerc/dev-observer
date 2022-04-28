@@ -1,5 +1,7 @@
 package ru.devobserver.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.devobserver.domain.devices.uart.DeviceSettings;
 import ru.devobserver.domain.devices.uart.LaboratoryStandSettings;
@@ -17,6 +19,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class DefaultDeviceService implements DeviceService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DefaultDeviceService.class);
+
     private final DeviceRepository deviceRepository;
     private final DeviceModeRepository deviceModeRepository;
 
@@ -49,6 +54,14 @@ public class DefaultDeviceService implements DeviceService {
         device.setMode(mode);
         final Device updatedDevice = deviceRepository.save(device);
         return new DeviceDTO(updatedDevice);
+    }
+
+    @Override
+    public void executeCommand(long deviceId, String command) {
+        logger.debug("Try to execute command \"{}\" for device {}", command, deviceId);
+        final Device device = deviceRepository.findById(deviceId)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find device with ID = " + deviceId));
+        device.executeCommand(command);
     }
 
     @Override

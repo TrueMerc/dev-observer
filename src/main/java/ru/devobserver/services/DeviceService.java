@@ -13,6 +13,8 @@ public interface DeviceService {
 
     DeviceDTO updateDeviceMode(long deviceId, int deviceModeId);
 
+    void executeCommand(long deviceId, String command);
+
     DeviceSettingsDTO getDeviceSettings(long deviceId);
 
     DeviceSettingsDTO updateDeviceSettings(long deviceId, DeviceSettingsDTO deviceSettings);

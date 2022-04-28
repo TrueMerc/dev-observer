@@ -109,7 +109,7 @@ DeviceManagement.propTypes = {
     deviceControllerUrl: PropTypes.object.isRequired
 };
 
-const CommandSendingForm = ({deviceId, deviceControllerUrl, settings}) => {
+const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
 
     const [commandText, setCommandText] = useState('');
 
@@ -120,12 +120,16 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl, settings}) => {
 
     const handleSendButtonClick = () => {
         const { pathname, origin } = deviceControllerUrl;
-        const url = new URL(`${pathname}/sendCommandToDevice/${deviceId}/${commandText}`, origin);
+        const url = new URL(`${pathname}/sendCommandToDevice/${deviceId}`, origin);
         console.log(url);
         fetch(`${url}`, {
             method: 'POST',
             mode: 'same-origin',
             credentials: 'same-origin',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: `${commandText}`
         }).then(response => {
             if (response.ok) {
                 setCommandText('');
@@ -158,7 +162,6 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl, settings}) => {
 CommandSendingForm.propTypes = {
     deviceId: PropTypes.number.isRequired,
     deviceControllerUrl: PropTypes.object.isRequired,
-    settings: PropTypes.object.isRequired
 }
 
 const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
@@ -204,8 +207,6 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
     }, []);
 
     useEffect(() => {
-        console.log(`Parameters`);
-        console.log(parameters);
         if(!isInitialized) {
             return;
         }
@@ -240,7 +241,6 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
         const { name, value } = event.target;
         setParameters(prevState => ({...prevState, [name]: value}));
     }
-
 
     const handleParityChange = (event) => {
         const value = event.target.value;

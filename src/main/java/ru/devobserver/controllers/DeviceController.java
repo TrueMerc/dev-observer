@@ -32,12 +32,12 @@ public class DeviceController {
         return deviceService.updateDeviceMode(deviceId, deviceModeId);
     }
 
-    @PostMapping("/sendCommandToDevice/{deviceId}/{command}")
+    @PostMapping("/sendCommandToDevice/{deviceId}")
     @ResponseBody
     @Secured("ROLE_ADMIN")
     public String sendCommandToDevice(
             @PathVariable("deviceId") final long deviceId,
-            @PathVariable("command") final String command
+            @RequestBody final String command
     ) {
         logger.debug("Command is received: deviceId = {}, command = {}", deviceId, command);
         deviceService.executeCommand(deviceId, command);

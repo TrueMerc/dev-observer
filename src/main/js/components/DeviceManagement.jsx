@@ -21,8 +21,6 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, devi
     const handleCurrentDeviceChange = (event) => {
         const newId = Number.parseInt(event.target.value);
         if (currentDevice.id !== id) {
-            console.log(event.target.value);
-            console.log('Another device has been selected');
             setCurrentDevice(devices.find(device => device.id === newId));
         }
     }
@@ -31,7 +29,6 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, devi
         const newId = Number.parseInt(event.target.value);
         if (currentDeviceMode.id !== newId) {
             setCurrentDeviceMode(deviceModes.find(mode => mode.id === newId));
-            console.log('Device mode has been changed.');
             onDeviceModeChange(currentDevice.id, newId);
         }
     }
@@ -121,7 +118,7 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
     const handleSendButtonClick = () => {
         const { pathname, origin } = deviceControllerUrl;
         const url = new URL(`${pathname}/sendCommandToDevice/${deviceId}`, origin);
-        console.log(url);
+
         fetch(`${url}`, {
             method: 'POST',
             mode: 'same-origin',
@@ -133,11 +130,10 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
         }).then(response => {
             if (response.ok) {
                 setCommandText('');
-                console.log('Command is successfully sent.');
             } else {
                 console.error(`Command sending failed! Server has responded with status: ${response.statusText}`);
             }
-        }).catch(error => console.log(error));
+        }).catch(error => console.error(error));
     }
 
     return (
@@ -228,13 +224,10 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
                     stopBits: json.stopBits
                 };
                 setParameters(newSettings);
-                console.log('Parameters is successfully sent.');
             } else {
                 console.error(`Parameters sending failed! Server has responded with status: ${response.statusText}`);
             }
-        }).catch(error => console.log(error));
-
-        console.log(parameters);
+        }).catch(error => console.error(error));
     }, [parameters.baudRate, parameters.parity, parameters.dataBits, parameters.stopBits]);
 
     const handleNumberFieldChange = (event) => {

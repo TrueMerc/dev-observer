@@ -105,7 +105,6 @@ class DeviceControls extends Component {
             }
             return response.text();
         }).then(text => {
-            console.log(text);
             this.addMessage(`Прошивка успешно загружена. Идентификатор прошивки: ${text}`);
         }).catch(error => {
             console.error(error);
@@ -126,9 +125,6 @@ class DeviceControls extends Component {
 
     render() {
         const poster = "../images/waiting-for-video.gif";
-        console.log("Stream URL");
-        console.log(this.props.videoStreamUrl);
-        console.log(this.props.isVideoReady);
 
         return (
             <div className="video-player-bar">
@@ -186,7 +182,7 @@ class Description extends Component {
 
     fetchData = (id) => {
         const url = `${this.props.labWorksControllerUrl}/${id}`;
-        console.log(url);
+
         fetch(url, {
             method: 'GET',
             mode: 'same-origin',
@@ -201,15 +197,14 @@ class Description extends Component {
                 throw new Error("Server responds with " + response.status);
             }
         }).then(json => {
-            console.log(json);
             this.setState({laboratory : json});
         }).catch(error => {
-            console.log(error);
+            console.error(error);
         });
     }
 
     handleDownloadButtonClick = () => {
-        console.log(this.props.labWorksControllerUrl);
+
         fetch(`${this.props.labWorksControllerUrl}/download/${this.props.laboratoryId}`, {
             method: "GET",
             mode: "same-origin",
@@ -219,14 +214,12 @@ class Description extends Component {
             }
         }).then(response => {
             if(response.ok) {
-                console.log(response);
                 return response.blob();
             } else {
                 throw new Error('Server responded with status ' + response.status);
             }
         }).then(blob => {
             // Maybe, it would rather use FileSaver.js or StreamSaver.js instead of this code.
-            console.log(blob);
             const url = window.URL.createObjectURL(
                 new Blob([blob], {type: 'octet/stream'})
             );

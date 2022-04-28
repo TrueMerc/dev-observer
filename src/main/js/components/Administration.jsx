@@ -412,7 +412,6 @@ const UserForm = ({onFinish, roles, user}) => {
         const method = user ? 'PUT' : 'POST';
 
         const onSuccess = () => {
-            console.log("User was successfully " + user ? "updated" : "registered");
             onFinish();
         }
 

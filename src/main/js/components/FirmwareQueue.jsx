@@ -24,7 +24,7 @@ export const FirmwareQueue = observer(({firmwareControllerUrl, deviceMode}) => {
 
     const updateState = () => {
         const url = `${firmwareControllerUrl}/queueState`;
-        console.log(url);
+
         fetch(url, {
             method: 'GET',
             mode: 'same-origin',

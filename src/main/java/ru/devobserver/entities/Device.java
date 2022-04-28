@@ -36,9 +36,9 @@ public class Device {
     private DeviceMode mode;
 
     public void executeCommand(final String commandName) {
-        final SerialPort firstAvailablePort = SerialPort.getCommPort("/dev/ttyUSB0");
         if (deviceSettings instanceof LaboratoryStandSettings) {
             final LaboratoryStandSettings settings = (LaboratoryStandSettings) deviceSettings;
+            final SerialPort firstAvailablePort = SerialPort.getCommPort(settings.getPort());
             firstAvailablePort.setBaudRate(settings.getBaudRate());
             firstAvailablePort.setParity(settings.getParity().getCode());
             firstAvailablePort.setNumDataBits(settings.getDataBits());

@@ -16,9 +16,10 @@ public class LaboratoryStandSettingsTest {
     void serializationTest() {
         // language=JSON
         final String expectedJson =
-                "{\"baudRate\":9600,\"parity\":\"NONE\",\"dataBits\":8,\"stopBits\":\"ONE\"}";
+                "{\"type\":\"LaboratoryStandSettings\",\"port\":\"/dev/tty0\",\"baudRate\":9600,\"parity\":\"NONE\","
+                        + "\"dataBits\":8,\"stopBits\":\"ONE\"}";
         final LaboratoryStandSettings settings =
-                new LaboratoryStandSettings(9600, Parity.NONE, 8, StopBits.ONE);
+                new LaboratoryStandSettings("/dev/tty0", 9600, Parity.NONE, 8, StopBits.ONE);
         final ObjectMapper objectMapper = new ObjectMapper();
         final String realJson = objectMapper.writeValueAsString(settings);
         assertEquals(expectedJson, realJson);

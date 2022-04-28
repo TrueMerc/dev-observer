@@ -15,6 +15,7 @@ export class ApplicationStore {
     firmwareControllerUrl = 'firmware';
     labWorksControllerUrl = 'api/labs';
     deviceControllerUrl='api/devices';
+    hardwareControllerUrl='api/hardware';
     maxFirmwareSize = '';
     user = null;
     roles = [];
@@ -29,6 +30,7 @@ export class ApplicationStore {
             firmwareControllerUrl: observable,
             labWorksControllerUrl: observable,
             deviceControllerUrl: observable,
+            hardwareControllerUrl: observable,
             user: observable,
             roles: observable,
             deviceModes: observable,
@@ -78,6 +80,7 @@ export class ApplicationStore {
                 this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
                 this.labWorksControllerUrl = new URL(this.labWorksControllerUrl, this.serverUrl);
                 this.deviceControllerUrl = new URL(this.deviceControllerUrl, this.serverUrl);
+                this.hardwareControllerUrl = new URL(this.hardwareControllerUrl, this.serverUrl);
                 const videoStreamServerUrl = this.serverUrl;
                 videoStreamServerUrl.port = 8081;
                 this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);

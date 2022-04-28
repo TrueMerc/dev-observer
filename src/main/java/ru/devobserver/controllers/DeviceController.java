@@ -51,7 +51,6 @@ public class DeviceController {
         return deviceService.getDeviceSettings(deviceId);
     }
 
-
     @PostMapping(value = "/changeDeviceSettings/{deviceId}", consumes = MediaType.APPLICATION_JSON)
     @ResponseBody
     @Secured("ROLE_ADMIN")

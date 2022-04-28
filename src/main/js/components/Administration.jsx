@@ -10,7 +10,15 @@ import {Tooltip} from "react-tippy";
 import {DeviceManagement} from "./DeviceManagement";
 
 export const Administration = observer(({applicationStore}) => {
-    const {user: administrator, roles, isReady, devices, deviceModes, deviceControllerUrl} = applicationStore;
+    const {
+        user: administrator,
+        roles,
+        isReady,
+        devices,
+        deviceModes,
+        deviceControllerUrl,
+        hardwareControllerUrl
+    } = applicationStore;
 
     return  (
         <div className='main-area'>
@@ -36,6 +44,7 @@ export const Administration = observer(({applicationStore}) => {
                             deviceModes={deviceModes}
                             onDeviceModeChange={applicationStore.updateDeviceMode}
                             deviceControllerUrl={deviceControllerUrl}
+                            hardwareControllerUrl={hardwareControllerUrl}
                         />
                     }
                 </Tab>

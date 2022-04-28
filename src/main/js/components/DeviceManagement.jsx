@@ -8,7 +8,9 @@ import {Parity} from "../domain/Parity";
 import {StopBits} from "../domain/StopBits";
 
 
-export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, deviceControllerUrl}) => {
+export const DeviceManagement = (
+    {devices, deviceModes, onDeviceModeChange, deviceControllerUrl, hardwareControllerUrl}
+) => {
     const getDeviceMode = (device) => {
         return (device !== undefined && device !== null)
             ? deviceModes.find(mode => mode.id === device.modeId)
@@ -17,6 +19,31 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, devi
 
     const [currentDevice, setCurrentDevice] = useState(devices ? devices[0] : null);
     const [currentDeviceMode, setCurrentDeviceMode] = useState(getDeviceMode(currentDevice));
+    const [availableSerialPorts, setAvailableSerialPorts] = useState([]);
+
+    useEffect(() => {
+        const { pathname, origin } = hardwareControllerUrl;
+        const url = new URL(`${pathname}/getAvailableSerialPortNames`, origin);
+        fetch(`${url}`, {
+            method: 'GET',
+            mode: 'same-origin',
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(
+                    `Can't get available serial ports. Server has responded with status ${response.status}`
+                );
+            }
+        }).then(json => {
+            setAvailableSerialPorts(json);
+        }).catch(error => {
+            console.error(error);
+        })
+    }, []);
+
+
 
     const handleCurrentDeviceChange = (event) => {
         const newId = Number.parseInt(event.target.value);
@@ -89,6 +116,7 @@ export const DeviceManagement = ({devices, deviceModes, onDeviceModeChange, devi
                                     deviceId={currentDevice.id}
                                     deviceControllerUrl={deviceControllerUrl}
                                     settings={currentDevice.settings}
+                                    availableSerialPorts={availableSerialPorts}
                                 />
                             </Col>
                         </Row>
@@ -103,7 +131,8 @@ DeviceManagement.propTypes = {
     devices: PropTypes.array.isRequired,
     deviceModes: PropTypes.array.isRequired,
     onDeviceModeChange: PropTypes.func.isRequired,
-    deviceControllerUrl: PropTypes.object.isRequired
+    deviceControllerUrl: PropTypes.object.isRequired,
+    hardwareControllerUrl: PropTypes.object.isRequired
 };
 
 const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
@@ -139,7 +168,7 @@ const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {
     return (
         <div className="command-panel">
             <Form.Control as="textarea"
-                          rows={5}
+                          rows={6}
                           value={commandText}
                           onChange={handleCommandTextChange}
             />
@@ -160,9 +189,10 @@ CommandSendingForm.propTypes = {
     deviceControllerUrl: PropTypes.object.isRequired,
 }
 
-const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
+const UartParametersForm = ({deviceId, deviceControllerUrl, availableSerialPorts}) => {
 
     const [parameters, setParameters] = useState({
+        port: (availableSerialPorts.length > 0) ? availableSerialPorts[0] : '',
         baudRate: 9600,
         parity: Parity.NONE.value,
         dataBits: 8,
@@ -218,6 +248,7 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
         }).then(response => {
             if (response.ok) {
                 const newSettings = {
+                    port: json.port,
                     baudRate: json.baudRate,
                     parity: json.parity,
                     dataBits: json.dataBits,
@@ -228,7 +259,7 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
                 console.error(`Parameters sending failed! Server has responded with status: ${response.statusText}`);
             }
         }).catch(error => console.error(error));
-    }, [parameters.baudRate, parameters.parity, parameters.dataBits, parameters.stopBits]);
+    }, [parameters.port, parameters.baudRate, parameters.parity, parameters.dataBits, parameters.stopBits]);
 
     const handleNumberFieldChange = (event) => {
         const { name, value } = event.target;
@@ -247,8 +278,30 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
         setParameters(prevState => ({...prevState, stopBits: newStopBitsValue}));
     }
 
+    const handleSerialPortChange = (event) => {
+        const value = event.target.value;
+        setParameters( prevState => ({...prevState, port: value}));
+    }
+
     return (
       <Form>
+          <FormGroup as={Row} className='mb-3'>
+              <Form.Label column>Порт</Form.Label>
+              <Col>
+                  <Form.Control
+                      as='select'
+                      name='serialPort'
+                      value={`${parameters.port}`}
+                      onChange={handleSerialPortChange}
+                  >
+                      {availableSerialPorts.map(port =>
+                          <option key={`serialPortOption${port}`} value={`${port}`}>
+                              {port}
+                          </option>
+                      )}
+                  </Form.Control>
+              </Col>
+          </FormGroup>
           <FormGroup as={Row} className='mb-3'>
               <Form.Label column>Скорость передачи данных</Form.Label>
               <Col>
@@ -313,5 +366,6 @@ const UartParametersForm = ({deviceId, deviceControllerUrl}) => {
 
 UartParametersForm.propTypes = {
     deviceId: PropTypes.number.isRequired,
-    deviceControllerUrl: PropTypes.object.isRequired
+    deviceControllerUrl: PropTypes.object.isRequired,
+    availableSerialPorts: PropTypes.array.isRequired
 }

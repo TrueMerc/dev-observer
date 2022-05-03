@@ -46,6 +46,20 @@ body {
   height: calc(100% - 30px);
 }
 
+@media screen and (min-width: 2048px) {
+  .half-screen-on-xl-screens {
+    margin: 15px;
+    width: calc(100% / 2 - 30px);
+    height: calc(100% - 30px);
+  }
+}
+
+@media screen and (max-width: 1920px) {
+  .full-screen-on-typical-screens {
+    margin: 15px;
+  }
+}
+
 .image {
   max-width: 100%;
   max-height: 100%;
@@ -102,6 +116,10 @@ body {
 
 .mt-0 {
   margin-top: 0;
+}
+
+.mt-15 {
+  margin-top: 15px!important;
 }
 
 .mt-100 {

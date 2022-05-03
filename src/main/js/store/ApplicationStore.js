@@ -2,6 +2,7 @@ import React from "react";
 import {makeObservable, observable, action, runInAction} from "mobx";
 import {User} from "../domain/User";
 import "regenerator-runtime/runtime";
+import {JsonRequest} from "../network/JsonRequest";
 
 export class ApplicationStore {
 
@@ -13,9 +14,13 @@ export class ApplicationStore {
     videoStreamUrl = '';
     firmwareControllerUrl = 'firmware';
     labWorksControllerUrl = 'api/labs';
+    deviceControllerUrl='api/devices';
+    hardwareControllerUrl='api/hardware';
     maxFirmwareSize = '';
     user = null;
     roles = [];
+    deviceModes = [];
+    devices = [];
     laboratoryIdentifiersAndNames = [];
 
     constructor(serverUrl) {
@@ -24,13 +29,18 @@ export class ApplicationStore {
             videoStreamUrl: observable,
             firmwareControllerUrl: observable,
             labWorksControllerUrl: observable,
+            deviceControllerUrl: observable,
+            hardwareControllerUrl: observable,
             user: observable,
             roles: observable,
+            deviceModes: observable,
+            devices: observable,
             maxFirmwareSize: observable,
             laboratoryIdentifiersAndNames: observable,
             load: action,
             loadSettings: action,
-            loadUser: action
+            loadUser: action,
+            updateDeviceMode: action
         });
         this.serverUrl = Object.assign(new URL(serverUrl));
         this.settingsUrl = new URL(this.settingsUrl, serverUrl);
@@ -66,14 +76,19 @@ export class ApplicationStore {
             }
         }).then(json => {
             runInAction(() => {
+                console.log(json);
                 this.firmwareControllerUrl = new URL(json.firmwareControllerUrl, this.serverUrl);
                 this.labWorksControllerUrl = new URL(this.labWorksControllerUrl, this.serverUrl);
+                this.deviceControllerUrl = new URL(this.deviceControllerUrl, this.serverUrl);
+                this.hardwareControllerUrl = new URL(this.hardwareControllerUrl, this.serverUrl);
                 const videoStreamServerUrl = this.serverUrl;
                 videoStreamServerUrl.port = 8081;
                 this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
-                this.roles = json.roles;
+                this.roles = json.applicationEntities.roles;
+                this.deviceModes = json.applicationEntities.deviceModes;
+                this.devices = json.applicationEntities.devices;
                 this.maxFirmwareSize = json.maxUploadedFileSize;
-                this.laboratoryIdentifiersAndNames = json.laboratoryIdentifiersAndNames;
+                this.laboratoryIdentifiersAndNames = json.applicationEntities.laboratoryIdentifiersAndNames;
                 this.isReady = true;
                 console.log('Settings are loaded');
                 console.log(this);
@@ -95,7 +110,7 @@ export class ApplicationStore {
             if (response.ok) {
                 return response.json();
             } else {
-               throw new Error(`Can't load current user data`);
+                throw new Error(`Can't load current user data`);
             }
         }).then(json => {
             runInAction(() => {
@@ -103,6 +118,36 @@ export class ApplicationStore {
                 this.isReady = true;
                 console.log('User is loaded');
             });
+        }).catch(error => {
+            console.error(error);
+        });
+    }
+
+    updateDeviceMode = async (deviceId, deviceModeId) => {
+        const url = `${this.deviceControllerUrl}/updateDeviceMode/${deviceId}/${deviceModeId}`;
+        //const jsonRequest = new JsonRequest(url, "PUT");
+        // const result = await jsonRequest.execute();
+        await fetch(url, {
+            method: 'PUT',
+            mode: 'same-origin',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`Can't retrieve a response from server. Response status: ${response.status}`);
+            }
+        }).then(json => {
+            runInAction(() => {
+                const newDevices = this.devices.slice(0);
+                const deviceForRemovalIdx = this.devices.findIndex(device => device.id === json.id);
+                newDevices.splice(deviceForRemovalIdx, 1, json);
+                // Reference in this field should be updated because we want that observer works.
+                this.devices = newDevices;
+            })
         }).catch(error => {
             console.error(error);
         });

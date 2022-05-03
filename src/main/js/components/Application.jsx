@@ -16,8 +16,6 @@ const Application = () => {
         applicationStore.load();
     }, []);
 
-    console.log(applicationStore.roles);
-
     return (
         <BrowserRouter>
             <div className='application'>

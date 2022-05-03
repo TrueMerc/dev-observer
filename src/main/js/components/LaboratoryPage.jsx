@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import "./LabWorkPage.css";
+import "./LaboratoryPage.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDownload, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Message} from "../domain/Message";
@@ -18,8 +18,12 @@ class LaboratoryPage extends Component {
             return null;
         }
         const {
-            videoStreamUrl, firmwareControllerUrl, maxFirmwareSize, labWorksControllerUrl
+            videoStreamUrl, firmwareControllerUrl, maxFirmwareSize, labWorksControllerUrl, devices, deviceModes
         } = this.props.applicationStore;
+
+        const currentDevice = devices[0];
+        const currentDeviceMode = deviceModes.find(mode => mode.id === currentDevice.modeId);
+
         return (
             <div className='device-page'>
                 <div className="half-screen">
@@ -29,6 +33,7 @@ class LaboratoryPage extends Component {
                         firmwareUrl={firmwareControllerUrl}
                         maxFirmwareSize={maxFirmwareSize}
                         isVideoReady={this.props.applicationStore.isReady}
+                        deviceMode={currentDeviceMode}
                     />
                     }
                 </div>
@@ -75,7 +80,7 @@ class DeviceControls extends Component {
         const requestBody = new FormData();
         const file = files[0];
         requestBody.append('file', file, file.name);
-        const uploadUrl = new URL('upload', this.props.firmwareUrl);
+
         fetch(`${this.props.firmwareUrl}/upload`, {
             method: 'POST',
             credentials: 'same-origin',
@@ -100,7 +105,6 @@ class DeviceControls extends Component {
             }
             return response.text();
         }).then(text => {
-            console.log(text);
             this.addMessage(`Прошивка успешно загружена. Идентификатор прошивки: ${text}`);
         }).catch(error => {
             console.error(error);
@@ -121,13 +125,13 @@ class DeviceControls extends Component {
 
     render() {
         const poster = "../images/waiting-for-video.gif";
-        console.log("Stream URL");
-        console.log(this.props.videoStreamUrl);
-        console.log(this.props.isVideoReady);
 
         return (
             <div className="video-player-bar">
-                <FirmwareQueue firmwareControllerUrl={this.props.firmwareUrl}/>
+                <FirmwareQueue
+                    firmwareControllerUrl={this.props.firmwareUrl}
+                    deviceMode={this.props.deviceMode}
+                />
                 <video className="video-player" autoPlay={true} controls={false} poster={poster} muted={true}>
                     {this.props.isVideoReady &&
                     <source src={this.props.videoStreamUrl} type="video/webm"/>
@@ -146,6 +150,7 @@ class DeviceControls extends Component {
                 <button
                     className="btn btn-outline-success upload-button"
                     onClick={this.handleUploadButtonClick}
+                    disabled={!this.props.deviceMode.firmwareUploadingEnabled}
                 >
                     <FontAwesomeIcon icon={faUpload}/>
                     &nbsp;
@@ -177,7 +182,7 @@ class Description extends Component {
 
     fetchData = (id) => {
         const url = `${this.props.labWorksControllerUrl}/${id}`;
-        console.log(url);
+
         fetch(url, {
             method: 'GET',
             mode: 'same-origin',
@@ -192,15 +197,14 @@ class Description extends Component {
                 throw new Error("Server responds with " + response.status);
             }
         }).then(json => {
-            console.log(json);
             this.setState({laboratory : json});
         }).catch(error => {
-            console.log(error);
+            console.error(error);
         });
     }
 
     handleDownloadButtonClick = () => {
-        console.log(this.props.labWorksControllerUrl);
+
         fetch(`${this.props.labWorksControllerUrl}/download/${this.props.laboratoryId}`, {
             method: "GET",
             mode: "same-origin",
@@ -210,14 +214,12 @@ class Description extends Component {
             }
         }).then(response => {
             if(response.ok) {
-                console.log(response);
                 return response.blob();
             } else {
                 throw new Error('Server responded with status ' + response.status);
             }
         }).then(blob => {
             // Maybe, it would rather use FileSaver.js or StreamSaver.js instead of this code.
-            console.log(blob);
             const url = window.URL.createObjectURL(
                 new Blob([blob], {type: 'octet/stream'})
             );
@@ -267,8 +269,8 @@ class Description extends Component {
                         <b>Порядок выполнения:</b>
                     </label>
                     <ol>
-                        {labWorkExecutionSteps.map(stepDescription => (
-                            <li className='description-list'>
+                        {labWorkExecutionSteps.map((stepDescription, index) => (
+                            <li key={`executionStep${index}`} className='description-list'>
                                 {stepDescription}
                             </li>
                         ))}

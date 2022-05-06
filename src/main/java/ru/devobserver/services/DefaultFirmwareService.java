@@ -97,7 +97,7 @@ public class DefaultFirmwareService implements FirmwareService {
 
     @Override
     @Async
-    @Scheduled(fixedDelay = 20000)
+    @Scheduled(fixedDelayString = "${application.lagBetweenFirmwareExecutionInMilliseconds:60000}")
     public void executeNextFirmware() {
         firmwareQueue.findFirstByStatusOrderById(FirmwareStatus.WAITING).ifPresent(firmwareQueueItem -> {
             final String firmwareName = firmwareQueueItem.getFirmware().getName();

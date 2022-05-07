@@ -1,9 +1,9 @@
 package ru.devobserver.services;
 
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -12,9 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.devobserver.configurations.ApplicationProperties;
 import ru.devobserver.domain.FirmwareQueueState;
 import ru.devobserver.domain.FirmwareStatus;
-import ru.devobserver.entities.Firmware;
-import ru.devobserver.entities.FirmwareQueueItem;
-import ru.devobserver.entities.User;
+import ru.devobserver.entities.*;
 import ru.devobserver.repositories.FirmwareQueue;
 import ru.devobserver.repositories.FirmwareRepository;
 import ru.devobserver.exceptions.FirmwareServiceException;
@@ -30,19 +28,24 @@ public class DefaultFirmwareService implements FirmwareService {
 
     private static final int NORMAL_EXECUTION_CODE = 0;
 
+    private static final int DEFAULT_DEVICE_ID = 1;
+
     private final ApplicationProperties applicationProperties;
+
+    private final DeviceService deviceService;
     private final UserService userService;
     private final FirmwareRepository firmwareRepository;
     private final FirmwareQueue firmwareQueue;
 
-    @Autowired
     public DefaultFirmwareService(
             final ApplicationProperties applicationProperties,
+            final DeviceService deviceService,
             final UserService userService,
             final FirmwareRepository firmwareRepository,
             final FirmwareQueue firmwareQueue
     ) {
         this.applicationProperties = applicationProperties;
+        this.deviceService = deviceService;
         this.userService = userService;
         this.firmwareRepository = firmwareRepository;
         this.firmwareQueue = firmwareQueue;
@@ -99,33 +102,41 @@ public class DefaultFirmwareService implements FirmwareService {
     @Async
     @Scheduled(fixedDelayString = "${application.lagBetweenFirmwareExecutionInMilliseconds:60000}")
     public void executeNextFirmware() {
-        firmwareQueue.findFirstByStatusOrderById(FirmwareStatus.WAITING).ifPresent(firmwareQueueItem -> {
-            final String firmwareName = firmwareQueueItem.getFirmware().getName();
-            final String firmwarePath = applicationProperties.getFirmwareFolder() + "/" + firmwareName;
-            final ProcessBuilder processBuilder = new ProcessBuilder(
-                    applicationProperties.getScriptPath(), firmwarePath
-            );
-            final String scriptWorkingDirectory = applicationProperties.getScriptWorkingDirectory();
-            if (scriptWorkingDirectory != null && !scriptWorkingDirectory.isEmpty()) {
-                final File file = new File(scriptWorkingDirectory);
-                if (!file.exists()) {
-                    throw new IllegalArgumentException("Script working directory doesn't exist");
-                }
-                processBuilder.directory(new File(scriptWorkingDirectory));
+        final Device device = deviceService.getDevice(DEFAULT_DEVICE_ID)
+                .orElseThrow(() -> new FirmwareServiceException("Can't find device with ID " + DEFAULT_DEVICE_ID));
+        final DeviceMode mode = device.getMode();
+        if(mode.isManualControlEnabled()) {
+            return;
+        }
+        firmwareQueue.findFirstByStatusOrderById(FirmwareStatus.WAITING)
+                .ifPresent(firmwareQueueItem -> executeFirmware(firmwareQueueItem));
+    }
+
+    private void executeFirmware(FirmwareQueueItem firmwareQueueItem) {
+        final String firmwareName = firmwareQueueItem.getFirmware().getName();
+        final String firmwarePath = applicationProperties.getFirmwareFolder() + "/" + firmwareName;
+        final String scriptPath = applicationProperties.getScriptPath();
+        final ProcessBuilder processBuilder = new ProcessBuilder(scriptPath, firmwarePath);
+        final String scriptWorkingDirectory = applicationProperties.getScriptWorkingDirectory();
+        if (scriptWorkingDirectory != null && !scriptWorkingDirectory.isEmpty()) {
+            final File file = new File(scriptWorkingDirectory);
+            if (!file.exists()) {
+                throw new IllegalArgumentException("Script working directory doesn't exist");
             }
-            try {
-                final Process process = processBuilder.start();
-                final int returnCode = process.waitFor();
-                if(returnCode == NORMAL_EXECUTION_CODE) {
-                    firmwareQueueItem.setStatus(FirmwareStatus.ACTIVE);
-                    firmwareQueue.save(firmwareQueueItem);
-                    Thread.sleep(10000);
-                    firmwareQueueItem.setStatus(FirmwareStatus.PROCESSED);
-                    firmwareQueue.save(firmwareQueueItem);
-                }
-            } catch (IOException | InterruptedException e) {
-                LOGGER.error("Can't execute firmware " + firmwareName, e);
+            processBuilder.directory(new File(scriptWorkingDirectory));
+        }
+        try {
+            final Process process = processBuilder.start();
+            final int returnCode = process.waitFor();
+            if(returnCode == NORMAL_EXECUTION_CODE) {
+                firmwareQueueItem.setStatus(FirmwareStatus.ACTIVE);
+                firmwareQueue.save(firmwareQueueItem);
+                Thread.sleep(10000);
+                firmwareQueueItem.setStatus(FirmwareStatus.PROCESSED);
+                firmwareQueue.save(firmwareQueueItem);
             }
-        });
+        } catch (IOException | InterruptedException e) {
+            LOGGER.error("Can't execute firmware " + firmwareName, e);
+        }
     }
 }

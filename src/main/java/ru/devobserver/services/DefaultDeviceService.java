@@ -15,6 +15,7 @@ import ru.devobserver.repositories.DeviceModeRepository;
 import ru.devobserver.repositories.DeviceRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +37,11 @@ public class DefaultDeviceService implements DeviceService {
     @Override
     public List<DeviceDTO> getDevices() {
         return deviceRepository.findAll().stream().map(DeviceDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Device> getDevice(long deviceId) {
+        return deviceRepository.findById(deviceId);
     }
 
     @Override

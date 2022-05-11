@@ -16,7 +16,6 @@ public class DeviceDTO {
         this.id = device.getId();
         this.name = device.getName();
         this.description = device.getDescription();
-        Hibernate.initialize(device);
         this.modeId = device.getMode().getId();
     }
 }

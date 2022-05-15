@@ -13,3 +13,7 @@
 .command-panel textarea {
     resize: none;
 }
+
+.admin-panal-video-player {
+    width: 100%;
+}

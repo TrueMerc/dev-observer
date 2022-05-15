@@ -17,7 +17,8 @@ export const Administration = observer(({applicationStore}) => {
         devices,
         deviceModes,
         deviceControllerUrl,
-        hardwareControllerUrl
+        hardwareControllerUrl,
+        videoStreamUrl
     } = applicationStore;
 
     return  (
@@ -45,6 +46,8 @@ export const Administration = observer(({applicationStore}) => {
                             onDeviceModeChange={applicationStore.updateDeviceMode}
                             deviceControllerUrl={deviceControllerUrl}
                             hardwareControllerUrl={hardwareControllerUrl}
+                            videoStreamUrl={videoStreamUrl}
+                            isVideoStreamReady={isReady}
                         />
                     }
                 </Tab>

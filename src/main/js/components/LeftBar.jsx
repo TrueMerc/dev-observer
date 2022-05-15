@@ -20,7 +20,7 @@ class LeftBarComponent extends Component {
     }
 
     handleAdministrationButtonClick = (event) => {
-        this.props.history.push('/Administration');
+        this.props.history.push('/administration');
     }
 
     render() {

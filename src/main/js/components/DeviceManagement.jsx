@@ -8,9 +8,13 @@ import {Parity} from "../domain/Parity";
 import {StopBits} from "../domain/StopBits";
 
 
-export const DeviceManagement = (
-    {devices, deviceModes, onDeviceModeChange, deviceControllerUrl, hardwareControllerUrl}
-) => {
+export const DeviceManagement = ({   devices,
+                                     deviceModes,
+                                     onDeviceModeChange,
+                                     deviceControllerUrl,
+                                     hardwareControllerUrl,
+                                     videoStreamUrl,
+                                     isVideoStreamReady}) => {
     const getDeviceMode = (device) => {
         return (device !== undefined && device !== null)
             ? deviceModes.find(mode => mode.id === device.modeId)
@@ -60,6 +64,8 @@ export const DeviceManagement = (
         }
     }
 
+    const poster = "../images/waiting-for-video.gif";
+
     return (
         <div className='tab-content'>
             <div className='half-screen-on-xl-screens full-screen-on-typical-screens'>
@@ -106,7 +112,18 @@ export const DeviceManagement = (
                     {currentDeviceMode.manualControlEnabled &&
                         <Row className='mt-15'>
                             <Col lg={true}>
-                                <CommandSendingForm
+                                <video className='admin-panal-video-player'
+                                       autoPlay={true}
+                                       controls={false}
+                                       poster={poster}
+                                       muted={true}
+                                >
+                                    {isVideoStreamReady &&
+                                        <source src={videoStreamUrl} type="video/webm"/>
+                                    }
+                                    Ваш браузер не поддерживает видео в формате HTML5
+                                </video>
+                                <CommandSendingForm className='mt-15'
                                     deviceId={currentDevice.id}
                                     deviceControllerUrl={deviceControllerUrl}
                                 />
@@ -132,7 +149,9 @@ DeviceManagement.propTypes = {
     deviceModes: PropTypes.array.isRequired,
     onDeviceModeChange: PropTypes.func.isRequired,
     deviceControllerUrl: PropTypes.object.isRequired,
-    hardwareControllerUrl: PropTypes.object.isRequired
+    hardwareControllerUrl: PropTypes.object.isRequired,
+    videoStreamUrl: PropTypes.object.isRequired,
+    isVideoStreamReady: PropTypes.bool.isRequired
 };
 
 const CommandSendingForm = ({deviceId, deviceControllerUrl}) => {

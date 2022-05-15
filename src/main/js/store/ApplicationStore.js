@@ -1,8 +1,7 @@
 import React from "react";
-import {makeObservable, observable, action, runInAction} from "mobx";
+import {action, makeObservable, observable, runInAction} from "mobx";
 import {User} from "../domain/User";
 import "regenerator-runtime/runtime";
-import {JsonRequest} from "../network/JsonRequest";
 
 export class ApplicationStore {
 

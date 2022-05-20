@@ -8,9 +8,9 @@
 		<version>2.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ru.ryabtsev</groupId>
+	<groupId>ru.devobserver</groupId>
 	<artifactId>dev-observer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 	<name>dev-observer</name>
 	<description>Application for remote control on study board firmware</description>

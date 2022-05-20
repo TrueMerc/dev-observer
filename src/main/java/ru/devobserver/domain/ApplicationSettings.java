@@ -13,19 +13,16 @@ public class ApplicationSettings {
     private final String videoStreamUrl;
     private final int videoStreamPort;
     private final String maxUploadedFileSize;
-    private final List<RoleDTO> roles;
-    private final List<LaboratoryIdentifierAndName> laboratoryIdentifiersAndNames;
+    private final ApplicationEntities applicationEntities;
 
     public ApplicationSettings(
             final ApplicationProperties properties,
-            final List<RoleDTO> roles,
-            final List<LaboratoryIdentifierAndName> laboratoryIdentifierAndNames
+            final ApplicationEntities applicationEntities
     ) {
         this.videoStreamUrl = properties.getVideoStreamUrl();
         this.firmwareControllerUrl = properties.getFirmwareControllerUrl();
         this.videoStreamPort = properties.getVideoStreamPort();
         this.maxUploadedFileSize = properties.getFirmwareMaxFileSize();
-        this.roles = roles;
-        this.laboratoryIdentifiersAndNames = laboratoryIdentifierAndNames;
+        this.applicationEntities = applicationEntities;
     }
 }

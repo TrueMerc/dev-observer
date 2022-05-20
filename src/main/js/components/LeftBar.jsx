@@ -20,7 +20,7 @@ class LeftBarComponent extends Component {
     }
 
     handleAdministrationButtonClick = (event) => {
-        this.props.history.push('/Administration');
+        this.props.history.push('/administration');
     }
 
     render() {
@@ -47,7 +47,7 @@ class LeftBarComponent extends Component {
                     </div>
                     <div className='left-bar__device-list-lab-item'>
                         {laboratoryIdentifiersAndNames.map((item, index) => (
-                            <div>
+                            <div key={`laboratory${index}`}>
                                 <Tooltip
                                     title={JSON.parse(`"${item.name}"`)}
                                     position='right'

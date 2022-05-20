@@ -4,8 +4,8 @@ export class DeviceDescription extends Component {
     constructor(props) {
         super(props);
     }
-    render() {
 
+    render() {
         const mainDescription = "Учебно-лабораторный стенд УЛС-2021 представляет собой комплект " +
             "аппаратно-программных средств, предназначенных для изучения принципов построения микропроцессорных " +
             "систем. В основе УЛС-2021 лежит промышленная FPGA Spartan-6 XC6SLX9 от компании Xilinx. Стенд имеет " +

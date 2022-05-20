@@ -16,8 +16,6 @@ const Application = () => {
         applicationStore.load();
     }, []);
 
-    console.log(applicationStore.roles);
-
     return (
         <BrowserRouter>
             <div className='application'>
@@ -25,9 +23,6 @@ const Application = () => {
                 <div className='main-section'>
                     <LeftBar applicationStore = {applicationStore}/>
                     <Switch>
-                        <Route path="/" exact>
-                            <Redirect to={'/labs/1'}/>
-                        </Route>
                         <Route path="/labs/:laboratoryId">
                             <LaboratoryPage applicationStore = {applicationStore} />
                         </Route>
@@ -39,6 +34,9 @@ const Application = () => {
                         </Route>
                         <Route path="/administration">
                             <Administration applicationStore = {applicationStore}/>
+                        </Route>
+                        <Route path="/" exact>
+                            <Redirect to={'/labs/1'}/>
                         </Route>
                         <Route path="*">
                             <Redirect to="/" />

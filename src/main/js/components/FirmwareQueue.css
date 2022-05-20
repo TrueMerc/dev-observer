@@ -8,3 +8,10 @@
 .firmware-queue span {
     display: block;
 }
+.firmware-queue-disabled {
+    width: 90%;
+    font-weight: bold;
+    text-align: center;
+    color: darkred;
+}
+

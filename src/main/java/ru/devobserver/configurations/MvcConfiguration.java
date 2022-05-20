@@ -32,7 +32,10 @@ public class MvcConfiguration implements WebMvcConfigurer {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/index").setViewName("index");
         registry.addViewController("/").setViewName("index");
-        registry.addViewController("/labs**").setViewName("redirect:/");
+        registry.addViewController("/labs**").setViewName("forward:/");
+        registry.addViewController("/description").setViewName("forward:/");
+        registry.addViewController("/profile").setViewName("forward:/");
+        registry.addViewController("/administration").setViewName("forward:/");
         registry.addViewController("/notFound").setViewName("redirect:/");
     }
 

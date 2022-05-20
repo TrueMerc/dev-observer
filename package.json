@@ -15,7 +15,9 @@
   ],
   "author": "Vladimir V. Ryabtsev",
   "scripts": {
-    "watch": "webpack --watch --mode development --config webpack.config.js"
+    "watch": "webpack --watch --mode development --config webpack.config.js",
+    "dev": "webpack --mode development --config webpack.config.js",
+    "prod": "webpack --mode production --config webpack.config.js"
   },
   "dependencies": {
     "@babel/core": "^7.14.3",

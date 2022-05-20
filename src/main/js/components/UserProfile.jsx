@@ -5,7 +5,6 @@ import "./UserProfile.css";
 
 export const UserProfile = observer((props) => {
 
-    console.log(props.user);
     const { login, firstName, lastName, patronymic, email, isAdministrator } = props.applicationStore.user || {};
 
     return (

@@ -1,0 +1,19 @@
+.send-command-button {
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.command-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.command-panel textarea {
+    resize: none;
+}
+
+.admin-panal-video-player {
+    width: 100%;
+}

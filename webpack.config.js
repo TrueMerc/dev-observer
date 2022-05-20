@@ -5,13 +5,17 @@ const Paths = {
 }
 
 module.exports = {
-    entry: './src/main/js/app.js',
+    context: path.resolve(__dirname, "src/main"),
+    entry: './js/app.js',
     devtool: 'source-map',
     cache: true,
     mode: 'development',
     output: {
-        path: __dirname,
-        filename: './src/main/resources/static/built/bundle.js'
+        path: path.resolve(__dirname, 'src/main/resources/static/built/'),
+        filename: 'bundle.js'
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
     },
     module: {
         rules: [
@@ -27,7 +31,6 @@ module.exports = {
                 }
             },
             {
-                // test: `${Paths.resources}`+/\.css$/,
                 test: /\.css$/,
                 use: [ 'style-loader', 'css-loader' ]
             },

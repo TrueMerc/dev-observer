@@ -3,6 +3,8 @@ package ru.devobserver.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.devobserver.configurations.ApplicationProperties;
+import ru.devobserver.configurations.video.StreamProperties;
+import ru.devobserver.configurations.video.VideoProperties;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.base.MediaPlayer;
 
@@ -21,31 +23,33 @@ public class VlcJVideoStreamService implements VideoStreamService {
     private static final String HEIGHT_OPTION_PATTERN = ":v4l2-height=%d";
     private final MediaPlayer mediaPlayer;
 
-    private final ApplicationProperties applicationProperties;
+    private final VideoProperties videoProperties;
 
     @Autowired
-    public VlcJVideoStreamService(final ApplicationProperties applicationProperties) {
+    public VlcJVideoStreamService(final VideoProperties videoProperties) {
         final MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
         this.mediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer();
-        this.applicationProperties = applicationProperties;
+        this.videoProperties = videoProperties;
     }
 
     @Override
     public void start() {
-        final String media = String.format(MEDIA_PATTERN, applicationProperties.getVideoDevice());
+        final String media = String.format(MEDIA_PATTERN, videoProperties.getDevice());
+        final StreamProperties streamProperties = videoProperties.getStream();
         final String[] options = {
                 ":sout=#transcode{" +
                         "vcodec=VP80,vb=2048,scale=1,acodec=vorb," +
                         "ab=128," +
                         "channels=2," +
                         "samplerate=44100," +
-                        "scodec=none" +
-                        "}:duplicate{dst=http{mux=webm,dst=:8081/stream},dst=display}",
+                        "scodec=none," +
+                        "threads=4" +
+                        "}:" + getDestinationString(),
                 ":no-sout-all",
                 ":sout-keep",
-                String.format(FPS_OPTION_PATTERN, applicationProperties.getVideoStreamFPS()),
-                String.format(WIDTH_OPTION_PATTERN, applicationProperties.getVideoStreamWidth()),
-                String.format(HEIGHT_OPTION_PATTERN, applicationProperties.getVideoStreamHeight()),
+                String.format(FPS_OPTION_PATTERN, streamProperties.getFps()),
+                String.format(WIDTH_OPTION_PATTERN, streamProperties.getWidth()),
+                String.format(HEIGHT_OPTION_PATTERN, streamProperties.getHeight()),
                 ":network-caching=300",
         };
         mediaPlayer.media().play(media,options);
@@ -54,5 +58,15 @@ public class VlcJVideoStreamService implements VideoStreamService {
     @Override
     public void stop() {
         mediaPlayer.controls().stop();
+    }
+
+    private final String getDestinationString() {
+        final String endPoint = videoProperties.getNetwork().getUrl();
+        final int port = videoProperties.getNetwork().getPort();
+        final String networkDestination = String.format("dst=:%d/%s", port, endPoint);
+        final String destinationStringPattern = videoProperties.isDuplicatedOnDisplay()
+                ? "duplicate{dst=http{mux=webm,%s},dst=display}"
+                : "duplicate{dst=http{mux=webm,%s}}";
+        return String.format(destinationStringPattern, networkDestination);
     }
 }

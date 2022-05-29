@@ -3,6 +3,7 @@ package ru.devobserver.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.devobserver.configurations.ApplicationProperties;
+import ru.devobserver.configurations.video.PlatformProperties;
 import ru.devobserver.configurations.video.StreamProperties;
 import ru.devobserver.configurations.video.VideoProperties;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
@@ -16,11 +17,14 @@ public class VlcJVideoStreamService implements VideoStreamService {
 
     private static final String MEDIA_PATTERN = "v4l2://%s";
 
+    private static final String THREADS_COUNT_PATTERN="threads=%d";
+
     private static final String FPS_OPTION_PATTERN = ":v4l2-fps=%d";
 
     private static final String WIDTH_OPTION_PATTERN = ":v4l2-width=%d";
 
     private static final String HEIGHT_OPTION_PATTERN = ":v4l2-height=%d";
+
     private final MediaPlayer mediaPlayer;
 
     private final VideoProperties videoProperties;
@@ -34,7 +38,8 @@ public class VlcJVideoStreamService implements VideoStreamService {
 
     @Override
     public void start() {
-        final String media = String.format(MEDIA_PATTERN, videoProperties.getDevice());
+        final PlatformProperties platform = videoProperties.getPlatform();
+        final String media = String.format(MEDIA_PATTERN, platform.getDevice());
         final StreamProperties streamProperties = videoProperties.getStream();
         final String[] options = {
                 ":sout=#transcode{" +
@@ -43,7 +48,7 @@ public class VlcJVideoStreamService implements VideoStreamService {
                         "channels=2," +
                         "samplerate=44100," +
                         "scodec=none," +
-                        "threads=4" +
+                        String.format(THREADS_COUNT_PATTERN, platform.getThreadsCount()) +
                         "}:" + getDestinationString(),
                 ":no-sout-all",
                 ":sout-keep",

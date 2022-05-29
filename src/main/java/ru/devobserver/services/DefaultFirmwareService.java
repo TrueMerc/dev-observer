@@ -1,7 +1,6 @@
 package ru.devobserver.services;
 
 
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.devobserver.configurations.ApplicationProperties;
+import ru.devobserver.configurations.firmware.FirmwareProperties;
 import ru.devobserver.domain.FirmwareQueueState;
 import ru.devobserver.domain.FirmwareStatus;
 import ru.devobserver.entities.*;
@@ -30,7 +30,7 @@ public class DefaultFirmwareService implements FirmwareService {
 
     private static final int DEFAULT_DEVICE_ID = 1;
 
-    private final ApplicationProperties applicationProperties;
+    private final FirmwareProperties firmwareProperties;
 
     private final DeviceService deviceService;
     private final UserService userService;
@@ -38,13 +38,13 @@ public class DefaultFirmwareService implements FirmwareService {
     private final FirmwareQueue firmwareQueue;
 
     public DefaultFirmwareService(
-            final ApplicationProperties applicationProperties,
+            final FirmwareProperties firmwareProperties,
             final DeviceService deviceService,
             final UserService userService,
             final FirmwareRepository firmwareRepository,
             final FirmwareQueue firmwareQueue
     ) {
-        this.applicationProperties = applicationProperties;
+        this.firmwareProperties = firmwareProperties;
         this.deviceService = deviceService;
         this.userService = userService;
         this.firmwareRepository = firmwareRepository;
@@ -55,7 +55,7 @@ public class DefaultFirmwareService implements FirmwareService {
     @Transactional
     public String upload(MultipartFile file) {
         try {
-            final String firmwareFolderName = applicationProperties.getFirmwareFolder();
+            final String firmwareFolderName = firmwareProperties.getFolder();
             final User currentUser = userService.currentUser();
             final long currentUserFirmwareCount = firmwareRepository.countAllByAuthor(currentUser);
             final String fileName = getFirmwareFileName(currentUser, currentUserFirmwareCount);
@@ -114,10 +114,10 @@ public class DefaultFirmwareService implements FirmwareService {
 
     private void executeFirmware(FirmwareQueueItem firmwareQueueItem) {
         final String firmwareName = firmwareQueueItem.getFirmware().getName();
-        final String firmwarePath = applicationProperties.getFirmwareFolder() + "/" + firmwareName;
-        final String scriptPath = applicationProperties.getScriptPath();
+        final String firmwarePath = firmwareProperties.getFolder() + "/" + firmwareName;
+        final String scriptPath = firmwareProperties.getScript().getPath();
         final ProcessBuilder processBuilder = new ProcessBuilder(scriptPath, firmwarePath);
-        final String scriptWorkingDirectory = applicationProperties.getScriptWorkingDirectory();
+        final String scriptWorkingDirectory = firmwareProperties.getScript().getWorkingDirectory();
         if (scriptWorkingDirectory != null && !scriptWorkingDirectory.isEmpty()) {
             final File file = new File(scriptWorkingDirectory);
             if (!file.exists()) {

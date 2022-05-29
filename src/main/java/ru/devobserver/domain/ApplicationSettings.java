@@ -19,10 +19,10 @@ public class ApplicationSettings {
             final ApplicationProperties properties,
             final ApplicationEntities applicationEntities
     ) {
-        this.videoStreamUrl = properties.getVideoStreamUrl();
-        this.firmwareControllerUrl = properties.getFirmwareControllerUrl();
-        this.videoStreamPort = properties.getVideoStreamPort();
-        this.maxUploadedFileSize = properties.getFirmwareMaxFileSize();
+        this.videoStreamUrl = properties.getVideo().getNetwork().getUrl();
+        this.videoStreamPort = properties.getVideo().getNetwork().getPort();
+        this.firmwareControllerUrl = properties.getFirmware().getControllerUrl();
+        this.maxUploadedFileSize = properties.getFirmware().getMaxSize();
         this.applicationEntities = applicationEntities;
     }
 }

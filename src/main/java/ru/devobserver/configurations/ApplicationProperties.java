@@ -1,81 +1,38 @@
 package ru.devobserver.configurations;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import ru.devobserver.configurations.firmware.FirmwareProperties;
+import ru.devobserver.configurations.video.VideoProperties;
 
 @ConfigurationProperties("application")
+@ConstructorBinding
 public class ApplicationProperties {
-    private String firmwareFolder;
-    private String firmwareControllerUrl;
-    @Value("${spring.servlet.multipart.max-file-size}")
-    private String firmwareMaxFileSize;
-    private String videoStreamUrl;
-    private int videoStreamPort;
-    private String scriptPath;
-    private String scriptWorkingDirectory;
-    private String laboratoriesFolder;
 
-    public String getFirmwareFolder() {
-        return firmwareFolder;
+    private final FirmwareProperties firmware;
+
+    private final VideoProperties video;
+
+    private final String laboratoriesFolder;
+
+    public ApplicationProperties(
+            final FirmwareProperties firmware,
+            final VideoProperties video,
+            final String laboratoriesFolder) {
+        this.firmware = firmware;
+        this.video = video;
+        this.laboratoriesFolder = laboratoriesFolder;
     }
 
-    public void setFirmwareFolder(String firmwareFolder) {
-        this.firmwareFolder = firmwareFolder;
+    public FirmwareProperties getFirmware() {
+        return firmware;
     }
 
-    public String getFirmwareControllerUrl() {
-        return firmwareControllerUrl;
-    }
-
-    public void setFirmwareControllerUrl(String firmwareControllerUrl) {
-        this.firmwareControllerUrl = firmwareControllerUrl;
-    }
-
-    public String getVideoStreamUrl() {
-        return videoStreamUrl;
-    }
-
-    public void setVideoStreamUrl(String videoStreamUrl) {
-        this.videoStreamUrl = videoStreamUrl;
-    }
-
-    public int getVideoStreamPort() {
-        return videoStreamPort;
-    }
-
-    public void setVideoStreamPort(int videoStreamPort) {
-        this.videoStreamPort = videoStreamPort;
-    }
-
-    public String getScriptPath() {
-        return scriptPath;
-    }
-
-    public void setScriptPath(String scriptPath) {
-        this.scriptPath = scriptPath;
-    }
-
-    public String getScriptWorkingDirectory() {
-        return scriptWorkingDirectory;
-    }
-
-    public void setScriptWorkingDirectory(String scriptWorkingDirectory) {
-        this.scriptWorkingDirectory = scriptWorkingDirectory;
-    }
-
-    public String getFirmwareMaxFileSize() {
-        return firmwareMaxFileSize;
-    }
-
-    public void setFirmwareMaxFileSize(String firmwareMaxFileSize) {
-        this.firmwareMaxFileSize = firmwareMaxFileSize;
+    public VideoProperties getVideo() {
+        return video;
     }
 
     public String getLaboratoriesFolder() {
         return laboratoriesFolder;
-    }
-
-    public void setLaboratoriesFolder(String laboratoriesFolder) {
-        this.laboratoriesFolder = laboratoriesFolder;
     }
 }

@@ -2,7 +2,6 @@ package ru.devobserver.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.devobserver.configurations.ApplicationProperties;
 import ru.devobserver.configurations.video.PlatformProperties;
 import ru.devobserver.configurations.video.StreamProperties;
 import ru.devobserver.configurations.video.VideoProperties;
@@ -66,7 +65,7 @@ public class VlcJVideoStreamService implements VideoStreamService {
     }
 
     private final String getDestinationString() {
-        final String endPoint = videoProperties.getNetwork().getUrl();
+        final String endPoint = videoProperties.getNetwork().getEndPoint();
         final int port = videoProperties.getNetwork().getPort();
         final String networkDestination = String.format("dst=:%d/%s", port, endPoint);
         final String destinationStringPattern = videoProperties.isDuplicatedOnDisplay()

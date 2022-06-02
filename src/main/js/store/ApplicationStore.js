@@ -80,9 +80,8 @@ export class ApplicationStore {
                 this.labWorksControllerUrl = new URL(this.labWorksControllerUrl, this.serverUrl);
                 this.deviceControllerUrl = new URL(this.deviceControllerUrl, this.serverUrl);
                 this.hardwareControllerUrl = new URL(this.hardwareControllerUrl, this.serverUrl);
-                const videoStreamServerUrl = this.serverUrl;
-                videoStreamServerUrl.port = 8081;
-                this.videoStreamUrl = new URL(json.videoStreamUrl, videoStreamServerUrl);
+                this.videoStreamUrl = this.videoStreamServerUrl(this.serverUrl, json.videoProperties);
+                console.log(this.videoStreamUrl);
                 this.roles = json.applicationEntities.roles;
                 this.deviceModes = json.applicationEntities.deviceModes;
                 this.devices = json.applicationEntities.devices;
@@ -150,5 +149,17 @@ export class ApplicationStore {
         }).catch(error => {
             console.error(error);
         });
+    }
+
+    videoStreamServerUrl = (currentServerUrl, videoProperties) => {
+        const localhostNames = ["localhost", "127.0.0.1"];
+        const hostname = currentServerUrl.hostname;
+        if (localhostNames.some(name => name.localeCompare(hostname) === 0)) {
+            const videoStreamServerUrl = currentServerUrl;
+            videoStreamServerUrl.port = videoProperties.port;
+            return new URL(videoProperties.endPoint, videoStreamServerUrl);
+        } else {
+            return new URL(videoProperties.url);
+        }
     }
 }
